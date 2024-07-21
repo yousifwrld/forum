@@ -14,7 +14,7 @@ func SetCookies(w http.ResponseWriter, r *http.Request) string {
 		Path:     "/",
 		MaxAge:   3600,
 		HttpOnly: true,
-		Secure:   true,
+		Secure:   false,
 		SameSite: http.SameSiteLaxMode,
 	}
 
