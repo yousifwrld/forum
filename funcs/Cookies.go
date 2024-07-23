@@ -1,6 +1,7 @@
 package forum
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -26,11 +27,10 @@ func GetSessionFromCookie(w http.ResponseWriter, r *http.Request) (string, error
 	cookie, err := r.Cookie("cookie")
 	if err != nil {
 		if err == http.ErrNoCookie {
-			http.Error(w, "no cookie found", http.StatusBadRequest)
-			return "", err
+			return "", fmt.Errorf("no cookie found")
 		} else {
-			http.Error(w, "internal server error", http.StatusInternalServerError)
-			return "", err
+
+			return "", fmt.Errorf("500")
 		}
 	}
 	return cookie.Value, nil

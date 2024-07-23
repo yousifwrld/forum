@@ -30,6 +30,7 @@ func main() {
 	http.HandleFunc("/", forum.RootHandler)
 	http.HandleFunc("/register", forum.RegisterHandler)
 	http.HandleFunc("/login", forum.LoginHandler)
+	http.HandleFunc("/logout", forum.LogoutHandler)
 	http.HandleFunc("/home", forum.HomeHandler)
 	http.HandleFunc("/home/post-detail/", forum.PostDetailHandler)
 	http.HandleFunc("/create-post", forum.CreatePostHandler)
