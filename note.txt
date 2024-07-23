@@ -1,0 +1,50 @@
+-- Login page {
+
+css + html + handler
+- Username and password 
+NOTE: check if the username is in the db or not and check if the password is correct
+
+}
+
+-- Register page {
+
+css + html + handler
+- Email, username and password
+NOTE: check if the email is formated correctly and the password len is more than 8
++ the username is not used before
+
+}
+
+=================================================================================================================================
+-- Home page {
+
+css + html + handler
+- Show all the posts (by who, when, content and the title) --> DONE
+NOTE: Find a way to get all the posts from the db and show it in the home page --> DONE
++ Buttons for like, dislike and comment (The comment button should take to another path) --> FIRRRRRRRRRRRRRSTTTTTTTTTTTTT TODOOOOOOOOOOOOOOOO
+
+}
+
+
+-- Post details page {
+
+css + html + handler
+- Post with the details and the comments for it --> DONE
+NOTE: Find a way to retrive all the comments related to this postID and display them all --> DONE
+
+}
+
+IN ADDITION (LATER) {
+ change all the names of the table to small letter for better reading --> DONE
+ change the format of the time to be human readable (If it is possible to change the time to e.g 6h ago)
+ show the username who post the post not his ID --> DONE
+ user can hover over the post and go for the details page --> DONE
+ choose categories when post 
+ filer
+ sessions 
+ cockies
+ encrypted passwords --> DONE
+ put limit for title len 
+ put limit for content len or comment len 
+ TODO: use html to take the data from the user (form) for posting posts or comments then use this data to insert it inside the db (before this check for the len)
+}

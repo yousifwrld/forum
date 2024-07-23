@@ -8,5 +8,4 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.Redirect(w, r, "/register", http.StatusFound)
-	return
 }

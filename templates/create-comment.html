@@ -1,0 +1,21 @@
+<!--Purpose: Provides a dedicated page for creating comments-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Post</title>
+    <link rel="stylesheet" href="/static/createComment.css">
+</head>
+<body>
+
+    <div class="post-form">
+        <h2>New comment</h2>
+        <form action="/home/post-detail/comment?postID={{.}}" method="post">
+            <textarea name="content" required placeholder="Write your comment here..."></textarea>
+            <button type="submit">Submit</button>
+        </form>      
+    </div>
+    <a href="/home/post-detail/?postID={{.}}">Back to Post</a>
+</body>
+</html>

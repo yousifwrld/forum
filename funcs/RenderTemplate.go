@@ -1,23 +1,24 @@
 package forum
 
 import (
-	"log"
+	"html/template"
 	"net/http"
-	"text/template"
 )
 
-// renderTemplate renders the given template with the provided data
-func RenderTemplate(w http.ResponseWriter, templatePath string, data any) {
-	temp, err := template.ParseFiles(templatePath)
+// RenderTemplate renders the HTML template with the given data
+func RenderTemplate(w http.ResponseWriter, templateFile string, data interface{}) {
+	tmpl, err := template.ParseFiles(templateFile)
 	if err != nil {
-		log.Println(err)
-		http.Error(w, "500: Internal Server Error!", http.StatusInternalServerError)
+		http.Error(w, "Error parsing template", http.StatusInternalServerError)
 		return
 	}
-	err = temp.Execute(w, data)
+
+	// Set content type to HTML
+	w.Header().Set("Content-Type", "text/html")
+
+	// Execute the template with the provided data
+	err = tmpl.Execute(w, data)
 	if err != nil {
-		log.Println(err)
-		http.Error(w, "500: Internal Server Error!", http.StatusInternalServerError)
-		return
+		http.Error(w, "Error executing template", http.StatusInternalServerError)
 	}
 }

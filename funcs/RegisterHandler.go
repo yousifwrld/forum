@@ -42,6 +42,10 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 		userID, err := CreateUser(email, username, string(hashedPassword))
 		if err != nil {
 			log.Println(err)

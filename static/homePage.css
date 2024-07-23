@@ -1,0 +1,217 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff; /* Change this to your desired color */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+}
+
+.post-form, .posts {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.post-form textarea {
+    width: 100%;
+    height: 100px;
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.post-form button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    margin-top: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.post-form button:hover {
+    background-color: #0056b3;
+}
+
+
+.post h3 {
+    margin: 0;
+}
+
+.post p {
+    margin: 5px 0;
+}
+
+.comment-form textarea {
+    width: 100%;
+    height: 50px;
+    margin-top: 10px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.comment-form button {
+    background-color: #28a745;
+    color: white;
+    padding: 5px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.comment-form button:hover {
+    background-color: #218838;
+}
+
+.comments {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
+.comment {
+    margin-bottom: 10px;
+}
+
+/* Style for each post container */
+.post-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Smooth hover effect */
+.post {
+    height: 150px;
+    width: 600px;
+    padding: 10px; /* Optional: Adds some padding inside each post container */
+    background-color: #ffffff; /* Fixed background color for posts */
+    border: 1px solid #ccc; /* Adds a border around each post */
+    border-radius: 5px; /* Rounds the corners of the border */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition */
+}
+
+.post:hover {
+    background-color: #d6d6d6; /* Background color on hover */
+    border-color: #bbb; /* Border color on hover */
+}
+
+/* Optional: Style for the title */
+.post-title {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+/* Optional: Style for the post content */
+.post-content {
+    margin-top: 10px;
+}
+
+/* Optional: Style for the author and timestamp */
+.post-meta {
+    font-size: 0.8em;
+    color: #666;
+}
+
+.small-rectangle {
+    height: 40px;
+    width: 620px;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px; /* Adds space below each post */
+    background-color: #ffffff; /* Fixed background color for posts */
+    border: 1px solid #ccc; /* Adds a border around each post */
+    border-radius: 5px; /* Rounds the corners of the border */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition */
+}
+.small-rectangle button {
+    flex-grow: 1;
+    text-align: center;
+    border: 1px solid black;
+    cursor: pointer;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 35px;
+}
+
+
+.small-rectangle button.like {
+    background-image: url("/static/image/like.png"); /* Path to your like image */
+}
+.like span{
+    margin-left: 50px;
+    color: #f10101;
+}
+
+.small-rectangle button.dislike {
+    background-image: url("/static/image/dislike.png"); /* Path to your dislike image */
+}
+/* Style for the dislike count */
+.dislike span {
+    color: #f10101; /* Red color for the dislike count */
+    position: relative; /* Allow positioning of the text */
+    margin-left: 50px;  /* Move the text to the left of the icon */
+}
+.small-rectangle button:hover {
+    border-color: #b3b3b3;
+    background-color: rgba(186, 186, 186, 0.983);
+}
+
+.comment-button {
+    flex-grow: 1;
+    text-align: center;
+    border: 1px solid black;
+    cursor: pointer;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 35px;
+    background-image: url("/static/image/comment.png"); /* Path to your comment image */
+    height: 38px;
+}
+
+.comment-button:hover {
+    border-color: #b3b3b3;
+    background-color: rgba(186, 186, 186, 0.983);
+}
+
+.create a {
+    background-color: #023f81; /* Blue background color */
+    color: white; /* Wrgb(0, 0, 0)xt color */
+    padding: 10px 20px; /* Padding for the button */
+    text-decoration: none;
+    border: none; /* Remove border */
+    border-radius: 12px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 16px; /* Font size */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+}
+
+/* Hover effect for Add Comment button */
+.create:hover a{
+    background-color: #005cbd; /* Darker green on hover */
+}

@@ -4,19 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum - Registeration</title>
+    <link rel="stylesheet" href="/static/loginPage.css">
 </head>
 <body>
+    <div class="wrapper">
+        <h2>Register</h2>
     <form action="/register" method="post">
+        <div class="input-field">
     <input type="email" name="email" placeholder="email" required>
+        </div>
+        <div class="input-field">
     <input type="text" name="username" placeholder="username" required>
+        </div>
+        <div class="input-field">
     <input type="password" name="password" placeholder="password" required>
-    <input type="submit" value="register">
+        </div>
+        <button type="submit">Register</button>
     </form>
 
     {{if ne .Msg ""}}
     <p>{{.Msg}}</p>
     {{end}}
+        <div class="register">
     <p>already have an account <a href="/login">login</a></p>
+        </div>
     <a href="/home">continue without an account</a>
+</div>
 </body>
 </html>

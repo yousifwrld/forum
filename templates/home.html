@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="/static/homePage.css">
+</head>
+<body>
+    <h1>Forum posts</h1>
+    <ul>
+        <div class="create">
+            <a href="/create-post">+ Add Post</a>  
+        </div>
+        {{range .}} 
+        <a href="/home/post-detail/?postID={{.ID}}" class="post-link">
+        <div class="rectangle">
+            <div class="post">
+                <div class="post-meta">
+                    <small>By {{.Username}}</small><br>
+                    <small>Posted on {{.CreatedAt}}</small>
+                </div>
+                <h2 class="post-title">{{.Title}}</h2>
+                <p class="post-content">{{.Content}}</p>
+            </div>
+        </div>
+        </a>
+        <div class="small-rectangle">
+            <button type="button" class="like" onclick="handleLike()"><span id="likeCount">0</span></button>
+            <button type="button" class="dislike" onclick="handleDislike()"><span id="dislikeCount">0</span></button>
+            <a href="/home/post-detail/comment?postID={{.ID}}" class="comment-button"></a>
+        </div>
+        {{end}}
+    </ul>
+    <script>
+        let likeCount = 0;
+        let dislikeCount = 0;
+        
+        function handleLike() {
+            likeCount++;
+            document.getElementById('likeCount').textContent = likeCount;
+        }
+        
+        function handleDislike() {
+            dislikeCount++;
+            document.getElementById('dislikeCount').textContent = dislikeCount;
+        }
+        function goToCreateCommentPage() {
+        // Redirect the user to the create-comment page
+        window.location.href = '/home/post-detail/comment';
+        }
+        </script>
+        
+</body>
+</html>

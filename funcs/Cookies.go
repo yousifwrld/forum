@@ -21,3 +21,17 @@ func SetCookies(w http.ResponseWriter, r *http.Request) string {
 	http.SetCookie(w, &cookie)
 	return sessionID
 }
+
+func GetCookies(w http.ResponseWriter, r *http.Request) (string, error) {
+	cookie, err := r.Cookie("cookie")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			http.Error(w, "no cookie found", http.StatusBadRequest)
+			return "", err
+		} else {
+			http.Error(w, "internal server error", http.StatusInternalServerError)
+			return "", err
+		}
+	}
+	return cookie.Value, nil
+}
