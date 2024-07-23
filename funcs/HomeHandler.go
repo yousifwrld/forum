@@ -1,19 +1,20 @@
 package forum
 
 import (
+	"fmt"
 	"net/http"
-	"text/template"
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	posts, err := getPosts()
 	if err != nil {
-		http.Error(w, "Unable to retrieve posts", http.StatusInternalServerError)
+		fmt.Println(err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
 		return
 	}
 
-	tmpl := template.Must(template.ParseFiles("templates/home.html"))
-	tmpl.Execute(w, posts)
+	RenderTemplate(w, "templates/home.html", posts)
+
 }
 
 func getPosts() ([]Post, error) {

@@ -1,8 +1,10 @@
 package forum
 
-import "time"
+import (
+	"time"
+)
 
-func GetCommentPosts(postID int) ([]Comment, error) {
+func GetPostComments(postID int) ([]Comment, error) {
 	rows, err := database.Query(`
 		SELECT u.username, c.comment, c.created_at
 		FROM comment c

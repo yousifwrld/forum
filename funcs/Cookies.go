@@ -22,7 +22,7 @@ func SetCookies(w http.ResponseWriter, r *http.Request) string {
 	return sessionID
 }
 
-func GetCookies(w http.ResponseWriter, r *http.Request) (string, error) {
+func GetSessionFromCookie(w http.ResponseWriter, r *http.Request) (string, error) {
 	cookie, err := r.Cookie("cookie")
 	if err != nil {
 		if err == http.ErrNoCookie {

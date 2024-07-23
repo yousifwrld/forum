@@ -1,10 +1,9 @@
 package forum
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"strconv"
-	"text/template"
 	"time"
 )
 
@@ -21,7 +20,7 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
 	postIDStr := r.URL.Query().Get("postID")
 	postID, err := strconv.Atoi(postIDStr)
 	if err != nil {
-		http.Error(w, postIDStr, http.StatusBadRequest)
+		ErrorPages(w, r, "400", http.StatusBadRequest)
 		return
 	}
 	var post PostDetail
@@ -44,26 +43,16 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "UserID not found", http.StatusNotFound)
 		return
 	}
-	
+
 	post.CreatedAt = postCreatedAt.Format("2006-01-02 15:04:05")
-	comments, err := GetCommentPosts(postID)
+	comments, err := GetPostComments(postID)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
 		return
 	}
 
 	post.Comments = comments
-	tmpl, err := template.ParseFiles("templates/post-detail.html")
-	if err != nil {
-		http.Error(w, "Error loading template", http.StatusInternalServerError)
-		return
-	}
 
-	err = tmpl.Execute(w, post)
-	if err != nil {
-		http.Error(w, "Error rendering template", http.StatusInternalServerError)
-		return
-	}
+	RenderTemplate(w, "templates/post-detail.html", post)
 }
-
-

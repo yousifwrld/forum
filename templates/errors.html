@@ -1,11 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Error</title>
+    <title>Error Page</title>
+    <link rel="stylesheet" href="/static/errors.css">
 </head>
+
 <body>
-    <h1>Error</h1>
-    <p>{{.}}</p>
+    <div class="container">
+        <h1>Error {{.Code}}</h1>
+        <p class="err-msg">{{.Msg}}</p>
+        <a href="{{.BackToPage}}" onclick="goBack()" class="button">Back to previous page</a>
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
 </body>
 </html>

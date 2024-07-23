@@ -1,8 +1,7 @@
 package forum
 
 import (
-	"database/sql"
-	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -10,13 +9,13 @@ import (
 func CommentHandler(w http.ResponseWriter, r *http.Request) {
 	postIDStr := r.URL.Query().Get("postID")
 	if postIDStr == "" {
-		http.Error(w, "Post ID is missing", http.StatusBadRequest)
+		ErrorPages(w, r, "400", http.StatusBadRequest)
 		return
 	}
 
 	postID, err := strconv.Atoi(postIDStr)
 	if err != nil {
-		http.Error(w, "Invalid Post ID", http.StatusBadRequest)
+		ErrorPages(w, r, "400", http.StatusBadRequest)
 		return
 	}
 
@@ -27,40 +26,23 @@ func CommentHandler(w http.ResponseWriter, r *http.Request) {
 		// Handle form submission
 		content := r.FormValue("content")
 		if content == "" {
-			http.Error(w, "Content is missing", http.StatusBadRequest)
+			ErrorPages(w, r, "400", http.StatusBadRequest)
 			return
 		}
 		// We should handle user authentication and get the userID here (sessions)
-		sessionID, err := GetCookies(w, r)
-		if err != nil {
-			fmt.Println(err)
-		}
+		// will change the logic and get the userID from the request context, and will authenticate using middleware function
 
-		var userID int
-		err = database.QueryRow(`
-		SELECT userID
-		FROM session
-		WHERE sessionID=?`, sessionID).Scan(&userID)
-		if err != nil {
-			if err == sql.ErrNoRows {
-				http.Error(w, "fuck you", http.StatusBadRequest)
-				fmt.Println(err)
-				return
-			} else {
-				http.Error(w, "dfdf", http.StatusBadRequest)
-				fmt.Println(err)
-				return
-			}
-		}
+		userID := 1
 
 		err = CreateComment(userID, postID, content)
 		if err != nil {
-			http.Error(w, "Unable to create comment", http.StatusInternalServerError)
+			log.Println(err)
+			http.Error(w, "500", http.StatusInternalServerError)
 			return
 		}
 
-		http.Redirect(w, r, "/home/post-detail/?postID="+postIDStr, http.StatusSeeOther)
+		http.Redirect(w, r, "/home/post-detail/?postID="+postIDStr, http.StatusFound)
 	} else {
-		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		ErrorPages(w, r, "405", http.StatusMethodNotAllowed)
 	}
 }

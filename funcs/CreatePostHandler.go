@@ -1,6 +1,7 @@
 package forum
 
 import (
+	"log"
 	"net/http"
 )
 
@@ -13,18 +14,24 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		title := r.FormValue("title")
 		content := r.FormValue("content")
 
+		if title == "" || content == "" {
+			ErrorPages(w, r, "400", http.StatusBadRequest)
+			return
+		}
+
 		// We should handle user authentication and get the userID here (sessions)
 		userID := 1
 
 		err := CreatePost(userID, title, content)
 		if err != nil {
-			http.Error(w, "Unable to create post", http.StatusInternalServerError)
+			log.Println(err)
+			ErrorPages(w, r, "500", http.StatusInternalServerError)
 			return
 		}
 
 		http.Redirect(w, r, "/home", http.StatusSeeOther)
 	} else {
-		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		ErrorPages(w, r, "405", http.StatusMethodNotAllowed)
 	}
 }
 
