@@ -13,9 +13,6 @@ func RenderTemplate(w http.ResponseWriter, templateFile string, data interface{}
 		return
 	}
 
-	// Set content type to HTML
-	w.Header().Set("Content-Type", "text/html")
-
 	// Execute the template with the provided data
 	err = tmpl.Execute(w, data)
 	if err != nil {

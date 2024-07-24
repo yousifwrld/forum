@@ -10,13 +10,8 @@
     <div class="container">
         <h1>Error {{.Code}}</h1>
         <p class="err-msg">{{.Msg}}</p>
-        <a href="{{.BackToPage}}" onclick="goBack()" class="button">Back to previous page</a>
+        <a href="{{.BackToPage}}" class="button">{{.BackToMsg}}</a>
     </div>
-
-    <script>
-        function goBack() {
-            window.history.back();
-        }
-    </script>
 </body>
+
 </html>
