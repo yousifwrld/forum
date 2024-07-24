@@ -52,6 +52,16 @@ func InitDatabase() error {
 			return
 		}
 
+		// Create category table if it doesn't exist
+		_, err = database.Exec(`CREATE TABLE IF NOT EXISTS category (
+					categoryID INTEGER PRIMARY KEY AUTOINCREMENT,
+					name TEXT NOT NULL UNIQUE
+				)`)
+		if err != nil {
+			err = fmt.Errorf("error creating category table: %v", err)
+			return
+		}
+
 		// Create post_categories table if it doesn't exist
 		_, err = database.Exec(`CREATE TABLE IF NOT EXISTS post_categories (
 			postID INTEGER NOT NULL,

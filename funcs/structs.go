@@ -12,11 +12,12 @@ var (
 )
 
 type Post struct {
-	ID        int    `json:"id"`
-	Title     string `json:"title"`
-	Content   string `json:"content"`
-	CreatedAt string `json:"created_at"`
-	Username  string `json:"username"`
+	ID         int      `json:"id"`
+	Title      string   `json:"title"`
+	Content    string   `json:"content"`
+	CreatedAt  string   `json:"created_at"`
+	Username   string   `json:"username"`
+	Categories []string `json:"categories"`
 }
 
 type Comment struct {
@@ -30,4 +31,9 @@ var users []User
 type User struct {
 	UserID                    int
 	Email, Username, Password string
+}
+
+type Category struct {
+	CategoryID int
+	Name       string
 }

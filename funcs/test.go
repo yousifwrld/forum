@@ -101,5 +101,20 @@ func insertTestPost() error {
 	if err != nil {
 		fmt.Printf("Error inserting test post: %v\n", err)
 	}
+	_, err = database.Exec(`INSERT INTO category (name) VALUES (?)`, "sports")
+	if err != nil {
+		fmt.Printf("error adding category: %v", err)
+	}
+
+	_, err = database.Exec(`INSERT INTO category (name) VALUES (?)`, "music")
+	if err != nil {
+		fmt.Printf("error adding category: %v", err)
+	}
+
+	_, err = database.Exec(`INSERT INTO category (name) VALUES (?)`, "news")
+	if err != nil {
+		fmt.Printf("error adding category: %v", err)
+	}
+
 	return err
 }
