@@ -4,18 +4,16 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 func CommentHandler(w http.ResponseWriter, r *http.Request) {
-	postIDStr := r.URL.Query().Get("postID")
-	if postIDStr == "" {
-		ErrorPages(w, r, "400", http.StatusBadRequest)
-		return
-	}
-
+	// extracting ID from the GET request
+	postIDStr := strings.TrimPrefix(string(r.URL.Path), "/home/post/")
+	postIDStr = strings.TrimSuffix(postIDStr, "/comment")
 	postID, err := strconv.Atoi(postIDStr)
 	if err != nil {
-		ErrorPages(w, r, "400", http.StatusBadRequest)
+		ErrorPages(w, r, "404", http.StatusBadRequest)
 		return
 	}
 
@@ -41,7 +39,7 @@ func CommentHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		http.Redirect(w, r, "/home/post-detail/?postID="+postIDStr, http.StatusFound)
+		http.Redirect(w, r, "/home/post/"+postIDStr, http.StatusFound)
 	} else {
 		ErrorPages(w, r, "405", http.StatusMethodNotAllowed)
 	}

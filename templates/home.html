@@ -16,7 +16,7 @@
             <a href="/create-post">+ Add Post</a>  
         </div>
         {{range .}} 
-        <a href="/home/post-detail/?postID={{.ID}}" class="post-link">
+        <a href="/home/post/{{.ID}}" class="post-link">
         <div class="rectangle">
             <div class="post">
                 <div class="post-meta">
@@ -31,7 +31,7 @@
         <div class="small-rectangle">
             <button type="button" class="like" onclick="handleLike()"><span id="likeCount">0</span></button>
             <button type="button" class="dislike" onclick="handleDislike()"><span id="dislikeCount">0</span></button>
-            <a href="/home/post-detail/comment?postID={{.ID}}" class="comment-button"></a>
+            <a href="/home/post/{{.ID}}/comment" class="comment-button"></a>
         </div>
         {{end}}
     </ul>

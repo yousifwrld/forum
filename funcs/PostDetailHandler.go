@@ -1,9 +1,11 @@
 package forum
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -17,10 +19,11 @@ type PostDetail struct {
 }
 
 func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
-	postIDStr := r.URL.Query().Get("postID")
+	// extracting ID from the GET request
+	postIDStr := strings.TrimPrefix(string(r.URL.Path), "/home/post/")
 	postID, err := strconv.Atoi(postIDStr)
 	if err != nil {
-		ErrorPages(w, r, "400", http.StatusBadRequest)
+		ErrorPages(w, r, "404", http.StatusBadRequest)
 		return
 	}
 	var post PostDetail
@@ -32,7 +35,13 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
         FROM post
         WHERE postID = ?`, postID).Scan(&post.ID, &post.Title, &post.Content, &UserID, &postCreatedAt)
 	if err != nil {
-		http.Error(w, "Post not found", http.StatusNotFound)
+		if err == sql.ErrNoRows {
+			log.Println(err)
+			ErrorPages(w, r, "400", http.StatusNotFound)
+			return
+		}
+		log.Println(err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
 		return
 	}
 	err = database.QueryRow(`
