@@ -53,7 +53,7 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	post.CreatedAt = postCreatedAt.Format("2006-01-02 15:04:05")
+	post.CreatedAt = postCreatedAt.Format("2006-01-02 15:04")
 	comments, err := GetPostComments(postID)
 	if err != nil {
 		log.Println(err)

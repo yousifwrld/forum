@@ -1,9 +1,5 @@
 package forum
 
-import (
-	"time"
-)
-
 func GetPostComments(postID int) ([]Comment, error) {
 	rows, err := database.Query(`
 		SELECT u.username, c.comment, c.created_at
@@ -20,12 +16,12 @@ func GetPostComments(postID int) ([]Comment, error) {
 	var comments []Comment
 	for rows.Next() {
 		var comment Comment
-		var createdAt time.Time
+
 		err := rows.Scan(&comment.Username, &comment.Content, &comment.CreatedAt)
 		if err != nil {
 			return nil, err
 		}
-		comment.CreatedAt = createdAt.Format("2006-01-02 15:04:05")
+		comment.FormattedCreatedAt = comment.CreatedAt.Format("2006-01-02 15:04")
 		comments = append(comments, comment)
 	}
 

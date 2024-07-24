@@ -34,6 +34,7 @@ func getPosts() ([]Post, error) {
 		if err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.CreatedAt, &post.Username); err != nil {
 			return nil, err
 		}
+		post.FormattedCreatedAt = post.CreatedAt.Format("2006-01-02 15:04")
 		posts = append(posts, post)
 	}
 	return posts, nil
