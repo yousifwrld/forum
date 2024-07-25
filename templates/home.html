@@ -24,6 +24,7 @@
                     <small>Posted on {{.FormattedCreatedAt}}</small>
                 </div>
                 <h2 class="post-title">{{.Title}}</h2>
+                <p>Categories: {{range .Categories}} {{.Name}} {{end}}</p>
                 <p class="post-content">{{.Content}}</p>
             </div>
         </div>

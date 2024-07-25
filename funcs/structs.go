@@ -13,13 +13,13 @@ var (
 )
 
 type Post struct {
-	ID                 int       `json:"id"`
-	Title              string    `json:"title"`
-	Content            string    `json:"content"`
-	CreatedAt          time.Time `json:"created_at"`
-	FormattedCreatedAt string    `json:"formatted_created_at"`
-	Username           string    `json:"username"`
-	Categories         []string  `json:"categories"`
+	ID                 int        `json:"id"`
+	Title              string     `json:"title"`
+	Content            string     `json:"content"`
+	CreatedAt          time.Time  `json:"created_at"`
+	FormattedCreatedAt string     `json:"formatted_created_at"`
+	Username           string     `json:"username"`
+	Categories         []Category `json:"categories"`
 }
 
 type Comment struct {
