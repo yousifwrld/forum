@@ -16,10 +16,11 @@ func AuthMiddleware(next http.Handler) http.Handler {
 				log.Println(err)
 				http.Redirect(w, r, "/login", http.StatusFound)
 				return
+			} else {
+				log.Println(err)
+				ErrorPages(w, r, "500", http.StatusInternalServerError)
+				return
 			}
-			log.Println(err)
-			ErrorPages(w, r, "500", http.StatusInternalServerError)
-			return
 		}
 		// Check if session exists
 		row := database.QueryRow("SELECT userID FROM session WHERE sessionID = ?", sessionID)
@@ -30,10 +31,11 @@ func AuthMiddleware(next http.Handler) http.Handler {
 				log.Println(err)
 				http.Redirect(w, r, "/login", http.StatusFound)
 				return
+			} else {
+				log.Println(err)
+				ErrorPages(w, r, "500", http.StatusInternalServerError)
+				return
 			}
-			log.Println(err)
-			ErrorPages(w, r, "500", http.StatusInternalServerError)
-			return
 		}
 
 		// Define a custom type for the context key
