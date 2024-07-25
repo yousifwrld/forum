@@ -28,9 +28,11 @@ func InitDatabase() error {
 			return
 		}
 
+		// Create session table if it doesn't exist
 		_, err = database.Exec(`CREATE TABLE IF NOT EXISTS session (
 			sessionID TEXT PRIMARY KEY NOT NULL,
 			userID INTEGER NOT NULL,
+			creationTime DATETIME DEFAULT CURRENT_TIMESTAMP,
 			FOREIGN KEY (userID) REFERENCES USER(userID)
 		)`)
 		if err != nil {
