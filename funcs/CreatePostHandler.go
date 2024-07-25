@@ -8,7 +8,31 @@ import (
 func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		// Render the form
-		RenderTemplate(w, "templates/create-post.html", nil)
+		var categories []Category
+		rows, err := database.Query(`SELECT categoryID, name FROM category`)
+		if err != nil {
+			log.Println("Error querying categories:", err)
+			ErrorPages(w, r, "500", http.StatusInternalServerError)
+			return
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var category Category
+			err := rows.Scan(&category.CategoryID, &category.Name)
+			if err != nil {
+				log.Println("Error scanning category:", err)
+				ErrorPages(w, r, "500", http.StatusInternalServerError)
+				return
+			}
+			categories = append(categories, category)
+		}
+		if err := rows.Err(); err != nil {
+			log.Println("Error after iterating rows:", err)
+			ErrorPages(w, r, "500", http.StatusInternalServerError)
+			return
+		}
+		log.Println("Categories fetched:", categories)
+		RenderTemplate(w, "templates/create-post.html", categories)
 	} else if r.Method == http.MethodPost {
 		// Handle form submission
 		title := r.FormValue("title")

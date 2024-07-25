@@ -12,9 +12,14 @@
     <div class="post-form">
         <h2>New Post</h2>
         <form method="post" action="/create-post">
+            {{range .}}
+            <input type="checkbox" name="category" id="{{.Name}}" value="{{.CategoryID}}">
+            <label for="{{.Name}}">{{.Name}}</label>
+            {{end}}
             <input type="text" name="title" placeholder="Post Title" required>
             <textarea name="content" placeholder="Write your post here..." required></textarea>
             <button type="submit">Post</button>
+
         </form>
     </div>
     <a href="/home">Back to Home</a>

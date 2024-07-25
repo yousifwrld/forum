@@ -1,6 +1,7 @@
 package forum
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
 )
@@ -16,6 +17,7 @@ func RenderTemplate(w http.ResponseWriter, templateFile string, data interface{}
 	// Execute the template with the provided data
 	err = tmpl.Execute(w, data)
 	if err != nil {
+		fmt.Println(templateFile)
 		http.Error(w, "Error executing template", http.StatusInternalServerError)
 	}
 }
