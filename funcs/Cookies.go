@@ -1,8 +1,11 @@
 package forum
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"net/http"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -23,7 +26,7 @@ func SetCookies(w http.ResponseWriter, r *http.Request) string {
 	return sessionID
 }
 
-func GetSessionFromCookie(w http.ResponseWriter, r *http.Request) (string, error) {
+func GetSessionFromCookie(r *http.Request) (string, error) {
 	cookie, err := r.Cookie("cookie")
 	if err != nil {
 		if err == http.ErrNoCookie {
@@ -34,4 +37,43 @@ func GetSessionFromCookie(w http.ResponseWriter, r *http.Request) (string, error
 		}
 	}
 	return cookie.Value, nil
+}
+
+// might use this for logout, and auto session deletion
+func DeleteCookiesAndSession(w http.ResponseWriter, r *http.Request) {
+
+	// Get the session ID from the cookie
+	sessionID, err := GetSessionFromCookie(r)
+	if err != nil {
+		if err == http.ErrNoCookie {
+			http.Redirect(w, r, "/login", http.StatusFound)
+			return
+		} else {
+			http.Error(w, "500", http.StatusInternalServerError)
+			return
+		}
+	}
+
+	// Create a context with timeout for the database operation
+	//which means if the database takes more than 5 seconds the operation is canceled
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	// Delete the session from the database
+	_, err = database.ExecContext(ctx, "DELETE FROM session WHERE sessionID = ?", sessionID)
+	if err != nil {
+		log.Printf("Error deleting session from database: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	cookie := http.Cookie{
+		Name:     "cookie",
+		Value:    "",
+		Path:     "/",
+		MaxAge:   -1,
+		HttpOnly: true,
+		Secure:   false,
+		SameSite: http.SameSiteLaxMode,
+	}
+	http.SetCookie(w, &cookie)
 }

@@ -15,7 +15,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get the session ID from the cookie
-	sessionID, err := GetSessionFromCookie(w, r)
+	sessionID, err := GetSessionFromCookie(r)
 	if err != nil {
 		if err.Error() == "no cookie found" {
 			http.Redirect(w, r, "/login", http.StatusFound)
@@ -39,6 +39,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//changing the maxage to -1 to delete the cookie
 	cookie := http.Cookie{
 		Name:     "cookie",
 		Value:    "",
