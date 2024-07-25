@@ -27,7 +27,7 @@ func GetSessionFromCookie(w http.ResponseWriter, r *http.Request) (string, error
 	cookie, err := r.Cookie("cookie")
 	if err != nil {
 		if err == http.ErrNoCookie {
-			return "", fmt.Errorf("no cookie found")
+			return "", err
 		} else {
 
 			return "", fmt.Errorf("500")

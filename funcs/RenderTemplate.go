@@ -10,6 +10,7 @@ import (
 func RenderTemplate(w http.ResponseWriter, templateFile string, data interface{}) {
 	tmpl, err := template.ParseFiles(templateFile)
 	if err != nil {
+		fmt.Println(err)
 		http.Error(w, "Error parsing template", http.StatusInternalServerError)
 		return
 	}
@@ -17,6 +18,7 @@ func RenderTemplate(w http.ResponseWriter, templateFile string, data interface{}
 	// Execute the template with the provided data
 	err = tmpl.Execute(w, data)
 	if err != nil {
+		fmt.Println(err)
 		fmt.Println(templateFile)
 		http.Error(w, "Error executing template", http.StatusInternalServerError)
 	}

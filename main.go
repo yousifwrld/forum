@@ -28,7 +28,7 @@ func main() {
 	fs := http.FileServer(http.Dir("./static")) // Ensure path is correct
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	http.HandleFunc("/", forum.RootHandler)
+	http.Handle("/", forum.AuthMiddleware(http.HandlerFunc(forum.RootHandler)))
 	http.HandleFunc("/register", forum.RegisterHandler)
 	http.HandleFunc("/login", forum.LoginHandler)
 	http.HandleFunc("/logout", forum.LogoutHandler)

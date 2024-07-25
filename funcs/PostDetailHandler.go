@@ -10,12 +10,13 @@ import (
 )
 
 type PostDetail struct {
-	ID        int
-	Title     string
-	Content   string
-	Username  string
-	CreatedAt string
-	Comments  []Comment
+	ID         int
+	Title      string
+	Content    string
+	Username   string
+	CreatedAt  string
+	Comments   []Comment
+	Categories []Category
 }
 
 func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
@@ -62,6 +63,14 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	post.Comments = comments
+
+	categories, err := GetCategories(postID)
+	if err != nil {
+		log.Println(err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
+	}
+	post.Categories = categories
 
 	RenderTemplate(w, "templates/post-detail.html", post)
 }

@@ -7,5 +7,5 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 		ErrorPages(w, r, "404", http.StatusNotFound)
 		return
 	}
-	http.Redirect(w, r, "/register", http.StatusFound)
+	http.Redirect(w, r, "/home", http.StatusFound)
 }

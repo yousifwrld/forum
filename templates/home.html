@@ -1,33 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link rel="stylesheet" href="/static/homePage.css">
 </head>
+
 <body>
     <h1>Forum posts</h1>
     <form action="/logout" method="post">
-        <input type="submit" value="logout" >
+        <input type="submit" value="logout">
     </form>
-    <ul> 
+    <ul>
         <div class="create">
-            <a href="/create-post">+ Add Post</a>  
+            <a href="/create-post">+ Add Post</a>
         </div>
-        {{range .}} 
+        {{range .}}
         <a href="/home/post/{{.ID}}" class="post-link">
-        <div class="rectangle">
-            <div class="post">
-                <div class="post-meta">
-                    <small>By {{.Username}}</small><br>
-                    <small>Posted on {{.FormattedCreatedAt}}</small>
+            <div class="rectangle">
+                <div class="post">
+                    <div class="post-meta">
+                        <small>By {{.Username}}</small><br>
+                        <small>Posted on {{.FormattedCreatedAt}}</small>
+                    </div>
+                    <h2 class="post-title">{{.Title}}</h2>
+                    {{if gt (len .Categories) 0}}
+                    <p>Categories: {{range .Categories}}{{.Name}}{{end}}</p>
+                    {{end}}
+                    <p class="post-content">{{.Content}}</p>
                 </div>
-                <h2 class="post-title">{{.Title}}</h2>
-                <p>Categories: {{range .Categories}} {{.Name}} {{end}}</p>
-                <p class="post-content">{{.Content}}</p>
             </div>
-        </div>
         </a>
         <div class="small-rectangle">
             <button type="button" class="like" onclick="handleLike()"><span id="likeCount">0</span></button>
@@ -39,21 +43,22 @@
     <script>
         let likeCount = 0;
         let dislikeCount = 0;
-        
+
         function handleLike() {
             likeCount++;
             document.getElementById('likeCount').textContent = likeCount;
         }
-        
+
         function handleDislike() {
             dislikeCount++;
             document.getElementById('dislikeCount').textContent = dislikeCount;
         }
         function goToCreateCommentPage() {
-        // Redirect the user to the create-comment page
-        window.location.href = '/home/post-detail/comment';
+            // Redirect the user to the create-comment page
+            window.location.href = '/home/post-detail/comment';
         }
-        </script>
-        
+    </script>
+
 </body>
+
 </html>
