@@ -36,9 +36,12 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
+		// Define a custom type for the context key
+		type contextKey string
 		// Set the user ID in the request context
+		const userIDKey = contextKey("userID")
 		ctx := r.Context()
-		ctx = context.WithValue(ctx, "userID", userID)
+		ctx = context.WithValue(ctx, userIDKey, userID)
 		r = r.WithContext(ctx)
 		next.ServeHTTP(w, r)
 	})
