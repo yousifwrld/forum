@@ -44,6 +44,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 		if err != nil {
 			fmt.Println(err)
+			ErrorPages(w, r, "500", http.StatusInternalServerError)
 			return
 		}
 		userID, err := CreateUser(email, username, string(hashedPassword))

@@ -45,6 +45,8 @@ func InitDatabase() error {
 			postID INTEGER PRIMARY KEY AUTOINCREMENT,
 			title TEXT NOT NULL,
 			content TEXT NOT NULL,
+			likes INTEGER DEFAULT 0,
+			dislikes INTEGER DEFAULT 0,
 			created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 			userID INTEGER,
 			FOREIGN KEY (userID) REFERENCES USER(userID)
@@ -78,7 +80,7 @@ func InitDatabase() error {
 		}
 
 		// Create likes table if it doesn't exist
-		_, err = database.Exec(`CREATE TABLE IF NOT EXISTS like (
+		_, err = database.Exec(`CREATE TABLE IF NOT EXISTS reaction (
 			userID INTEGER NOT NULL,
 			postID INTEGER NOT NULL,
 			is_like BOOLEAN,

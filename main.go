@@ -33,6 +33,7 @@ func main() {
 	http.HandleFunc("/login", forum.LoginHandler)
 	http.HandleFunc("/logout", forum.LogoutHandler)
 	http.HandleFunc("/home", forum.HomeHandler)
+	http.HandleFunc("/like", forum.LikeHandler)
 	http.HandleFunc("/create-post", forum.CreatePostHandler)
 	http.HandleFunc("/home/post/", func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasSuffix(r.URL.Path, "/comment") {

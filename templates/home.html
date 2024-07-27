@@ -34,31 +34,38 @@
             </div>
         </a>
         <div class="small-rectangle">
-            <button type="button" class="like" onclick="handleLike()"><span id="likeCount">0</span></button>
-            <button type="button" class="dislike" onclick="handleDislike()"><span id="dislikeCount">0</span></button>
+            <button type="button" class="like" onclick="handleLike({{.ID}})"><span id="likeCount-{{.ID}}">0</span></button>
+            <button type="button" class="dislike" onclick="handleDislike({{.ID}})"><span id="dislikeCount-{{.ID}}">0</span></button>
             <a href="/home/post/{{.ID}}/comment" class="comment-button"></a>
         </div>
         {{end}}
     </ul>
     <script>
-        let likeCount = 0;
-        let dislikeCount = 0;
-
-        function handleLike() {
-            likeCount++;
-            document.getElementById('likeCount').textContent = likeCount;
+        function handleLike(postID) {
+            fetch('/like', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ postID: postID })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.likes !== undefined) {
+                    document.getElementById('likeCount-' + postID).textContent = data.likes;
+                } else {
+                    console.error('Invalid response data:', data);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         }
 
-        function handleDislike() {
-            dislikeCount++;
-            document.getElementById('dislikeCount').textContent = dislikeCount;
-        }
-        function goToCreateCommentPage() {
-            // Redirect the user to the create-comment page
-            window.location.href = '/home/post-detail/comment';
+        function handleDislike(postID) {
+            // Implement similar to handleLike if needed
         }
     </script>
-
 </body>
 
 </html>
