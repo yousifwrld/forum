@@ -2,11 +2,17 @@ package forum
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 )
 
 func LikeHandler(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method != http.MethodPost {
+		ErrorPages(w, r, "405", http.StatusMethodNotAllowed)
+		return
+	}
 	// Define a struct to hold the incoming request data
 	type request struct {
 		PostID int `json:"postID"`
@@ -19,8 +25,12 @@ func LikeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//get the userID from the request context
+	userID := r.Context().Value(userIDKey).(int)
+	fmt.Println("User ID from context:", userID)
+
 	//like the post and get the dislikes and likes count
-	likes, dislikes, err := LikePost(1, req.PostID)
+	likes, dislikes, err := LikePost(userID, req.PostID)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Failed to like the post", http.StatusInternalServerError)

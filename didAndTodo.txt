@@ -1,0 +1,10 @@
+1- added delete session function, just to make sure that there is no session for a user before we create a new one.
+2- fixed like and dislike handlers.
+3- added root auth function to render the login page without an error message on initial load or accessing the login page later.
+4- added the middleware authentication to the rest of the handlers, (like, dislike, create-post)
+
+TODO:
+1- need to fix the counter on page load. --> make a js function that works on page load and gets the correct like/dislike counts.
+2- fix the login page not showing when unAuthed user tries to like or dislike, its working correctly just not showing the page.
+3- add likes and dislikes to comments
+

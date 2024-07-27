@@ -8,6 +8,10 @@ import (
 )
 
 func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
+
+	// Check if the user is authenticated, and get the userID from the request context
+	userID := r.Context().Value(userIDKey).(int)
+
 	if r.Method == http.MethodGet {
 		// Render the form
 		var categories []Category
@@ -49,9 +53,6 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 			ErrorPages(w, r, "400", http.StatusBadRequest)
 			return
 		}
-
-		// We should handle user authentication and get the userID here (sessions)
-		userID := 1
 
 		err = CreatePost(userID, title, content, categories)
 		if err != nil {

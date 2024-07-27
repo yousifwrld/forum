@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Post</title>
+    <title>Forum - Create Comment</title>
     <link rel="stylesheet" href="/static/createComment.css">
 </head>
 <body>
 
     <div class="post-form">
-        <h2>New comment {{.}}</h2>
+        <h2>New comment</h2>
         <form action="/home/post/{{.}}/comment" method="post">
             <textarea name="content" required placeholder="Write your comment here..."></textarea>
             <button type="submit">Submit</button>

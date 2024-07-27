@@ -2,11 +2,17 @@ package forum
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 )
 
 func DisLikeHandler(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method != http.MethodPost {
+		ErrorPages(w, r, "405", http.StatusMethodNotAllowed)
+		return
+	}
 	// Define a struct to hold the incoming request data
 	type request struct {
 		PostID int `json:"postID"`
@@ -19,8 +25,12 @@ func DisLikeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//get the userID from the request context
+	userID := r.Context().Value(userIDKey).(int)
+	fmt.Println("User ID from context:", userID)
+
 	//dislike the post and get the dislikes and likes count
-	dislikes, likes, err := DislikePost(1, req.PostID)
+	dislikes, likes, err := DislikePost(userID, req.PostID)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Failed to like the post", http.StatusInternalServerError)

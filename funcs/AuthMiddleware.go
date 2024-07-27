@@ -57,11 +57,11 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		sessionID, err := GetSessionFromCookie(r)
 		if err != nil {
 			if err == http.ErrNoCookie {
-				log.Println(err)
-				ErrorPages(w, r, "not logged in", http.StatusUnauthorized)
+				log.Println("No cookie found:", err)
+				ErrorPages(w, r, "not logged in", http.StatusUnauthorized, "templates/login.html")
 				return
 			} else {
-				log.Println(err)
+				log.Println("Error getting session cookie:", err)
 				ErrorPages(w, r, "500", http.StatusInternalServerError)
 				return
 			}
@@ -70,17 +70,18 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		// Check if session exists and get userID
 		userID, err := GetIDFromSession(sessionID)
 		if err != nil {
-			//if no session exists
 			if err == sql.ErrNoRows {
-				log.Println("no session found")
-				http.Redirect(w, r, "/login", http.StatusFound)
+				log.Println("No session found for sessionID:", sessionID)
+				ErrorPages(w, r, "not logged in", http.StatusUnauthorized, "templates/login.html")
 				return
 			} else {
-				log.Println(err)
+				log.Println("Error getting userID from session:", err)
 				ErrorPages(w, r, "500", http.StatusInternalServerError)
 				return
 			}
 		}
+
+		log.Println("Authenticated userID:", userID)
 
 		ctx := r.Context()
 		ctx = context.WithValue(ctx, userIDKey, userID)
