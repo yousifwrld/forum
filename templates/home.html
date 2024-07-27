@@ -41,30 +41,49 @@
         {{end}}
     </ul>
     <script>
-        function handleLike(postID) {
-            fetch('/like', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ postID: postID })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.likes !== undefined) {
-                    document.getElementById('likeCount-' + postID).textContent = data.likes;
-                } else {
-                    console.error('Invalid response data:', data);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+      function handleLike(postID) {
+    fetch('/like', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ postID: postID })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.likes !== undefined && data.dislikes !== undefined) {
+            document.getElementById('likeCount-' + postID).textContent = data.likes;
+            document.getElementById('dislikeCount-' + postID).textContent = data.dislikes;
+        } else {
+            console.error('Invalid response data:', data);
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
 
-        function handleDislike(postID) {
-            // Implement similar to handleLike if needed
+function handleDislike(postID) {
+    fetch('/dislike', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ postID: postID })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.likes !== undefined && data.dislikes !== undefined) {
+            document.getElementById('likeCount-' + postID).textContent = data.likes;
+            document.getElementById('dislikeCount-' + postID).textContent = data.dislikes;
+        } else {
+            console.error('Invalid response data:', data);
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
     </script>
 </body>
 

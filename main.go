@@ -28,12 +28,13 @@ func main() {
 	fs := http.FileServer(http.Dir("./static")) // Ensure path is correct
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	http.Handle("/", forum.AuthMiddleware(http.HandlerFunc(forum.RootHandler)))
+	http.Handle("/", forum.RootAuth(http.HandlerFunc(forum.RootHandler)))
 	http.HandleFunc("/register", forum.RegisterHandler)
 	http.HandleFunc("/login", forum.LoginHandler)
 	http.HandleFunc("/logout", forum.LogoutHandler)
 	http.HandleFunc("/home", forum.HomeHandler)
 	http.HandleFunc("/like", forum.LikeHandler)
+	http.HandleFunc("/dislike", forum.DisLikeHandler)
 	http.HandleFunc("/create-post", forum.CreatePostHandler)
 	http.HandleFunc("/home/post/", func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasSuffix(r.URL.Path, "/comment") {

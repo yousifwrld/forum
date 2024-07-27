@@ -46,6 +46,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		DeleteCookiesAndSession(w, r)
+
 		sessionID := SetCookies(w, r)
 		database.Exec(`INSERT INTO SESSION (SessionID, UserID) VALUES (?, ?)`, sessionID, userID)
 

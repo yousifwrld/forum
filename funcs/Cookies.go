@@ -2,6 +2,7 @@ package forum
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -46,7 +47,8 @@ func DeleteCookiesAndSession(w http.ResponseWriter, r *http.Request) {
 	sessionID, err := GetSessionFromCookie(r)
 	if err != nil {
 		if err == http.ErrNoCookie {
-			http.Redirect(w, r, "/login", http.StatusFound)
+			// No cookie, no session
+			log.Println("no cookie found, returning without deleting")
 			return
 		} else {
 			http.Error(w, "500", http.StatusInternalServerError)
@@ -62,6 +64,11 @@ func DeleteCookiesAndSession(w http.ResponseWriter, r *http.Request) {
 	// Delete the session from the database
 	_, err = database.ExecContext(ctx, "DELETE FROM session WHERE sessionID = ?", sessionID)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			// No rows found, no session
+			log.Println("no session found, returning without deleting")
+			return
+		}
 		log.Printf("Error deleting session from database: %v", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
