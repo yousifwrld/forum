@@ -5,7 +5,6 @@
 5- sorted posts from latest to oldest.
 
 TODO:
-1- need to fix the counter on page load. --> make a js function that works on page load and gets the correct like/dislike counts.
 2- fix the login page not showing when unAuthed user tries to like or dislike, its working correctly just not showing the page.
 3- add likes and dislikes to comments.
 4- add what sayed hasan did in his repo.
