@@ -34,8 +34,8 @@
             </div>
         </a>
         <div class="small-rectangle">
-            <button type="button" class="like" onclick="handleLike({{.ID}})"><span id="likeCount-{{.ID}}">0</span></button>
-            <button type="button" class="dislike" onclick="handleDislike({{.ID}})"><span id="dislikeCount-{{.ID}}">0</span></button>
+            <button type="button" class="like" onclick="handleLike({{.ID}})"><span id="likeCount-{{.ID}}">{{.Likes}}</span></button>
+            <button type="button" class="dislike" onclick="handleDislike({{.ID}})"><span id="dislikeCount-{{.ID}}">{{.Dislikes}}</span></button>
             <a href="/home/post/{{.ID}}/comment" class="comment-button"></a>
         </div>
         {{end}}

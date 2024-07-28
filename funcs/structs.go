@@ -20,6 +20,8 @@ type Post struct {
 	FormattedCreatedAt string     `json:"formatted_created_at"`
 	Username           string     `json:"username"`
 	Categories         []Category `json:"categories"`
+	Likes              int        `json:"likes"`
+	Dislikes           int        `json:"dislikes"`
 }
 
 type Comment struct {

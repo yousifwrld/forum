@@ -2,6 +2,7 @@
 2- fixed like and dislike handlers.
 3- added root auth function to render the login page without an error message on initial load or accessing the login page later.
 4- added the middleware authentication to the rest of the handlers, (like, dislike, create-post)
+5- sorted posts from latest to oldest.
 
 TODO:
 1- need to fix the counter on page load. --> make a js function that works on page load and gets the correct like/dislike counts.
