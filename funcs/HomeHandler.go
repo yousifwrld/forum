@@ -42,7 +42,7 @@ func getPosts() ([]Post, error) {
 		post.FormattedCreatedAt = post.CreatedAt.Format("2006-01-02 15:04")
 
 		// Fetch categories for this post
-		categories, err := GetCategories(post.ID)
+		categories, err := GetCategoriesForPost(post.ID)
 		if err != nil {
 			return nil, err
 		}

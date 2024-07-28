@@ -7,4 +7,4 @@
 TODO:
 2- fix the login page not showing when unAuthed user tries to like or dislike, its working correctly just not showing the page.
 3- add likes and dislikes to comments.
-4- add what sayed hasan did in his repo.
+4- add what sayed hasan did in his repo (auth in home handler).

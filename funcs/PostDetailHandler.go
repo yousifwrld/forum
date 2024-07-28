@@ -64,7 +64,7 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
 
 	post.Comments = comments
 
-	categories, err := GetCategories(postID)
+	categories, err := GetCategoriesForPost(postID)
 	if err != nil {
 		log.Println(err)
 		ErrorPages(w, r, "500", http.StatusInternalServerError)
