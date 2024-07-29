@@ -25,10 +25,13 @@ type Post struct {
 }
 
 type Comment struct {
+	CommentID          int       `json:"comment_id"`
 	Username           string    `json:"username"`
 	Content            string    `json:"content"`
 	CreatedAt          time.Time `json:"created_at"`
 	FormattedCreatedAt string    `json:"formatted_created_at"`
+	Likes              int       `json:"likes"`
+	Dislikes           int       `json:"dislikes"`
 }
 
 var users []User

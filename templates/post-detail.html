@@ -26,15 +26,69 @@
     <h3>Comments</h3>
     <div class="comments">
         {{range .Comments}}
+
+        {{.CommentID}}
         <div class="comment">
             <div class="post-meta">
                 <small>By {{.Username}}</small><br>
                 <small>Posted on {{.FormattedCreatedAt}}</small>
             </div>
             <p class="comment-content">{{.Content}}</p>
+
+            <div class="small-rectangle">
+                <button type="button" class="like" onclick="handleLike({{.CommentID}})"><span id="likeCount-{{.CommentID}}">{{.Likes}}</span></button>
+                <button type="button" class="dislike" onclick="handleDislike({{.CommentID}})"><span id="dislikeCount-{{.CommentID}}">{{.Dislikes}}</span></button>
+            </div>
         </div>
         {{end}}
     </div>
+
+    <script>
+function handleLike(commentID) {
+    fetch('/like-comment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ commentID: commentID })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.likes !== undefined && data.dislikes !== undefined) {
+            document.getElementById('likeCount-' + commentID).textContent = data.likes;
+            document.getElementById('dislikeCount-' + commentID).textContent = data.dislikes;
+        } else {
+            console.error('Invalid response data:', data);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function handleDislike(commentID) {
+    fetch('/dislike-comment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ commentID: commentID })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.likes !== undefined && data.dislikes !== undefined) {
+            document.getElementById('likeCount-' + commentID).textContent = data.likes;
+            document.getElementById('dislikeCount-' + commentID).textContent = data.dislikes;
+        } else {
+            console.error('Invalid response data:', data);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+      </script>
 </body>
 
 </html>

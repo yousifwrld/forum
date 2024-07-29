@@ -38,7 +38,7 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Println(err)
-			ErrorPages(w, r, "400", http.StatusNotFound)
+			ErrorPages(w, r, "400", http.StatusBadRequest)
 			return
 		}
 		log.Println(err)

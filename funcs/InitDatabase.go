@@ -116,6 +116,8 @@ func InitDatabase() error {
 			postID INTEGER NOT NULL,
 			comment TEXT NOT NULL,
 			created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			likes INTEGER DEFAULT 0,
+			dislikes INTEGER DEFAULT 0,
 			FOREIGN KEY (userID) REFERENCES USER(userID),
 			FOREIGN KEY (postID) REFERENCES POST(postID)
 		)`)

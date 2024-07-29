@@ -1,13 +1,16 @@
 package forum
 
+import "fmt"
+
 func GetPostComments(postID int) ([]Comment, error) {
 	rows, err := database.Query(`
-		SELECT u.username, c.comment, c.created_at
+		SELECT u.username, c.commentID, c.comment, c.created_at, c.likes, c.dislikes
 		FROM comment c
 		JOIN user u ON c.userID = u.userID
 		WHERE PostId = ?	
 	`, postID)
 	if err != nil {
+		fmt.Println("hi")
 		return nil, err
 	}
 
@@ -17,7 +20,7 @@ func GetPostComments(postID int) ([]Comment, error) {
 	for rows.Next() {
 		var comment Comment
 
-		err := rows.Scan(&comment.Username, &comment.Content, &comment.CreatedAt)
+		err := rows.Scan(&comment.Username, &comment.CommentID, &comment.Content, &comment.CreatedAt, &comment.Likes, &comment.Dislikes)
 		if err != nil {
 			return nil, err
 		}
