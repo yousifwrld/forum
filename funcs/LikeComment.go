@@ -54,7 +54,7 @@ func DislikeComment(userID, commentID int) error {
 	var liked, disliked bool
 
 	tx, err := database.Begin()
-	if (err != nil) {
+	if err != nil {
 		log.Println("Error starting transaction:", err)
 		return err
 	}
