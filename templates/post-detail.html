@@ -62,6 +62,7 @@ function handleLike(commentID) {
     })
     .catch(error => {
         console.error('Error:', error);
+        window.location.replace("/login")
     });
 }
 
@@ -84,6 +85,7 @@ function handleDislike(commentID) {
     })
     .catch(error => {
         console.error('Error:', error);
+        window.location.replace("/login")
     });
 }
 

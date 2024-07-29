@@ -60,6 +60,7 @@
     })
     .catch(error => {
         console.error('Error:', error);
+        window.location.replace("/login")
     });
 }
 
@@ -82,6 +83,7 @@ function handleDislike(postID) {
     })
     .catch(error => {
         console.error('Error:', error);
+        window.location.replace("/login")
     });
 }
     </script>
