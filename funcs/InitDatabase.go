@@ -94,6 +94,21 @@ func InitDatabase() error {
 			return
 		}
 
+		// Create comment_likes table if it doesn't exist
+		_, err = database.Exec(`CREATE TABLE IF NOT EXISTS comment_likes (
+					userID INTEGER NOT NULL,
+					commentID INTEGER NOT NULL,
+					is_like BOOLEAN,
+					is_dislike BOOLEAN,
+					PRIMARY KEY (userID, commentID),
+					FOREIGN KEY (userID) REFERENCES USER(userID),
+					FOREIGN KEY (commentID) REFERENCES COMMENT(commentID)
+				)`)
+		if err != nil {
+			err = fmt.Errorf("error creating likes table: %v", err)
+			return
+		}
+
 		// Create comments table if it doesn't exist
 		_, err = database.Exec(`CREATE TABLE IF NOT EXISTS comment (
 			commentID INTEGER PRIMARY KEY AUTOINCREMENT,
