@@ -1,10 +1,3 @@
-1- added delete session function, just to make sure that there is no session for a user before we create a new one.
-2- fixed like and dislike handlers.
-3- added root auth function to render the login page without an error message on initial load or accessing the login page later.
-4- added the middleware authentication to the rest of the handlers, (like, dislike, create-post)
-5- sorted posts from latest to oldest.
-
 TODO:
-3- add likes and dislikes to comments.
 4- add what sayed hasan did in his repo (auth in home handler).
 5- docker
