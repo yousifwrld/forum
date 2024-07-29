@@ -7,6 +7,7 @@ func CreateComment(userID, postID int, comment string) error {
 		return err
 	}
 
+	// comment = strings.ReplaceAll(comment, "\r\n", "<br>")
 	_, err = tx.Exec("INSERT INTO comment (userID, postID, comment) VALUES (?, ?, ?)", userID, postID, comment)
 	if err != nil {
 		tx.Rollback()

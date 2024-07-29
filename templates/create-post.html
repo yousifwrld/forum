@@ -11,17 +11,46 @@
 
     <div class="post-form">
         <h2>New Post</h2>
-        <form method="post" action="/create-post">
+        <form method="post" action="/create-post" onsubmit="return validateForm()">
             {{range .}}
             <input type="checkbox" name="category" id="{{.Name}}" value="{{.CategoryID}}">
             <label for="{{.Name}}">{{.Name}}</label>
             {{end}}
-            <input type="text" name="title" placeholder="Post Title" required>
-            <textarea name="content" placeholder="Write your post here..." required></textarea>
+            <input type="text" name="title" id="title" placeholder="Post Title" required>
+            <textarea name="content" id="content" placeholder="Write your post here..." required></textarea>
             <button type="submit">Post</button>
 
         </form>
     </div>
     <a href="/home">Back to Home</a>
+
+
+    <script>
+          function validateForm() {
+            const title = document.getElementById('title').value.trim();
+            const content = document.getElementById('content').value.trim();
+            const checkboxes = document.querySelectorAll('input[name="category"]');
+            const checked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+
+            if (title === '') {
+                alert('Title cannot be empty');
+                return false;
+            }
+
+            if (content === '') {
+                alert('Content cannot be empty');
+                return false;
+            }
+
+            if (!checked) {
+                alert('Please select at least one category.');
+                return false;
+            }
+
+            return true;
+        }
+    </script>
 </body>
+
+
 </html>

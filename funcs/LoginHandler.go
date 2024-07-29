@@ -47,6 +47,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		database.Exec(`DELETE FROM session WHERE userID = ?`, userID)
 		sessionID := SetCookies(w, r)
 		database.Exec(`INSERT INTO SESSION (SessionID, UserID) VALUES (?, ?)`, sessionID, userID)
 
