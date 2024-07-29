@@ -38,7 +38,7 @@ func main() {
 	http.Handle("/create-post", forum.AuthMiddleware(http.HandlerFunc(forum.CreatePostHandler)))
 	http.HandleFunc("/home/post/", func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasSuffix(r.URL.Path, "/comment") {
-			forum.CommentHandler(w, r)
+			forum.AuthMiddleware(http.HandlerFunc(forum.CommentHandler)).ServeHTTP(w, r)
 		} else {
 			forum.PostDetailHandler(w, r)
 		}

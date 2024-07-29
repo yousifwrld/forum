@@ -8,6 +8,9 @@ import (
 )
 
 func CommentHandler(w http.ResponseWriter, r *http.Request) {
+
+	// Check if the user is authenticated, and get the userID from the request context
+	userID := r.Context().Value(userIDKey).(int)
 	// extracting ID from the GET request
 	postIDStr := strings.TrimPrefix(string(r.URL.Path), "/home/post/")
 	postIDStr = strings.TrimSuffix(postIDStr, "/comment")
@@ -29,8 +32,6 @@ func CommentHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		// We should handle user authentication and get the userID here (sessions)
 		// will change the logic and get the userID from the request context, and will authenticate using middleware function
-
-		userID := 1
 
 		err = CreateComment(userID, postID, content)
 		if err != nil {
