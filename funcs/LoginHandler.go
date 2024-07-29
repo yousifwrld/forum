@@ -11,6 +11,7 @@ import (
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
+		DeleteCookiesAndSession(w, r)
 		if r.URL.Query().Get("email") != "" || r.URL.Query().Get("username") != "" || r.URL.Query().Get("password") != "" {
 			ErrorPages(w, r, "405", http.StatusMethodNotAllowed)
 			return
@@ -45,8 +46,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			ErrorPages(w, r, "invalid password", http.StatusBadRequest, "templates/login.html")
 			return
 		}
-
-		DeleteCookiesAndSession(w, r)
 
 		sessionID := SetCookies(w, r)
 		database.Exec(`INSERT INTO SESSION (SessionID, UserID) VALUES (?, ?)`, sessionID, userID)

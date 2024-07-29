@@ -17,7 +17,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	// Get the session ID from the cookie
 	sessionID, err := GetSessionFromCookie(r)
 	if err != nil {
-		if err.Error() == "no cookie found" {
+		if err == http.ErrNoCookie {
 			http.Redirect(w, r, "/login", http.StatusFound)
 			return
 		} else {
@@ -26,7 +26,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Create a context with timeout for the database operation
+	// Create a context ;with timeout for the database operation
 	//which means if the database takes more than 5 seconds the operation is canceled
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
