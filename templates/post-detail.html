@@ -26,8 +26,10 @@
     <div class="add-comment-button">
         <a href="/home/post/{{.ID}}/comment">+ Add Comment</a>
     </div>
+    {{ if gt (len .Comments) 0 }}
     <h3>Comments</h3>
     <div class="comments">
+
         {{range .Comments}}
 
         <div class="comment">
@@ -42,6 +44,12 @@
                 <button type="button" class="dislike" onclick="handleReaction({{.CommentID}}, 0, 'comment')"><span id="dislikeCount-{{.CommentID}}">{{.Dislikes}}</span></button>
             </div>
         </div>
+        {{end}}
+
+        {{else}}
+
+        <h2>No comments yet</h2>
+        <p>Be the first one to comment!</p>
         {{end}}
     </div>
 
