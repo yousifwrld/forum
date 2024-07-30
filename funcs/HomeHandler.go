@@ -3,6 +3,8 @@ package forum
 import (
 	"database/sql"
 	"fmt"
+	"html/template"
+	"log"
 	"net/http"
 	"sort"
 )
@@ -24,7 +26,15 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	RenderTemplate(w, "templates/home.html", posts)
+	tmpl := template.Must(template.New("home.html").Funcs(template.FuncMap{
+		"joinAndTrim": joinAndTrim,
+	}).ParseFiles("templates/home.html"))
+
+	if err := tmpl.Execute(w, posts); err != nil {
+		log.Println(err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
+	}
 
 }
 func getPosts() ([]Post, error) {

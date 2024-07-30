@@ -2,6 +2,7 @@ package forum
 
 import (
 	"database/sql"
+	"html/template"
 	"log"
 	"net/http"
 	"strconv"
@@ -72,5 +73,13 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	post.Categories = categories
 
-	RenderTemplate(w, "templates/post-detail.html", post)
+	tmpl := template.Must(template.New("post-detail.html").Funcs(template.FuncMap{
+		"joinAndTrim": joinAndTrim,
+	}).ParseFiles("templates/post-detail.html"))
+
+	if err := tmpl.Execute(w, post); err != nil {
+		log.Println(err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
+	}
 }

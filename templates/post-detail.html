@@ -14,7 +14,7 @@
             <small>By {{.Username}}</small><br>
             <small>Posted on {{.CreatedAt}}</small>
             {{if gt (len .Categories) 0}}
-            <p>Categories: {{range .Categories}}{{.Name}}{{end}}</p>
+            <p>Categories: {{joinAndTrim .Categories}}</p>
             {{end}}
         </div>
         <h2>{{.Title}}</h2>
