@@ -58,7 +58,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		database.Exec(`DELETE FROM session WHERE userID = ?`, userID)
 		sessionID := SetCookies(w, r)
 		database.Exec(`INSERT INTO SESSION (SessionID, UserID) VALUES (?, ?)`, sessionID, userID)
-		http.Redirect(w, r, "/home", http.StatusFound)
+		http.Redirect(w, r, "/", http.StatusFound)
 
 	default:
 		ErrorPages(w, r, "405", http.StatusMethodNotAllowed)

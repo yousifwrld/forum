@@ -11,12 +11,12 @@
 
     <div class="post-form">
         <h2>New comment</h2>
-        <form action="/home/post/{{.}}/comment" method="post" onsubmit="return validateComment()">
+        <form action="/post/{{.}}/comment" method="post" onsubmit="return validateComment()">
             <textarea name="content" id="content" required placeholder="Enter your comment here..."></textarea>
             <button type="submit">Submit</button>
         </form>      
     </div>
-    <a href="/home/post/{{.}}">Back to Post</a>
+    <a href="/post/{{.}}">Back to Post</a>
 
 
     <script>

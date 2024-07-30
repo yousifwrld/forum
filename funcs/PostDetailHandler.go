@@ -21,7 +21,7 @@ type PostDetail struct {
 
 func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
 	// extracting ID from the GET request
-	postIDStr := strings.TrimPrefix(string(r.URL.Path), "/home/post/")
+	postIDStr := strings.TrimPrefix(string(r.URL.Path), "/post/")
 	postID, err := strconv.Atoi(postIDStr)
 	if err != nil {
 		ErrorPages(w, r, "404", http.StatusBadRequest)

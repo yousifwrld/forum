@@ -12,7 +12,7 @@ func CommentHandler(w http.ResponseWriter, r *http.Request) {
 	// Check if the user is authenticated, and get the userID from the request context
 	userID := r.Context().Value(userIDKey).(int)
 	// extracting ID from the GET request
-	postIDStr := strings.TrimPrefix(string(r.URL.Path), "/home/post/")
+	postIDStr := strings.TrimPrefix(string(r.URL.Path), "/post/")
 	postIDStr = strings.TrimSuffix(postIDStr, "/comment")
 	postID, err := strconv.Atoi(postIDStr)
 	if err != nil {
@@ -40,7 +40,7 @@ func CommentHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		http.Redirect(w, r, "/home/post/"+postIDStr, http.StatusFound)
+		http.Redirect(w, r, "/post/"+postIDStr, http.StatusFound)
 	} else {
 		ErrorPages(w, r, "405", http.StatusMethodNotAllowed)
 	}

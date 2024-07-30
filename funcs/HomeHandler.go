@@ -8,6 +8,11 @@ import (
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
+
+	if r.URL.Path != "/" {
+		ErrorPages(w, r, "404", http.StatusNotFound)
+		return
+	}
 	if r.Method != http.MethodGet {
 		ErrorPages(w, r, "405", http.StatusMethodNotAllowed)
 		return

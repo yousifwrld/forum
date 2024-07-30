@@ -21,10 +21,10 @@
         <p class="post-content">{{.Content}}</p>
     </div>
     <div style="margin-right: 1000px ;">
-        <a href="/home">Back to Home</a>
+        <a href="/">Back to Home</a>
     </div>
     <div class="add-comment-button">
-        <a href="/home/post/{{.ID}}/comment">+ Add Comment</a>
+        <a href="/post/{{.ID}}/comment">+ Add Comment</a>
     </div>
     {{ if gt (len .Comments) 0 }}
     <h3>Comments</h3>
