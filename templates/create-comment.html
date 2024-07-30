@@ -11,11 +11,25 @@
 
     <div class="post-form">
         <h2>New comment</h2>
-        <form action="/home/post/{{.}}/comment" method="post">
-            <textarea name="content" required placeholder="Write your comment here..."></textarea>
+        <form action="/home/post/{{.}}/comment" method="post" onsubmit="return validateComment()">
+            <textarea name="content" id="content" required placeholder="Enter your comment here..."></textarea>
             <button type="submit">Submit</button>
         </form>      
     </div>
     <a href="/home/post/{{.}}">Back to Post</a>
+
+
+    <script>
+        function validateComment() {
+            const content = document.getElementById('content').value.trim();
+
+            if (content === '') {
+                alert('Comment cannot be empty');
+                return false;
+            }
+
+            return true;
+        }
+    </script>
 </body>
 </html>
