@@ -34,26 +34,26 @@
             </div>
         </a>
         <div class="small-rectangle">
-            <button type="button" class="like" onclick="handleLike({{.ID}})"><span id="likeCount-{{.ID}}">{{.Likes}}</span></button>
-            <button type="button" class="dislike" onclick="handleDislike({{.ID}})"><span id="dislikeCount-{{.ID}}">{{.Dislikes}}</span></button>
+            <button type="button" class="like" onclick="handleReaction({{.ID}}, 1, 'post')"><span id="likeCount-{{.ID}}">{{.Likes}}</span></button>
+            <button type="button" class="dislike" onclick="handleReaction({{.ID}}, 0, 'post')"><span id="dislikeCount-{{.ID}}">{{.Dislikes}}</span></button>
             <a href="/home/post/{{.ID}}/comment" class="comment-button"></a>
         </div>
         {{end}}
     </ul>
     <script>
-      function handleLike(postID) {
-    fetch('/like', {
+      function handleReaction(id, action, type) {
+    fetch('/reaction', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ postID: postID })
+        body: JSON.stringify({ ID: id, action: action, type: type })
     })
     .then(response => response.json())
     .then(data => {
         if (data.likes !== undefined && data.dislikes !== undefined) {
-            document.getElementById('likeCount-' + postID).textContent = data.likes;
-            document.getElementById('dislikeCount-' + postID).textContent = data.dislikes;
+            document.getElementById('likeCount-' + id).textContent = data.likes;
+            document.getElementById('dislikeCount-' + id).textContent = data.dislikes;
         } else {
             console.error('Invalid response data:', data);
         }
@@ -64,28 +64,6 @@
     });
 }
 
-function handleDislike(postID) {
-    fetch('/dislike', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ postID: postID })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.likes !== undefined && data.dislikes !== undefined) {
-            document.getElementById('likeCount-' + postID).textContent = data.likes;
-            document.getElementById('dislikeCount-' + postID).textContent = data.dislikes;
-        } else {
-            console.error('Invalid response data:', data);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        window.location.replace("/login")
-    });
-}
     </script>
 </body>
 

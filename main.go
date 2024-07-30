@@ -33,10 +33,7 @@ func main() {
 	http.HandleFunc("/login", forum.LoginHandler)
 	http.HandleFunc("/logout", forum.LogoutHandler)
 	http.HandleFunc("/home", forum.HomeHandler)
-	http.Handle("/like", forum.AuthMiddleware(http.HandlerFunc(forum.LikeHandler)))
-	http.Handle("/dislike", forum.AuthMiddleware(http.HandlerFunc(forum.DisLikeHandler)))
-	http.Handle("/like-comment", forum.AuthMiddleware(http.HandlerFunc(forum.LikeCommentHandler)))
-	http.Handle("/dislike-comment", forum.AuthMiddleware(http.HandlerFunc(forum.DisLikeCommentHandler)))
+	http.Handle("/reaction", forum.AuthMiddleware(http.HandlerFunc(forum.ReactionHandler)))
 	http.Handle("/create-post", forum.AuthMiddleware(http.HandlerFunc(forum.CreatePostHandler)))
 	http.HandleFunc("/home/post/", func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasSuffix(r.URL.Path, "/comment") {
