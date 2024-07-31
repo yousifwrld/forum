@@ -1,0 +1,54 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  
+  } 
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, rgb(28, 63, 77), rgb(153, 216, 241)); /* Change this to your desired color */
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    margin: 0;
+    padding-top: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+.bar{
+    display: flex;
+    align-items: center;
+  }
+  .bar i {
+    color: rgb(0, 0, 0);
+    font-size: 35px;
+    margin-right: 10px;
+  }
+  .bar span{
+    font-family: "Pacifico", cursive;
+    font-weight: 400;
+    font-size: 40px;
+    color: white;
+    text-decoration: none;
+    
+  }
+  
+  .home a {
+    background-color: rgb(153, 216, 241); /* Blue background color */
+    color: rgb(28, 63, 77); /* Wrgb(0, 0, 0)xt color */   
+    padding: 10px 15px; /* Padding for the button */
+    position: fixed;/* Positioning */
+    bottom: 50px;
+    left: 50px;
+    text-decoration: none;
+    border-radius: 30px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 16px; /* Font size */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+}
+
+/* Hover effect for Add Comment button */
+.home:hover a{
+    background-color: #005cbd; /* Darker green on hover */
+}

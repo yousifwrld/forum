@@ -6,30 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum - Create Comment</title>
     <link rel="stylesheet" href="/static/createComment.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 </head>
 <body>
+        <header>
+        <a class="bar"><i class='bx bxs-comment-detail'></i><span>New Comment</span></a>
+    </header>
 
     <div class="post-form">
-        <h2>New comment</h2>
+
         <form action="/post/{{.}}/comment" method="post" onsubmit="return validateComment()">
-            <textarea name="content" id="content" required placeholder="Enter your comment here..."></textarea>
+            <textarea name="content" id="content" required placeholder="Write your comment here..."></textarea>
             <button type="submit">Submit</button>
         </form>      
     </div>
-    <a href="/post/{{.}}">Back to Post</a>
+    <div class="back">
+    <a href="/post/{{.}}"><i class='bx bxl-twitter'></i></a>
+</div>
+<div class="home">
+    <a href="/"><i class='bx bx-home-circle'></i></a>
+</div>
+<script>
+    function validateComment() {
+        const content = document.getElementById('content').value.trim();
 
-
-    <script>
-        function validateComment() {
-            const content = document.getElementById('content').value.trim();
-
-            if (content === '') {
-                alert('Comment cannot be empty');
-                return false;
-            }
-
-            return true;
+        if (content === '') {
+            alert('Comment cannot be empty');
+            return false;
         }
-    </script>
+
+        return true;
+    }
+</script>
 </body>
 </html>

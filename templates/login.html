@@ -5,18 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum - Login</title>
     <link rel="stylesheet" type="text/css" href="/static/loginPage.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
     <div class="wrapper">
-        <h2>Login</h2>
+        <h1>Login</h1>
     <form action="/login" method="post">
         <div class="input-field">
     <input type="email" name="email" placeholder="email" required>
-        </div>
+    <i class='bx bx-envelope'></i>       
+</div>
     <div class="input-field">
         <input type="password" name="password" placeholder="password" required>
+        <i class='bx bxs-lock'></i>
     </div>
-    <button type="submit">Log In</button>
+    <button type="submit"class="btn">Login</button>
     </form>
 
     {{if ne .Msg ""}}
@@ -25,7 +28,9 @@
     <div class="register">
     <p>Don't have an account? <a href="/register">register</a></p>
     </div>
-    <a href="/">continue without an account</a>
+    <div class="noacc">
+    <a href="/">Continue Without An Account</a>
+</div>
 </div>
 </body>
 </html>

@@ -4,31 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum - Registeration</title>
-    <link rel="stylesheet" href="/static/loginPage.css">
+    <link rel="stylesheet" href="/static/registerPage.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
     <div class="wrapper">
-        <h2>Register</h2>
+        <h1>Register</h1>
     <form action="/register" method="post">
         <div class="input-field">
-    <input type="email" name="email" placeholder="email" required>
-        </div>
+    <input type="email" name="email" placeholder="Email" required>
+    <i class='bx bx-envelope'></i>   
+</div>
         <div class="input-field">
-    <input type="text" name="username" placeholder="username" required>
-        </div>
+    <input type="text" name="username" placeholder="Username" required>
+    <i class='bx bx-user-circle'></i>
+</div>
         <div class="input-field">
-    <input type="password" name="password" placeholder="password" required>
-        </div>
-        <button type="submit">Register</button>
+    <input type="password" name="password" placeholder="Password" required>
+    <i class='bx bxs-lock'></i>
+</div>
+        <button type="submit" class="btn">Register</button>
     </form>
 
     {{if ne .Msg ""}}
     <p>{{.Msg}}</p>
     {{end}}
         <div class="register">
-    <p>already have an account <a href="/login">login</a></p>
+    <p>Already Have An Account <a href="/login">Login</a></p>
         </div>
-    <a href="/">continue without an account</a>
+        <div class="noacc">
+    <a href="/">Continue Without An Account</a>
+</div>
 </div>
 </body>
 </html>
