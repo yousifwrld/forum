@@ -1,54 +1,110 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  
-  } 
-  body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to right, rgb(28, 63, 77), rgb(153, 216, 241)); /* Change this to your desired color */
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    margin: 0;
-    padding-top: 60px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-}
-.bar{
-    display: flex;
-    align-items: center;
-  }
-  .bar i {
-    color: rgb(0, 0, 0);
-    font-size: 35px;
-    margin-right: 10px;
-  }
-  .bar span{
-    font-family: "Pacifico", cursive;
-    font-weight: 400;
-    font-size: 40px;
-    color: white;
-    text-decoration: none;
-    
-  }
-  
-  .home a {
-    background-color: rgb(153, 216, 241); /* Blue background color */
-    color: rgb(28, 63, 77); /* Wrgb(0, 0, 0)xt color */   
-    padding: 10px 15px; /* Padding for the button */
-    position: fixed;/* Positioning */
-    bottom: 50px;
-    left: 50px;
-    text-decoration: none;
-    border-radius: 30px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 16px; /* Font size */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Hover effect for Add Comment button */
-.home:hover a{
-    background-color: #005cbd; /* Darker green on hover */
+body {
+  background: linear-gradient(to right, rgb(28, 63, 77), rgb(153, 216, 241));
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  margin: 0;
+  padding-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  font-family: "Lora", serif;
+}
+
+header {
+  height: 60px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(to right, rgb(28, 63, 77), rgb(153, 216, 241));
+  padding: 20px 10%;
+  border-radius: 1px;
+}
+
+.bar, .home {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  color: white;
+}
+
+.bar i, .home i {
+  font-size: 28px;
+  margin-right: 10px;
+}
+
+.bar span {
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+  font-size: 24px;
+  color: white;
+}
+
+.container {
+  width: 60%;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+h1 {
+  font-family: "Ubuntu", sans-serif;
+  color: rgb(28, 63, 77);
+  margin-bottom: 20px;
+}
+
+.post-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.post-item {
+  margin-bottom: 20px;
+}
+
+.post-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post {
+  padding: 15px;
+  border: 1px solid rgb(153, 216, 241);
+  border-radius: 5px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.post:hover {
+  background-color: #f0f0f0;
+  border-color: rgb(28, 63, 77);
+}
+
+.post-meta {
+  font-size: 0.8rem;
+  color: rgb(153, 216, 241);
+}
+
+.post-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 10px;
+  color: rgb(28, 63, 77);
+}
+
+.post-content {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: black;
 }

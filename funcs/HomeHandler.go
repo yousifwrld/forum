@@ -9,6 +9,11 @@ import (
 	"sort"
 )
 
+type PageData struct {
+	Posts      []Post
+	IsLoggedIn bool
+}
+
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/" {
@@ -19,6 +24,35 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		ErrorPages(w, r, "405", http.StatusMethodNotAllowed)
 		return
 	}
+
+	isLoggedIn := false
+
+	sessionID, err := GetSessionFromCookie(r)
+	if err != nil {
+		if err == http.ErrNoCookie {
+			isLoggedIn = false
+		} else {
+			log.Println("Error getting session cookie:", err)
+			ErrorPages(w, r, "500", http.StatusInternalServerError)
+			return
+		}
+	}
+
+	userID, err := GetIDFromSession(sessionID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			isLoggedIn = false
+		} else {
+			log.Println("Error getting userID from session:", err)
+			ErrorPages(w, r, "500", http.StatusInternalServerError)
+			return
+		}
+	}
+
+	if userID != 0 {
+		isLoggedIn = true
+	}
+
 	posts, err := getPosts()
 	if err != nil {
 		fmt.Println(err)
@@ -26,11 +60,16 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	data := PageData{
+		Posts:      posts,
+		IsLoggedIn: isLoggedIn,
+	}
+
 	tmpl := template.Must(template.New("home.html").Funcs(template.FuncMap{
 		"joinAndTrim": joinAndTrim,
 	}).ParseFiles("templates/home.html"))
 
-	if err := tmpl.Execute(w, posts); err != nil {
+	if err := tmpl.Execute(w, data); err != nil {
 		log.Println(err)
 		ErrorPages(w, r, "500", http.StatusInternalServerError)
 		return

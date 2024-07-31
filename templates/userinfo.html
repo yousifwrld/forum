@@ -1,21 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Info</title>
     <link rel="stylesheet" href="/static/userinfo.css">
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Lora:ital,wght@0,400..700;1,400..700&family=Permanent+Marker&family=Silkscreen:wght@400;700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
-    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
+
 <body>
-    
-    <a class="bar"><i class='bx bx-user-circle'></i><span>User</span></a>
-    <div class="home">
-        <a href="/"><i class='bx bx-home-circle'></i></a>
+    <header>
+        <a class="bar" href="/"><i class='bx bx-user-circle'></i><span>{{.Username}}</span></a>
+        <a href="/" class="home"><i class='bx bx-home-circle'></i></a>
+    </header>
+
+    <div class="container">
+        <h1>User Posts</h1>
+        {{if .Posts}}
+        <ul class="post-list">
+            {{range .Posts}}
+            <li class="post-item">
+                <a href="/post/{{.ID}}" class="post-link">
+                    <div class="post">
+                        <div class="post-meta">
+                            <small>Posted on {{.FormattedCreatedAt}}</small>
+                        </div>
+                        <p class="post-title">{{.Title}}</p>
+                        <p class="post-content">{{.Content}}</p>
+                    </div>
+                </a>
+            </li>
+            {{end}}
+        </ul>
+        {{else}}
+        <p>No posts available.</p>
+        {{end}}
+
+        <h1>Liked Posts</h1>
+        {{if .LikedPosts}}
+        <ul class="post-list">
+            {{range .LikedPosts}}
+            <li class="post-item">
+                <a href="/post/{{.ID}}" class="post-link">
+                    <div class="post">
+                        <div class="post-meta">
+                            <small>Posted on {{.FormattedCreatedAt}}</small>
+                        </div>
+                        <p class="post-title">{{.Title}}</p>
+                        <p class="post-content">{{.Content}}</p>
+                    </div>
+                </a>
+            </li>
+            {{end}}
+        </ul>
+        {{else}}
+        <p>No liked posts available.</p>
+        {{end}}
     </div>
 </body>
+
 </html>

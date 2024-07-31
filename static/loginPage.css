@@ -110,3 +110,9 @@ button:hover {
   text-decoration: underline;
   color: blue;
 }
+
+
+.err {
+  padding-top: 5px;
+  text-align: center;
+}

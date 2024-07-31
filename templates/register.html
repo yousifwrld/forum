@@ -27,7 +27,8 @@
     </form>
 
     {{if ne .Msg ""}}
-    <p>{{.Msg}}</p>
+
+    <p class="err">{{.Msg}}</p>
     {{end}}
         <div class="register">
     <p>Already Have An Account <a href="/login">Login</a></p>

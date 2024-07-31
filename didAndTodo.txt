@@ -1,11 +1,13 @@
 DID:
 1- a single handler for all interactions (liking posts or comments).
-2- removed root auth to fix routing, now the initial page is the home page.
-3- better formatting for displaying categories whether in home page or post details.
-4- indicator for when a post has no comments instead of leaving it empty.
-5-finalize css.
+2- added auth in the home page to show the correct button for the user (login if unAuthed and logout if Authed)
+3- removed root auth to fix routing, now the initial page is the home page.
+4- better formatting for displaying categories whether in home page or post details.
+5- indicator for when a post has no comments instead of leaving it empty.
+6- added userinfo page handler
 
 
 TODO:
 1- add auth in home handler (or js), to display the correct button, login for non authed users and logout for authed users.
 2- filters.
+3- finalize css.

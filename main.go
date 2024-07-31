@@ -33,7 +33,7 @@ func main() {
 	http.HandleFunc("/login", forum.LoginHandler)
 	http.HandleFunc("/logout", forum.LogoutHandler)
 	http.HandleFunc("/help", forum.Help)
-	http.HandleFunc("/userinfo", forum.UserInfo)
+	http.Handle("/user-info", forum.AuthMiddleware(http.HandlerFunc(forum.UserInfo)))
 	http.Handle("/reaction", forum.AuthMiddleware(http.HandlerFunc(forum.ReactionHandler)))
 	http.Handle("/create-post", forum.AuthMiddleware(http.HandlerFunc(forum.CreatePostHandler)))
 	http.HandleFunc("/post/", func(w http.ResponseWriter, r *http.Request) {

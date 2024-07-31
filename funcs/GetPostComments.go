@@ -1,6 +1,9 @@
 package forum
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
 func GetPostComments(postID int) ([]Comment, error) {
 	rows, err := database.Query(`
@@ -32,6 +35,11 @@ func GetPostComments(postID int) ([]Comment, error) {
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
+
+	// Sort comments by created_at
+	sort.Slice(comments, func(i, j int) bool {
+		return comments[i].CreatedAt.After(comments[j].CreatedAt)
+	})
 
 	return comments, nil
 }

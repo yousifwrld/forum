@@ -123,3 +123,14 @@ font-size: 15px;
 color: rgb(245, 242, 237);
 margin-right: 3px;
 }
+
+.no-comments {
+    color: rgb(245, 242, 237);
+    margin-top: 10px;
+    margin: 0;
+    font-family: "Lora", serif;/* change */
+    font-weight: 600;
+    font-style:normal;
+    font-size: 1.2rem;
+    text-align: center;
+}

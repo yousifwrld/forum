@@ -17,31 +17,37 @@
 
 <body>
     <header>
-    <a class="bar"><i class='bx bx-home-circle'></i><span>Forum posts</span></a>
+    <a href="/" class="bar"><i class='bx bx-home-circle'></i><span>Forum posts</span></a>
     </div>
     <a onclick="toggleMenu()" class="mann"><i class='bx bx-menu'></i> </a>
     <div class="sub-manu-wrap" id="subMenu">
         <div class="sub-manu">
             <div class="user">
-                <a href="/userinfo"><i class='bx bx-user-circle'></i>User</a>
+                <a href="/profile"><i class='bx bx-user-circle'></i>User</a>
             </div>
             <hr>
             <div class="help">
                 <a href="/help"><i class='bx bx-help-circle' ></i>Help & Support</a>
             </div>
             <hr>
+
+            {{if .IsLoggedIn}}
             <div class="logout">
                 <form action="/logout" method="post">
-                    <button type="submit" value="logout"><i class='bx bx-log-out-circle'></i>Logout</button>
-                
+                    <button type="submit" value="logout"><i class='bx bx-log-out-circle'></i>Logout</button> 
         </div>
+        {{else}}
+        <div class="login">
+            <a href="/login"> <i class='bx bx-log-in-circle'></i>Login</a>
+        </div>
+        {{end}}
     </div>
     </header>
     <ul>
         <div class="add">
             <a href="/create-post">+</a>
         </div>
-        {{range .}}
+        {{range .Posts}}
         <a href="/post/{{.ID}}" class="post-link">
                 <div class="post">
                     <div class="post-meta">
