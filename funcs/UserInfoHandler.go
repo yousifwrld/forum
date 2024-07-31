@@ -1,9 +1,9 @@
 package forum
 
 import (
-	"database/sql"
 	"log"
 	"net/http"
+	"slices"
 	"sort"
 )
 
@@ -32,7 +32,7 @@ func UserInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//get the posts created by the user
-	posts, err := getPostsByID(userID)
+	posts, err := getPostsByUserID(userID)
 	if err != nil {
 		log.Println(err)
 		ErrorPages(w, r, "500", http.StatusInternalServerError)
@@ -40,40 +40,11 @@ func UserInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//get the liked posts for the user
-	var likedPosts []Post
-
-	//get the user's liked posts from the database
-	rows, err := database.Query(`SELECT postID FROM reaction WHERE userID = ? AND is_like = true`, userID)
+	likedPosts, err := getLikedPostsByUserID(userID)
 	if err != nil {
-		//if no results this means that the user hasnt liked any post before
-		if err == sql.ErrNoRows {
-			//set the liked posts to an empty slice
-			likedPosts = []Post{}
-		} else {
-			log.Println(err)
-			ErrorPages(w, r, "500", http.StatusInternalServerError)
-			return
-		}
-	}
-
-	for rows.Next() {
-
-		var postID int
-		err := rows.Scan(&postID)
-		if err != nil {
-			log.Println(err)
-			ErrorPages(w, r, "500", http.StatusInternalServerError)
-			return
-		}
-
-		//get the post from the database
-		posts, err := getPostsByID(postID)
-		if err != nil {
-			log.Println(err)
-			ErrorPages(w, r, "500", http.StatusInternalServerError)
-			return
-		}
-		likedPosts = posts
+		log.Println(err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
 	}
 
 	data := PageData{
@@ -86,7 +57,7 @@ func UserInfo(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func getPostsByID(userID int) ([]Post, error) {
+func getPostsByUserID(userID int) ([]Post, error) {
 
 	//start a transaction
 	tx, err := database.Begin()
@@ -148,5 +119,78 @@ func getPostsByID(userID int) ([]Post, error) {
 	sort.Slice(posts, func(i, j int) bool {
 		return posts[i].CreatedAt.After(posts[j].CreatedAt)
 	})
+	return posts, nil
+}
+
+func getLikedPostsByUserID(userID int) ([]Post, error) {
+
+	//start a transaction
+	tx, err := database.Begin()
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		} else {
+			tx.Commit()
+		}
+	}()
+
+	rows, err := tx.Query(`SELECT postID FROM reaction WHERE userID = ? AND is_like = true`, userID)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	// get the posts
+	var posts []Post
+
+	for rows.Next() {
+		var postID int
+		if err := rows.Scan(&postID); err != nil {
+			log.Println(err)
+			return nil, err
+		}
+
+		// Now we query the details for the post
+		postRow := tx.QueryRow(`SELECT postID, title, content, likes, dislikes, created_at FROM post WHERE postID = ?`, postID)
+
+		var post Post
+		if err := postRow.Scan(&post.ID, &post.Title, &post.Content, &post.Likes, &post.Dislikes, &post.CreatedAt); err != nil {
+			log.Println(err)
+			return nil, err
+		}
+
+		//get the categories for each post
+		categories, err := GetCategoriesForPost(post.ID)
+		if err != nil {
+			log.Println(err)
+			return nil, err
+		}
+
+		//save the categories for each post, and format the time
+		post.Categories = categories
+		post.FormattedCreatedAt = post.CreatedAt.Format("2006-01-02 15:04")
+
+		posts = append(posts, post)
+	}
+
+	// Check if there were any errors during iteration
+	if err = rows.Err(); err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	// in case of no posts liked by the user, set the posts to an empty slice
+	if posts == nil {
+		posts = []Post{}
+	}
+
+	//reverse the order of the posts to display them based on the latest liked posts
+	slices.Reverse(posts)
+
 	return posts, nil
 }
