@@ -27,6 +27,9 @@
                     <div class="post">
                         <div class="post-meta">
                             <small>Posted on {{.FormattedCreatedAt}}</small>
+                            {{if gt (len .Categories) 0}}
+                            <p>Categories: {{joinAndTrim .Categories}}</p>
+                            {{end}}
                         </div>
                         <p class="post-title">{{.Title}}</p>
                         <p class="post-content">{{.Content}}</p>
@@ -47,7 +50,12 @@
                 <a href="/post/{{.ID}}" class="post-link">
                     <div class="post">
                         <div class="post-meta">
+                            <small>By {{.Username}}</small>
+                            <br>
                             <small>Posted on {{.FormattedCreatedAt}}</small>
+                            {{if gt (len .Categories) 0}}
+                            <p>Categories: {{joinAndTrim .Categories}}</p>
+                            {{end}}
                         </div>
                         <p class="post-title">{{.Title}}</p>
                         <p class="post-content">{{.Content}}</p>

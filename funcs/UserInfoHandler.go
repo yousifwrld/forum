@@ -1,6 +1,7 @@
 package forum
 
 import (
+	"html/template"
 	"log"
 	"net/http"
 	"slices"
@@ -53,7 +54,16 @@ func UserInfo(w http.ResponseWriter, r *http.Request) {
 		LikedPosts: likedPosts,
 	}
 
-	RenderTemplate(w, "templates/userinfo.html", data)
+	//to be able to use the joinAndTrim function in the html
+	tmpl := template.Must(template.New("userinfo.html").Funcs(template.FuncMap{
+		"joinAndTrim": joinAndTrim,
+	}).ParseFiles("templates/userinfo.html"))
+
+	if err := tmpl.Execute(w, data); err != nil {
+		log.Println(err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
+	}
 
 }
 
@@ -156,10 +166,15 @@ func getLikedPostsByUserID(userID int) ([]Post, error) {
 		}
 
 		// Now we query the details for the post
-		postRow := tx.QueryRow(`SELECT postID, title, content, likes, dislikes, created_at FROM post WHERE postID = ?`, postID)
+		postRow := tx.QueryRow(`
+		SELECT p.postID, p.title, p.content, p.likes, p.dislikes, p.created_at, u.username
+		FROM post p
+		JOIN user u ON p.userID = u.userID
+		WHERE p.postID = ?
+		`, postID)
 
 		var post Post
-		if err := postRow.Scan(&post.ID, &post.Title, &post.Content, &post.Likes, &post.Dislikes, &post.CreatedAt); err != nil {
+		if err := postRow.Scan(&post.ID, &post.Title, &post.Content, &post.Likes, &post.Dislikes, &post.CreatedAt, &post.Username); err != nil {
 			log.Println(err)
 			return nil, err
 		}

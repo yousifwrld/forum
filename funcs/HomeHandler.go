@@ -65,6 +65,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		IsLoggedIn: isLoggedIn,
 	}
 
+	//to be able to use the joinAndTrim function in the html
 	tmpl := template.Must(template.New("home.html").Funcs(template.FuncMap{
 		"joinAndTrim": joinAndTrim,
 	}).ParseFiles("templates/home.html"))
