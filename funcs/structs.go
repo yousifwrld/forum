@@ -22,6 +22,7 @@ type Post struct {
 	Categories         []Category `json:"categories"`
 	Likes              int        `json:"likes"`
 	Dislikes           int        `json:"dislikes"`
+	FilterCategories   []Category
 }
 
 type Comment struct {

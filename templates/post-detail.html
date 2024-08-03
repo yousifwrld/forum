@@ -32,6 +32,9 @@
     <div class="add-comment-button">
         <a href="/post/{{.ID}}/comment"><i class='bx bxs-comment-detail'></i></a>
     </div>
+    <div class="back">
+        <a href="/"><i class='bx bx-home-circle'></i></a>
+    </div>
     <br>
     {{ if gt (len .Comments) 0 }}
     <h3>Comments</h3>

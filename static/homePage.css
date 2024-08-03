@@ -105,8 +105,8 @@ body {
 
 /* Smooth hover effect */
 .post {
-    cursor:pointer;
-    height: 150px;
+    cursor:pointer; 
+    height: fit-content;
     width: 620px;
     padding: 10px; /* Optional: Adds some padding inside each post container */
     background-color: transparent; /* Fixed background color for posts */
@@ -115,6 +115,7 @@ body {
     border-radius: 5px; /* Rounds the corners of the border */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
     transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition */;
+    word-wrap: break-word;
 }
 
 

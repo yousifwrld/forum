@@ -4,7 +4,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"slices"
 	"sort"
 )
 
@@ -205,7 +204,13 @@ func getLikedPostsByUserID(userID int) ([]Post, error) {
 	}
 
 	//reverse the order of the posts to display them based on the latest liked posts
-	slices.Reverse(posts)
+	Reverse(posts)
 
 	return posts, nil
+}
+
+func Reverse(posts []Post) {
+	for i, j := 0, len(posts)-1; i < j; i, j = i+1, j-1 {
+		posts[i], posts[j] = posts[j], posts[i]
+	}
 }

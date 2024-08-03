@@ -17,7 +17,7 @@
 
 <body>
     <header>
-    <a href="/" class="bar"><i class='bx bx-home-circle'></i><span>Forum posts</span></a>
+    <a  class="bar"><i class='bx bx-home-circle'></i><span>Forum posts</span></a>
     </div>
     <a onclick="toggleMenu()" class="mann"><i class='bx bx-menu'></i> </a>
     <div class="sub-manu-wrap" id="subMenu">
@@ -43,6 +43,16 @@
         {{end}}
     </div>
     </header>
+
+
+    <form action="/filter" method="post">
+        <div class="category-filter">
+            {{range .FilteredCategories}}
+            <input type="checkbox" name="filter" id="{{.Name}}" value="{{.CategoryID}}" >
+            <label for="{{.Name}}">{{.Name}}</label>
+            {{end}}
+        </div>
+    </form>
     <ul>
         <div class="add">
             <a href="/create-post">+</a>
