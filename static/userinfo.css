@@ -65,6 +65,47 @@ h1 {
   margin-bottom: 20px;
 }
 
+.tabs {
+  display: flex;
+  position: relative;
+  margin-bottom: 20px;
+  border-bottom: 2px solid rgb(153, 216, 241);
+}
+
+.tab-button {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  font-family: "Ubuntu", sans-serif;
+  font-size: 1rem;
+  background: none;
+  border: none;
+  outline: none;
+  color: rgb(28, 63, 77);
+  transition: color 0.3s ease;
+}
+
+.tab-button:hover, .tab-button.active {
+  color: rgb(153, 216, 241);
+}
+
+.underline {
+  position: absolute;
+  bottom: -1.5px;
+  height: 2px;
+  background-color: rgb(65, 124, 148);
+  transition: width 0.3s ease, left 0.3s ease;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
 .post-list {
   list-style: none;
   padding-left: 0;

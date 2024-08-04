@@ -18,56 +18,89 @@
     </header>
 
     <div class="container">
-        <h1>User Posts</h1>
-        {{if .Posts}}
-        <ul class="post-list">
-            {{range .Posts}}
-            <li class="post-item">
-                <a href="/post/{{.ID}}" class="post-link">
-                    <div class="post">
-                        <div class="post-meta">
-                            <small>Posted on {{.FormattedCreatedAt}}</small>
-                            {{if gt (len .Categories) 0}}
-                            <p>Categories: {{joinAndTrim .Categories}}</p>
-                            {{end}}
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('posts')">Posts</button>
+            <button class="tab-button" onclick="showTab('liked')">Liked</button>
+            <div class="underline"></div>
+        </div>
+        
+        <div id="posts" class="tab-content">
+            <h1>Your Posts</h1>
+            {{if .Posts}}
+            <ul class="post-list">
+                {{range .Posts}}
+                <li class="post-item">
+                    <a href="/post/{{.ID}}" class="post-link">
+                        <div class="post">
+                            <div class="post-meta">
+                                <small>Posted on {{.FormattedCreatedAt}}</small>
+                                {{if gt (len .Categories) 0}}
+                                <p>Categories: {{joinAndTrim .Categories}}</p>
+                                {{end}}
+                            </div>
+                            <p class="post-title">{{.Title}}</p>
+                            <p class="post-content">{{.Content}}</p>
                         </div>
-                        <p class="post-title">{{.Title}}</p>
-                        <p class="post-content">{{.Content}}</p>
-                    </div>
-                </a>
-            </li>
+                    </a>
+                </li>
+                {{end}}
+            </ul>
+            {{else}}
+            <p>No posts available.</p>
             {{end}}
-        </ul>
-        {{else}}
-        <p>No posts available.</p>
-        {{end}}
+        </div>
 
-        <h1>Liked Posts</h1>
-        {{if .LikedPosts}}
-        <ul class="post-list">
-            {{range .LikedPosts}}
-            <li class="post-item">
-                <a href="/post/{{.ID}}" class="post-link">
-                    <div class="post">
-                        <div class="post-meta">
-                            <small>By {{.Username}}</small>
-                            <br>
-                            <small>Posted on {{.FormattedCreatedAt}}</small>
-                            {{if gt (len .Categories) 0}}
-                            <p>Categories: {{joinAndTrim .Categories}}</p>
-                            {{end}}
+        <div id="liked" class="tab-content" style="display:none;">
+            <h1>Liked Posts</h1>
+            {{if .LikedPosts}}
+            <ul class="post-list">
+                {{range .LikedPosts}}
+                <li class="post-item">
+                    <a href="/post/{{.ID}}" class="post-link">
+                        <div class="post">
+                            <div class="post-meta">
+                                <small>By {{.Username}}</small>
+                                <br>
+                                <small>Posted on {{.FormattedCreatedAt}}</small>
+                                {{if gt (len .Categories) 0}}
+                                <p>Categories: {{joinAndTrim .Categories}}</p>
+                                {{end}}
+                            </div>
+                            <p class="post-title">{{.Title}}</p>
+                            <p class="post-content">{{.Content}}</p>
                         </div>
-                        <p class="post-title">{{.Title}}</p>
-                        <p class="post-content">{{.Content}}</p>
-                    </div>
-                </a>
-            </li>
+                    </a>
+                </li>
+                {{end}}
+            </ul>
+            {{else}}
+            <p>No liked posts available.</p>
             {{end}}
-        </ul>
-        {{else}}
-        <p>No liked posts available.</p>
-        {{end}}
+        </div>
     </div>
+
+    <script>
+        function showTab(tab) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-button');
+            tabs.forEach(t => t.style.display = 'none');
+            buttons.forEach(b => b.classList.remove('active'));
+
+            document.getElementById(tab).style.display = 'block';
+            event.currentTarget.classList.add('active');
+
+            const underline = document.querySelector('.underline');
+            underline.style.width = event.currentTarget.offsetWidth + 'px';
+            underline.style.left = event.currentTarget.offsetLeft + 'px';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const activeButton = document.querySelector('.tab-button.active');
+            const underline = document.querySelector('.underline');
+            underline.style.width = activeButton.offsetWidth + 'px';
+            underline.style.left = activeButton.offsetLeft + 'px';
+        });
+    </script>
 </body>
 
 </html>
