@@ -35,6 +35,7 @@ func main() {
 	http.HandleFunc("/help", forum.Help)
 	http.Handle("/user-info", forum.AuthMiddleware(http.HandlerFunc(forum.UserInfo)))
 	http.Handle("/reaction", forum.AuthMiddleware(http.HandlerFunc(forum.ReactionHandler)))
+	http.HandleFunc("/filter", forum.FilterHandler)
 	http.Handle("/create-post", forum.AuthMiddleware(http.HandlerFunc(forum.CreatePostHandler)))
 	http.HandleFunc("/post/", func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasSuffix(r.URL.Path, "/comment") {

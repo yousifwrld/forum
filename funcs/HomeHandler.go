@@ -2,21 +2,18 @@ package forum
 
 import (
 	"database/sql"
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"sort"
 )
 
-type PageData struct {
-	Posts              []Post
-	IsLoggedIn         bool
-	FilteredCategories []Category
-}
-
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-
+	type PageData struct {
+		Posts              []Post
+		IsLoggedIn         bool
+		FilteredCategories []Category
+	}
 	if r.URL.Path != "/" {
 		ErrorPages(w, r, "404", http.StatusNotFound)
 		return
@@ -56,7 +53,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 	posts, err := getPosts()
 	if err != nil {
-		fmt.Println(err)
+		log.Println("Error getting posts:", err)
 		ErrorPages(w, r, "500", http.StatusInternalServerError)
 		return
 	}

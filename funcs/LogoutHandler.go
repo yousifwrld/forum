@@ -2,6 +2,7 @@ package forum
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -18,6 +19,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	sessionID, err := GetSessionFromCookie(r)
 	if err != nil {
 		if err == http.ErrNoCookie {
+			fmt.Println(err)
 			http.Redirect(w, r, "/login", http.StatusFound)
 			return
 		} else {
@@ -51,5 +53,6 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, &cookie)
 
+	fmt.Println("end of logout")
 	http.Redirect(w, r, "/login", http.StatusFound)
 }

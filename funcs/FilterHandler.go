@@ -1,15 +1,56 @@
 package forum
 
 import (
+	"database/sql"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
+	"sort"
 	"strconv"
 )
 
 func FilterHandler(w http.ResponseWriter, r *http.Request) {
 
-	err := r.ParseForm()
+	type PageData struct {
+		Posts      []Post
+		IsLoggedIn bool
+	}
+
+	if r.Method != http.MethodPost {
+		ErrorPages(w, r, "405", http.StatusMethodNotAllowed)
+		return
+	}
+
+	isLoggedIn := false
+
+	sessionID, err := GetSessionFromCookie(r)
+	if err != nil {
+		if err == http.ErrNoCookie {
+			isLoggedIn = false
+		} else {
+			log.Println("Error getting session cookie:", err)
+			ErrorPages(w, r, "500", http.StatusInternalServerError)
+			return
+		}
+	}
+
+	userID, err := GetIDFromSession(sessionID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			isLoggedIn = false
+		} else {
+			log.Println("Error getting userID from session:", err)
+			ErrorPages(w, r, "500", http.StatusInternalServerError)
+			return
+		}
+	}
+
+	if userID != 0 {
+		isLoggedIn = true
+	}
+
+	err = r.ParseForm()
 	if err != nil {
 		log.Println(err)
 		ErrorPages(w, r, "400", http.StatusBadRequest)
@@ -18,27 +59,87 @@ func FilterHandler(w http.ResponseWriter, r *http.Request) {
 
 	categories := r.Form["filter"]
 
-	var catID []int
+	if len(categories) == 0 {
+		ErrorPages(w, r, "400", http.StatusBadRequest)
+		return
+	}
 
+	// Convert category IDs to integers
+	var catID []int
 	for _, id := range categories {
 		intID, err := strconv.Atoi(id)
 		if err != nil {
 			log.Println(err)
 			ErrorPages(w, r, "400", http.StatusBadRequest)
-			return
 		}
 		catID = append(catID, intID)
 	}
 
-	statement := fmt.Sprintf(`SELECT postID from post_category WHERE categoryID = %d`, catID[0])
-	for i := 1; i < len(catID); i++ {
-		statement += fmt.Sprintf(`OR categoryID = %d`, catID[i])
-	}
-	rows, err := database.Query(statement)
+	// Create SQL statement for filtering posts by category
+	statement := fmt.Sprintf("SELECT DISTINCT postID FROM post_categories WHERE categoryID = %d", catID[0])
 
+	for i := 1; i < len(catID); i++ {
+		statement += fmt.Sprintf(" OR categoryID = %d", catID[i])
+	}
+
+	rows, err := database.Query(statement)
+	if err != nil {
+		log.Println(err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
+	}
+	defer rows.Close()
+
+	var posts []Post
 	for rows.Next() {
 		var postID int
-		rows.Scan(&postID)
-		database.Query(`SELECT title, content, likes, dislikes, created_at, userID WHERE postID = ?`, postID)
+		if err := rows.Scan(&postID); err != nil {
+			log.Println(err)
+			ErrorPages(w, r, "500", http.StatusInternalServerError)
+		}
+
+		var post Post
+		err := database.QueryRow(
+			`SELECT p.title, p.content, p.created_at, p.likes, p.dislikes, u.username
+			FROM post p
+			JOIN user u ON p.userID = u.userID
+			WHERE p.postID = ?`, postID).Scan(&post.Title, &post.Content, &post.CreatedAt, &post.Likes, &post.Dislikes, &post.Username)
+		if err != nil {
+			log.Println(err)
+			ErrorPages(w, r, "500", http.StatusInternalServerError)
+		}
+
+		post.ID = postID
+		post.FormattedCreatedAt = post.CreatedAt.Format("2006-01-02 15:04")
+
+		categories, err := GetCategoriesForPost(postID)
+		if err != nil {
+			log.Println(err)
+			ErrorPages(w, r, "500", http.StatusInternalServerError)
+
+		}
+		post.Categories = categories
+
+		posts = append(posts, post)
 	}
+
+	// Sort filtered posts by creation date
+	sort.Slice(posts, func(i, j int) bool {
+		return posts[i].CreatedAt.After(posts[j].CreatedAt)
+	})
+
+	data := PageData{
+		Posts:      posts,
+		IsLoggedIn: isLoggedIn,
+	}
+	//to be able to use the joinAndTrim function in the html
+	tmpl := template.Must(template.New("filter.html").Funcs(template.FuncMap{
+		"joinAndTrim": joinAndTrim,
+	}).ParseFiles("templates/filter.html"))
+
+	if err := tmpl.Execute(w, data); err != nil {
+		log.Println(err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
+	}
+
 }
