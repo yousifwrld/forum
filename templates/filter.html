@@ -84,6 +84,20 @@
         {{end}}
     </ul>
 
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const filterOptions = document.querySelectorAll('.filter-option');
+    
+            filterOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    checkbox.checked = !checkbox.checked;
+                    this.classList.toggle('selected', checkbox.checked);
+                });
+            });
+        });
+    </script>
     <script>
 function toggleMenu() {
     const subMenu = document.getElementById("subMenu");

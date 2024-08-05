@@ -135,14 +135,49 @@ hr {
 }
 
 .filter-option {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
+    display: inline-block;
+    background-color: #f0f0f0;
+    padding: 8px 12px;
+    border-radius: 20px;
+    margin: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    /* Ensures consistent size and padding whether selected or not */
 }
 
 .filter-option input[type="checkbox"] {
-    margin-right: 10px;
+    display: none;
 }
+
+.filter-option label {
+    font-family: "Ubuntu", sans-serif;
+    font-size: 0.9rem;
+    color: #333;
+    cursor: pointer;
+}
+
+.filter-option:hover {
+    background-color: #d0e6f1;
+}
+
+/* Apply styles directly to .filter-option when selected */
+.filter-option.selected {
+    background-color: #1c3f4d;
+    color: white; /* Change text color to white */
+    border-radius: 20px;
+    padding: 8px 12px;
+    transition: background-color 0.3s ease;
+}
+
+/* New rule to ensure label text color is white when selected */
+.filter-option.selected label {
+    color: white;
+}
+
+
+
+
+
 
 .filter-submit {
     display: block;

@@ -1,103 +1,155 @@
+/* Reset styles */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  } 
-body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to right, rgb(28, 63, 77), rgb(153, 216, 241)); /* Change this to your desired color */
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    margin: 0;
-    padding-top: 60px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-}
-.post-form, .posts {
-    width: 100%;
-    max-width: 800px;
-    margin: 20px;
-    padding: 20px;
-    background-color: transparent;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-.post-form textarea {
-    width: 100%;
-    height: 100px;
-    margin-top: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 7px;
-    box-sizing: border-box;
-}
-.post-form button {
-    font-family: "Pacifico", cursive; /*change*/
-    background-color:transparent;
-    color: white;
-    font-size: 20px;
-    padding: 10px;
-    margin-top: 10px;
-    width: 100%;
-    border: none;
-    border-radius: 15px;
-    cursor: pointer;
-}
-.post-form button:hover {
-    color: rgb(28, 63, 77);
-}
-.post-form .ptitle{
-    border-radius: 2px;
-    border: none;
-}
-.back a {
-    background-color: rgb(28, 63, 77); /* Blue background color */
-    color: white; /* Wrgb(0, 0, 0)xt color */   
-    padding: 10px 15px; /* Padding for the button */
-    position: fixed;/* Positioning */
-    bottom: 50px;
-    right: 50px;
-    text-decoration: none;
-    border-radius: 30px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 16px; /* Font size */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Hover effect for Add Comment button */
-.back:hover a{
-    background-color: #005cbd; /* Darker green on hover */
+/* General body styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0; /* Simple background color like the home page */
+  margin: 0;
+  padding-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
 }
-  
-  header{
-    height: 60px;
-    position: fixed;
-    width: 100%;
-    top:0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(to right, rgb(28, 63, 77), rgb(153, 216, 241));
-    padding: 28px 12%;
-    border-radius: 1px;
-    transition: all .50s ease;
-  }
-  .bar{
-    display: flex;
-    align-items: center;
-  }
-  .bar i {
-    color: rgb(153, 216, 241);
-    font-size: 28px;
-    margin-right: 3px;
-  }
-  .bar span{
-    font-family: "Pacifico", cursive;
-    font-weight: 400;
-    font-size: 40px;
-    color: white;
-    font-style: normal;
-  }
+
+/* Form container styles */
+.post-form {
+  width: 100%;
+  max-width: 800px;
+  margin: 20px;
+  padding: 20px;
+  background-color: white; /* Changed to white for simplicity */
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Categories container */
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+/* Category label styles */
+.category-label {
+  padding: 10px;
+  border: 2px solid #1c3f4d;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Selected category styles */
+.category-label.selected {
+  background-color: #1c3f4d;
+  color: white;
+}
+
+/* Hide checkbox but keep it accessible */
+.category-label input[type="checkbox"] {
+  display: none;
+}
+
+/* Title input styles */
+.post-form .ptitle {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+/* Textarea styles */
+.post-form textarea {
+  width: 100%;
+  height: 150px; /* Increased height */
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  resize: vertical; /* Allow resizing only if content overflows */
+  box-sizing: border-box;
+}
+
+/* Button styles */
+.post-form button {
+  font-family: "Pacifico", cursive;
+  background-color: #1c3f4d;
+  color: white;
+  font-size: 20px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Button hover effect */
+.post-form button:hover {
+  background-color: #15303c;
+}
+
+/* Back button container */
+.back {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+}
+
+/* Back button styles */
+.back a {
+  background-color: #1c3f4d;
+  color: white;
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+/* Back button hover effect */
+.back a:hover {
+  background-color: #15303c;
+}
+
+/* Header styles */
+header {
+  height: 60px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1c3f4d;
+  padding: 28px 12%;
+  border-radius: 1px;
+  transition: all 0.5s ease;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+}
+
+.bar i {
+  color: white;
+  font-size: 28px;
+  margin-right: 3px;
+}
+
+.bar span {
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+  font-size: 40px;
+  color: white;
+  font-style: normal;
+}
