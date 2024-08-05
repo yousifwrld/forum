@@ -13,8 +13,9 @@ import (
 func FilterHandler(w http.ResponseWriter, r *http.Request) {
 
 	type PageData struct {
-		Posts      []Post
-		IsLoggedIn bool
+		Posts            []Post
+		IsLoggedIn       bool
+		FilterCategories []Category
 	}
 
 	if r.Method != http.MethodPost {
@@ -127,14 +128,47 @@ func FilterHandler(w http.ResponseWriter, r *http.Request) {
 		return posts[i].CreatedAt.After(posts[j].CreatedAt)
 	})
 
+	//get the categories for the filters
+	var filterCategories []Category
+	rows, err = database.Query(`SELECT categoryID, name FROM category`)
+	if err != nil {
+		log.Println("Error querying categories:", err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var category Category
+		err := rows.Scan(&category.CategoryID, &category.Name)
+		if err != nil {
+			log.Println("Error scanning category:", err)
+			ErrorPages(w, r, "500", http.StatusInternalServerError)
+			return
+		}
+		filterCategories = append(filterCategories, category)
+	}
+	if err := rows.Err(); err != nil {
+		log.Println("Error after iterating rows:", err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
+	}
+
 	data := PageData{
 		Posts:      posts,
 		IsLoggedIn: isLoggedIn,
+
+		FilterCategories: filterCategories,
 	}
 	//to be able to use the joinAndTrim function in the html
-	tmpl := template.Must(template.New("filter.html").Funcs(template.FuncMap{
+	tmpl, err := template.New("filter.html").Funcs(template.FuncMap{
 		"joinAndTrim": joinAndTrim,
-	}).ParseFiles("templates/filter.html"))
+	}).ParseFiles("templates/filter.html")
+
+	if err != nil {
+		log.Println(err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
+	}
 
 	if err := tmpl.Execute(w, data); err != nil {
 		log.Println(err)

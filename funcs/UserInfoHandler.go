@@ -54,9 +54,15 @@ func UserInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//to be able to use the joinAndTrim function in the html
-	tmpl := template.Must(template.New("userinfo.html").Funcs(template.FuncMap{
+	tmpl, err := template.New("userinfo.html").Funcs(template.FuncMap{
 		"joinAndTrim": joinAndTrim,
-	}).ParseFiles("templates/userinfo.html"))
+	}).ParseFiles("templates/userinfo.html")
+
+	if err != nil {
+		log.Println(err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
+	}
 
 	if err := tmpl.Execute(w, data); err != nil {
 		log.Println(err)

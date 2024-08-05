@@ -73,9 +73,15 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	post.Categories = categories
 
-	tmpl := template.Must(template.New("post-detail.html").Funcs(template.FuncMap{
+	tmpl, err := template.New("post-detail.html").Funcs(template.FuncMap{
 		"joinAndTrim": joinAndTrim,
-	}).ParseFiles("templates/post-detail.html"))
+	}).ParseFiles("templates/post-detail.html")
+
+	if err != nil {
+		log.Println(err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
+	}
 
 	if err := tmpl.Execute(w, post); err != nil {
 		log.Println(err)

@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	"strings"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -107,7 +108,7 @@ func validateCredentials(email, username, password string) error {
 		return fmt.Errorf("invalid username")
 	}
 
-	if len(password) < 8 {
+	if len(password) < 8 || strings.TrimSpace(password) == "" {
 		return fmt.Errorf("password too short")
 	}
 	return nil

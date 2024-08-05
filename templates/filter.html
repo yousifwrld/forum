@@ -4,109 +4,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forum - Home</title>
+    <title>Forum - Filter</title>
     <link rel="stylesheet" href="/static/homePage.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <header>
-    <a href="/" class="bar"><i class='bx bx-home-circle'></i><span>Forum posts</span></a>
-    </div>
-    <a onclick="toggleMenu()" class="mann"><i class='bx bx-menu'></i> </a>
-    <div class="sub-manu-wrap" id="subMenu">
-        <div class="sub-manu">
-            <div class="user">
-                <a href="/user-info"><i class='bx bx-user-circle'></i>User</a>
-            </div>
-            <hr>
-            <div class="help">
-                <a href="/help"><i class='bx bx-help-circle' ></i>Help & Support</a>
-            </div>
-            <hr>
+        <a href="/" class="bar"><i class='bx bx-home-circle'></i><span>Forum posts</span></a>
+        <div>
+            <a onclick="toggleMenu()" class="mann"><i class='bx bx-menu'></i></a>
+            <a onclick="toggleFilter()" class="filter"><i class='bx bx-filter-alt'></i></a>
+        </div>
+        <div class="sub-manu-wrap" id="subMenu">
+            <div class="sub-manu">
+                <div class="user">
+                    <a href="/user-info"><i class='bx bx-user-circle'></i>User</a>
+                </div>
+                <hr>
+                <div class="help">
+                    <a href="/help"><i class='bx bx-help-circle'></i>Help & Support</a>
+                </div>
+                <hr>
 
-            {{if .IsLoggedIn}}
-            <div class="logout">
-                <form action="/logout" method="post">
-                    <button type="submit" value="logout"><i class='bx bx-log-out-circle'></i>Logout</button>
-                </form> 
+                {{if .IsLoggedIn}}
+                <div class="logout">
+                    <form action="/logout" method="post">
+                        <button type="submit" value="logout"><i class='bx bx-log-out-circle'></i>Logout</button>
+                    </form>
+                </div>
+                {{else}}
+                <div class="login">
+                    <a href="/login"><i class='bx bx-log-in-circle'></i>Login</a>
+                </div>
+                {{end}}
+            </div>
         </div>
-        {{else}}
-        <div class="login">
-            <a href="/login"> <i class='bx bx-log-in-circle'></i>Login</a>
+        <div class="filter-wrap" id="filterMenu">
+            <form action="/filter" method="post" class="filter-form">
+                <div class="category-filter">
+                    {{range .FilterCategories}}
+                    <div class="filter-option">
+                        <input type="checkbox" name="filter" id="{{.Name}}" value="{{.CategoryID}}">
+                        <label for="{{.Name}}">{{.Name}}</label>
+                    </div>
+                    {{end}}
+                </div>
+                <button type="submit" class="filter-submit">Filter posts</button>
+            </form>
         </div>
-        {{end}}
-    </div>
     </header>
 
     <ul>
         <div class="add">
             <a href="/create-post">+</a>
         </div>
-        {{if .Posts}}
         {{range .Posts}}
         <a href="/post/{{.ID}}" class="post-link">
-                <div class="post">
-                    <div class="post-meta">
-                        <small>By {{.Username}}</small><br>
-                        <small>Posted on {{.FormattedCreatedAt}}</small>
-                    </div>
-                    <p class="post-title">{{.Title}}</p>
-                    {{if gt (len .Categories) 0}}
-                    <p>Categories: {{joinAndTrim .Categories}}</p>
-                    {{end}}
-                    <p class="post-content">{{.Content}}</p>
+            <div class="post">
+                <div class="post-meta">
+                    <small>By {{.Username}}</small><br>
+                    <small>Posted on {{.FormattedCreatedAt}}</small>
+                </div>
+                <p class="post-title">{{.Title}}</p>
+                {{if gt (len .Categories) 0}}
+                <p>Categories: {{joinAndTrim .Categories}}</p>
+                {{end}}
+                <p class="post-content">{{.Content}}</p>
             </div>
         </a>
         <div class="small-rectangle">
             <button type="button" class="like" onclick="handleReaction({{.ID}}, 1, 'post')"><i class='bx bxs-like'></i><span id="likeCount-{{.ID}}">{{.Likes}}</span></button>
-            <button type="button" class="dislike" onclick="handleReaction({{.ID}}, 0, 'post')"><i class='bx bxs-dislike' ></i><span id="dislikeCount-{{.ID}}">{{.Dislikes}}</span></button>
-            <a href="/post/{{.ID}}/comment"> <i class='bx bxs-comment-add'></i></a>
+            <button type="button" class="dislike" onclick="handleReaction({{.ID}}, 0, 'post')"><i class='bx bxs-dislike'></i><span id="dislikeCount-{{.ID}}">{{.Dislikes}}</span></button>
+            <a href="/post/{{.ID}}/comment"><i class='bx bxs-comment-add'></i></a>
         </div>
         {{end}}
-        {{else}}
-        <h2>No posts found with the specified categories</h2>
-        {{end}}
     </ul>
-   
+
     <script>
         function handleReaction(id, action, type) {
-      fetch('/reaction', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ ID: id, action: action, type: type })
-      })
-      .then(response => response.json())
-      .then(data => {
-          if (data.likes !== undefined && data.dislikes !== undefined) {
-              document.getElementById('likeCount-' + id).textContent = data.likes;
-              document.getElementById('dislikeCount-' + id).textContent = data.dislikes;
-          } else {
-              console.error('Invalid response data:', data);
-          }
-      })
-      .catch(error => {
-          console.error('Error:', error);
-          window.location.replace("/login")
-      });
-  }
-  
-      </script>
-    <script>
-        let subMenu = document.getElementById("subMenu");
+            fetch('/reaction', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ ID: id, action: action, type: type })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.likes !== undefined && data.dislikes !== undefined) {
+                    document.getElementById('likeCount-' + id).textContent = data.likes;
+                    document.getElementById('dislikeCount-' + id).textContent = data.dislikes;
+                } else {
+                    console.error('Invalid response data:', data);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                window.location.replace("/login")
+            });
+        }
 
-        function toggleMenu(){
+        let subMenu = document.getElementById("subMenu");
+        let filterMenu = document.getElementById("filterMenu");
+
+        function toggleMenu() {
+            if (filterMenu.classList.contains("open-menu")) {
+                filterMenu.classList.remove("open-menu");
+            }
             subMenu.classList.toggle("open-menu");
+        }
+
+        function toggleFilter() {
+            if (subMenu.classList.contains("open-menu")) {
+                subMenu.classList.remove("open-menu");
+            }
+            filterMenu.classList.toggle("open-menu");
         }
     </script>
 </body>
- 
+
 </html>

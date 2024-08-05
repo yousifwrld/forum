@@ -90,9 +90,15 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//to be able to use the joinAndTrim function in the html
-	tmpl := template.Must(template.New("home.html").Funcs(template.FuncMap{
+	tmpl, err := template.New("home.html").Funcs(template.FuncMap{
 		"joinAndTrim": joinAndTrim,
-	}).ParseFiles("templates/home.html"))
+	}).ParseFiles("templates/home.html")
+
+	if err != nil {
+		log.Println(err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
+	}
 
 	if err := tmpl.Execute(w, data); err != nil {
 		log.Println(err)
