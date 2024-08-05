@@ -2,13 +2,9 @@ package forum
 
 import (
 	"fmt"
-	"os"
 )
 
 func insertTestPost() error {
-	if(fileExists("forum.db")) {
-		return nil
-	}
 	// Insert users
 	users := []struct {
 		email, username, password string
@@ -104,9 +100,4 @@ func insertTestPost() error {
 	}
 
 	return nil
-}
-
-func fileExists(filename string) bool {
-	_, err := os.Stat(filename)
-	return !os.IsNotExist(err)
 }

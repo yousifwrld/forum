@@ -3,11 +3,13 @@ package forum
 import (
 	"database/sql"
 	"fmt"
+	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func InitDatabase() error {
+	dbExists := fileExists("forum.db")
 	var err error
 	once.Do(func() {
 		// Start database connection
@@ -126,10 +128,17 @@ func InitDatabase() error {
 			return
 		}
 		// Insert a test post
-		err = insertTestPost()
-		if err != nil {
-			fmt.Printf("Error inserting test post: %v\n", err)
+		if(!dbExists) {
+			err = insertTestPost()
+			if err != nil {
+				fmt.Printf("Error inserting test post: %v\n", err)
+			}
 		}
 	})
 	return err
+}
+
+func fileExists(filename string) bool {
+	_, err := os.Stat(filename)
+	return !os.IsNotExist(err)
 }
