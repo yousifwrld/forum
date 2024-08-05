@@ -2,13 +2,13 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  
-  } 
-  header{
+}
+
+header {
     height: 60px;
     position: fixed;
     width: 100%;
-    top:0;
+    top: 0;
     z-index: 1000;
     display: flex;
     align-items: center;
@@ -16,46 +16,49 @@
     background: linear-gradient(to right, rgb(28, 63, 77), rgb(153, 216, 241));
     padding: 28px 10%;
     border-radius: 1px;
-  }
+}
 
-  .bar{
+.bar {
     text-decoration: none;
     display: flex;
     align-items: center;
-  }
-  .bar i {
+}
+
+.bar i {
     color: rgb(153, 216, 241);
     font-size: 28px;
     margin-right: 3px;
-  }
-  .bar span{
+}
+
+.bar span {
     font-family: "Pacifico", cursive;
     font-weight: 400;
     font-size: 40px;
     color: white;
     font-style: normal;
-  }
-  .logout button{
+}
+
+.logout button {
     font-family: "Pacifico", cursive;
     border: transparent;
     background-color: transparent;
-    color:  black;
+    color: black;
     font-size: 1.1rem;
     font-weight: 550;
     cursor: pointer;
-  }
-  .logout button:hover{
-    font-weight: 600;
+}
 
-  }
-  .logout i {
+.logout button:hover {
+    font-weight: 600;
+}
+
+.logout i {
     color: rgb(28, 63, 77);
     margin-right: 5px;
     font-size: 25px;
-    
-  }
+}
 
-  .login a {
+.login a {
     font-family: "Pacifico", cursive;
     border: transparent;
     background-color: transparent;
@@ -78,9 +81,8 @@
     font-size: 25px;
 }
 
-
 body {
-    background: linear-gradient(to right, rgb(28, 63, 77), rgb(153, 216, 241)); /* Change this to your desired color */
+    background: linear-gradient(to right, rgb(28, 63, 77), rgb(153, 216, 241));
     background-repeat: no-repeat;
     background-attachment: fixed;
     margin: 0;
@@ -90,81 +92,72 @@ body {
     align-items: center;
     min-height: 100vh;
 }
+
 .post p {
     color: black;
     margin: 5px 0;
-    
 }
 
-/* Style for each post container */
 .post-link {
     display: block;
     text-decoration: none;
     color: inherit;
 }
 
-/* Smooth hover effect */
 .post {
-    cursor:pointer; 
+    cursor: pointer;
     height: fit-content;
     width: 620px;
-    padding: 10px; /* Optional: Adds some padding inside each post container */
-    background-color: transparent; /* Fixed background color for posts */
+    padding: 10px;
+    background-color: transparent;
     border: solid whitesmoke;
-    border-bottom:none ;
-    border-radius: 5px; /* Rounds the corners of the border */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
-    transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition */;
+    border-bottom: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
     word-wrap: break-word;
 }
 
-
-
-/* Optional: Style for the title */
 .post-title {
-    font-family: "Lora", serif;/* change */
+    font-family: "Lora", serif;
     color: rgb(0, 0, 0);
     margin: 0;
     font-size: 0.7rem;
     font-weight: 300;
-    font-style:italic;
+    font-style: italic;
 }
 
-/* Optional: Style for the post content */
 .post-content {
     color: rgb(0, 0, 0);
     margin-top: 10px;
     margin: 0;
-    font-family: "Lora", serif;/* change */
+    font-family: "Lora", serif;
     font-weight: 600;
-    font-style:normal;
-
+    font-style: normal;
 }
 
-/* Optional: Style for the author and timestamp */
 .post-meta {
     font-size: 0.7rem;
-    color:  rgba(255, 255, 255, 0.457);
-    font-family: "Lora", serif;/* change */
+    color: rgba(255, 255, 255, 0.457);
+    font-family: "Lora", serif;
     font-weight: 500;
-    font-style:italic;
+    font-style: italic;
 }
 
 .small-rectangle {
-    
     height: 40px;
     width: 620px;
     display: flex;
     justify-content: space-around;
-    margin-bottom: 20px; /* Adds space below each post */
-    background: transparent; /* Fixed background color for posts */
-    border: 1px solid transparent; /* Adds a border around each post */
-    border-radius: 5px; /* Rounds the corners of the border */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
-    transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition */
-
+    margin-bottom: 20px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
-.small-rectangle button { 
+
+.small-rectangle button {
     flex-grow: 1;
     text-align: center;
     border: 1px solid transparent;
@@ -173,23 +166,21 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     background-size: 35px;
-     border-radius: 5px; /* Rounds the corners of the border */
-     border: solid whitesmoke;
+    border-radius: 5px;
+    border: solid whitesmoke;
 }
-
 
 .small-rectangle i {
-font-size: 25px;
-color: rgb(245, 242, 237);
-
+    font-size: 25px;
+    color: rgb(245, 242, 237);
 }
-.like span{
 
+.like span {
     color: rgb(1, 0, 0);
 }
-/* Style for the dislike count */
+
 .small-rectangle button:hover {
-    background-color:  #eaeaea73;
+    background-color: #eaeaea73;
 }
 
 .small-rectangle a {
@@ -201,33 +192,33 @@ color: rgb(245, 242, 237);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 35px;
-     border-radius: 5px; /* Rounds the corners of the border */
-     border: solid whitesmoke;
+    border-radius: 5px;
+    border: solid whitesmoke;
 }
 
 .small-rectangle a:hover {
-    background-color:  #eaeaea73;
+    background-color: #eaeaea73;
 }
 
 .add a {
-    background-color: rgb(28, 63, 77); /* Blue background color */
-    color: white; /* Wrgb(0, 0, 0)xt color */   
-    padding: 10px 15px; /* Padding for the button */
-    position: fixed;/* Positioning */
+    background-color: rgb(28, 63, 77);
+    color: white;
+    padding: 10px 15px;
+    position: fixed;
     bottom: 50px;
     right: 50px;
     text-decoration: none;
-    border-radius: 30px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 16px; /* Font size */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Hover effect for Add Comment button */
-.add:hover a{
-    background-color: #005cbd; /* Darker green on hover */
+.add:hover a {
+    background-color: #005cbd;
 }
-.sub-manu-wrap{
+
+.sub-manu-wrap {
     position: absolute;
     top: 100%;
     right: 10%;
@@ -237,34 +228,40 @@ color: rgb(245, 242, 237);
     overflow: hidden;
     transition: max-height 0.5s;
 }
-.sub-manu-wrap.open-menu{
+
+.sub-manu-wrap.open-menu {
     max-height: 400px;
 }
-.sub-manu{
+
+.sub-manu {
     background: white;
     padding: 20px;
     margin: 10px;
 }
-.user{
+
+.user {
     display: flex;
     align-items: center;
 }
+
 .user i {
     font-size: 25px;
     margin-right: 5px;
 }
-.user a{
+
+.user a {
     font-family: "Pacifico", cursive;
-    color:  black;
+    color: black;
     font-size: 1.1rem;
     font-weight: 550;
     font-weight: 500;
     text-decoration: none;
 }
-.user a:hover{
-    font-weight: 600;
 
-  }
+.user a:hover {
+    font-weight: 600;
+}
+
 .sub-manu hr {
     border: 0;
     height: 1px;
@@ -272,23 +269,82 @@ color: rgb(245, 242, 237);
     background: #ccc;
     margin: 15px 0 10px;
 }
-.mann i {
+
+.mann i, .filter i {
     font-size: 30px;
     cursor: pointer;
+    transition: all .2s ease-in;
 }
-.help a{
+
+.mann i:hover, .filter i:hover {
+    transform: scale(1.2);
+}
+
+
+.filter-wrap {
+    position: absolute;
+    top: 100%;
+    right: 10%;
+    width: 260px;
+    max-height: 0px;
+    border-radius: 40px;
+    overflow: hidden;
+    transition: max-height 0.5s;
+    
+}
+
+.filter-wrap.open-menu {
+    max-height: 400px;
+}
+
+.filter-form {
+    background: white;
+    padding: 20px;
+    margin: 10px;
+}
+
+.filter-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.filter-option input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.filter-submit {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: rgb(28, 63, 77);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: "Ubuntu", sans-serif;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.filter-submit:hover {
+    background-color: rgb(21, 48, 59);
+}
+
+.help a {
     font-family: "Pacifico", cursive;
-    color:  black;
+    color: black;
     font-size: 1.1rem;
     font-weight: 550;
     cursor: pointer;
     text-decoration: none;
 }
+
 .help i {
     font-size: 25px;
     margin-right: 5px;
 }
-.help a:hover{
-    font-weight: 600;
 
-  }
+.help a:hover {
+    font-weight: 600;
+}
