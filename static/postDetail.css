@@ -2,155 +2,141 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  
-  } 
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to right, rgb(28, 63, 77), rgb(153, 216, 241)); /* Change this to your desired color */
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    margin: 0;
+    font-family: "Ubuntu", sans-serif;
+    background-color: #f5f5f5;
     padding-top: 60px;
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
 }
+
+h4 {
+    font-family: "Lora", serif;
+    margin-bottom: 20px;
+}
+
 .post {
-    font-family: "Lora", serif;/* change */
-    color: rgb(0, 0, 0);
-    margin: 0;
-    font-size: 0.5rem;
-    font-weight: 300;
-    font-style:italic;
-    cursor:default;
-    height: fit-content;
-    width: 620px;
-    padding: 10px; /* Optional: Adds some padding inside each post container */
-    background-color: transparent; /* Fixed background color for posts */
-    border-radius: 5px; /* Rounds the corners of the border */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
-    transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth transition */
-    word-wrap: break-word;
-}
-h3{
-    font-family: "Pacifico", cursive;
-    font-weight: 400;
-    font-size: 40px;
-    text-decoration: underline;
-    color: aliceblue;
-}
-h4{
-    position: absolute;
-    margin-right: 500px;
-    top: 0;
-    font-family: "Pacifico", cursive;
-    font-weight: 400;
-    font-size: 40px;
-    font-style: normal;
-    color: aliceblue;
-}
-.post p {
-    margin: 5px 0;
-}
-.comments {
-    color: rgb(0, 0, 0);
-    margin-top: 10px;
-    margin: 0;
-    font-family: "Lora", serif;/* change */
-    font-weight: 600;
-    font-style:normal;
-    width: 600px;
-    margin-top: 10px;
-    padding-right: 0;
-}
-.comment {
-    margin-bottom: 10px;
-    background-color: transparent;
-    padding: 10px;
-    border-radius: 4px;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
-    border: solid black;
-    word-wrap: break-word;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
-.add-comment-button a {
-    background-color: rgb(28, 63, 77); /* Blue background color */
-    color: white; /* Wrgb(0, 0, 0)xt color */   
-    padding: 10px 15px; /* Padding for the button */
-    position: fixed;/* Positioning */
-    bottom: 50px;
-    right: 50px;
-    text-decoration: none;
-    border-radius: 30px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 16px; /* Font size */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
-}
-/* Hover effect for Add Comment button */
-.add-comment-button:hover a{
-    background-color: #005cbd; /* Darker green on hover */
-}
 .post-meta {
-    font-size: 0.7rem;
-    color:  rgba(255, 255, 255, 0.457);
-    font-family: "Lora", serif;/* change */
-    font-weight: 500;
-    font-style:italic;
+    font-size: 0.8rem;
+    color: gray;
+    margin-bottom: 10px;
 }
+
+.post h2 {
+    font-family: "Lora", serif;
+    font-size: 1.5rem;
+    margin: 10px 0;
+}
+
 .post-content {
-    color: rgb(0, 0, 0);
-    margin-top: 10px;
-    margin: 0;
-    font-family: "Lora", serif;/* change */
-    font-weight: 600;
-    font-style:normal;
-    font-size: 1.2rem;
+    font-family: "Lora", serif;
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 10px;
 }
-.small-rectangle button { 
-    flex-grow: 1;
-    text-align: center;
-    border: 1px solid transparent;
-    cursor: pointer;
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+}
+
+.post-actions button {
     background-color: transparent;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 35px;
-    
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    color: #1c3f4d;
 }
 
 
-.small-rectangle i {
-font-size: 15px;
-color: rgb(245, 242, 237);
-margin-right: 3px;
+.post-actions i {
+    margin-right: 5px;
+    font-size: 20px;
 }
 
-.no-comments {
-    color: rgb(245, 242, 237);
-    margin-top: 10px;
-    margin: 0;
-    font-family: "Lora", serif;/* change */
-    font-weight: 600;
-    font-style:normal;
-    font-size: 1.2rem;
-    text-align: center;
+.navigation-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 800px;
 }
-.back a {
-    background-color:rgb(153, 216, 241); /* Blue background color */
-    color: rgb(12, 11, 11); /* Wrgb(0, 0, 0)xt color */   
-    padding: 10px 15px; /* Padding for the button */
-    position: fixed;/* Positioning */
-    bottom: 50px;
-    left: 50px;
+
+.navigation-buttons a {
     text-decoration: none;
-    border-radius: 30px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 16px; /* Font size */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+    color: #1c3f4d;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
 }
 
-/* Hover effect for Add Comment button */
-.back:hover a{
-    background-color: #005cbd; /* Darker green on hover */
+.navigation-buttons a:hover {
+    color: #99d8f1;
+}
+
+.comments {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+}
+
+.comment {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-meta {
+    font-size: 0.8rem;
+    color: gray;
+    margin-bottom: 10px;
+}
+
+.comment-content {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.small-rectangle {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px; /* Adjust the gap between the like and dislike buttons */
+}
+
+.small-rectangle button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #1c3f4d;
+}
+
+.small-rectangle button:hover {
+    font-weight: bold;
 }

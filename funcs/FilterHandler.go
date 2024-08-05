@@ -109,8 +109,22 @@ func FilterHandler(w http.ResponseWriter, r *http.Request) {
 			ErrorPages(w, r, "500", http.StatusInternalServerError)
 		}
 
+		var comments int
+		err = database.QueryRow(`SELECT COUNT(*) FROM comment WHERE postID = ?`, postID).Scan(&comments)
+
+		if err != nil {
+			if err == sql.ErrNoRows {
+				comments = 0
+			} else {
+				log.Println(err)
+				ErrorPages(w, r, "500", http.StatusInternalServerError)
+			}
+		}
+
 		post.ID = postID
 		post.FormattedCreatedAt = post.CreatedAt.Format("2006-01-02 15:04")
+
+		post.Comments = comments
 
 		categories, err := GetCategoriesForPost(postID)
 		if err != nil {

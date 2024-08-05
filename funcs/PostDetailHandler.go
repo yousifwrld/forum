@@ -11,13 +11,16 @@ import (
 )
 
 type PostDetail struct {
-	ID         int
-	Title      string
-	Content    string
-	Username   string
-	CreatedAt  string
-	Comments   []Comment
-	Categories []Category
+	ID            int
+	Title         string
+	Content       string
+	Username      string
+	CreatedAt     string
+	Likes         int
+	Dislikes      int
+	CommentsCount int
+	Comments      []Comment
+	Categories    []Category
 }
 
 func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
@@ -33,9 +36,9 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
 	var UserID int
 
 	err = database.QueryRow(`
-        SELECT postID, title, content, userID, created_at
+        SELECT postID, title, content, userID, created_at, likes, dislikes
         FROM post
-        WHERE postID = ?`, postID).Scan(&post.ID, &post.Title, &post.Content, &UserID, &postCreatedAt)
+        WHERE postID = ?`, postID).Scan(&post.ID, &post.Title, &post.Content, &UserID, &postCreatedAt, &post.Likes, &post.Dislikes)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Println(err)
@@ -53,6 +56,17 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "UserID not found", http.StatusNotFound)
 		return
+	}
+
+	err = database.QueryRow(`SELECT COUNT(*) FROM comment WHERE postID = ?`, postID).Scan(&post.CommentsCount)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			post.CommentsCount = 0
+		} else {
+			log.Println(err)
+			ErrorPages(w, r, "500", http.StatusInternalServerError)
+			return
+		}
 	}
 
 	post.CreatedAt = postCreatedAt.Format("2006-01-02 15:04")

@@ -17,7 +17,6 @@
 </head>
 
 <body>
-    <h4>Post</h4>
     <div class="post">
         <div class="post-meta">
             <small>By {{.Username}}</small><br>
@@ -28,12 +27,16 @@
         </div>
         <h2>{{.Title}}</h2>
         <p class="post-content">{{.Content}}</p>
+
+        <div class="post-actions">
+            <button onclick="handleReaction({{.ID}}, 1, 'post')" class="like-button"><i class='bx bx-like'></i><span id="likeCount-{{.ID}}">{{.Likes}}</span></button>
+            <button onclick="handleReaction({{.ID}}, 0, 'post')" class="dislike-button"><i class='bx bx-dislike'></i><span id="dislikeCount-{{.ID}}">{{.Dislikes}}</span></button>
+            <button  class="comment-button"><i class='bx bx-comment'></i>{{.CommentsCount}} Comments</button>
+        </div>
     </div>
-    <div class="add-comment-button">
-        <a href="/post/{{.ID}}/comment"><i class='bx bxs-comment-detail'></i></a>
-    </div>
-    <div class="back">
-        <a href="/"><i class='bx bx-home-circle'></i></a>
+    <div class="navigation-buttons">
+        <a href="/post/{{.ID}}/comment" class="add-comment-button">+<i class='bx bxs-comment-detail'></i></a>
+        <a href="/" class="back"><i class='bx bx-home-circle'></i></a>
     </div>
     <br>
     {{ if gt (len .Comments) 0 }}

@@ -132,7 +132,7 @@ func getPosts() ([]Post, error) {
 			return nil, err
 		}
 		// Get likes and dislikes for this post
-		likes, dislikes, err := getLikesDislikes(post.ID)
+		likes, dislikes, comments, err := getLikesDislikesComments(post.ID)
 		if err != nil {
 			return nil, err
 		}
@@ -140,6 +140,7 @@ func getPosts() ([]Post, error) {
 		post.Likes = likes
 		post.Dislikes = dislikes
 		post.Categories = categories
+		post.Comments = comments
 
 		// Append post to posts
 		posts = append(posts, post)
@@ -151,7 +152,7 @@ func getPosts() ([]Post, error) {
 	return posts, nil
 }
 
-func getLikesDislikes(postID int) (int, int, error) {
+func getLikesDislikesComments(postID int) (int, int, int, error) {
 	var likes, dislikes int
 	err := database.QueryRow(`
 		SELECT likes, dislikes
@@ -160,9 +161,19 @@ func getLikesDislikes(postID int) (int, int, error) {
 	`, postID).Scan(&likes, &dislikes)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return 0, 0, nil
+			return 0, 0, 0, nil
 		}
-		return 0, 0, err
+		return 0, 0, 0, err
 	}
-	return likes, dislikes, nil
+
+	var comments int
+	err = database.QueryRow(`SELECT COUNT(*) FROM comment WHERE postID = ?`, postID).Scan(&comments)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return 0, 0, 0, nil
+		}
+		return 0, 0, 0, err
+	}
+
+	return likes, dislikes, comments, nil
 }
