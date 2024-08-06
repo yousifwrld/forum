@@ -16,6 +16,8 @@ type Post struct {
 	ID                 int        `json:"id"`
 	Title              string     `json:"title"`
 	Content            string     `json:"content"`
+	Image              []byte     `json:"image"`
+	Base64Image        string     `json:"base64_image"`
 	CreatedAt          time.Time  `json:"created_at"`
 	FormattedCreatedAt string     `json:"formatted_created_at"`
 	Username           string     `json:"username"`

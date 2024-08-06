@@ -39,6 +39,9 @@
                                 {{end}}
                             </div>
                             <p class="post-title">{{.Title}}</p>
+                            {{if .Base64Image}}
+                            <div class="post-image"><img src="data:image/png;base64,{{.Base64Image}}"></div>
+                            {{end}}
                             <p class="post-content">{{.Content}}</p>
                         </div>
                     </a>

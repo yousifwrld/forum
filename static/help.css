@@ -1,105 +1,106 @@
+/* Reset styles */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  
-  } 
-  body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to right, rgb(28, 63, 77), rgb(153, 216, 241)); /* Change this to your desired color */
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    margin: 0;
-    padding-top: 60px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-}
-.bar{
-    display: flex;
-    align-items: center;
-  }
-  .bar i {
-    color: rgb(0, 0, 0);
-    font-size: 35px;
-    margin-right: 10px;
-  }
-  .bar span{
-    font-family: "Pacifico", cursive;
-    font-weight: 400;
-    font-size: 40px;
-    color: white;
-    text-decoration: none;
-    
-  }
-  .home a {
-    background-color: rgb(153, 216, 241); /* Blue background color */
-    color: rgb(28, 63, 77); /* Wrgb(0, 0, 0)xt color */   
-    padding: 10px 15px; /* Padding for the button */
-    position: fixed;/* Positioning */
-    bottom: 50px;
-    left: 50px;
-    text-decoration: none;
-    border-radius: 30px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 16px; /* Font size */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Hover effect for Add Comment button */
-.home:hover a{
-    background-color: #005cbd; /* Darker green on hover */
+body {
+  font-family: "Ubuntu", sans-serif;
+  background-color: #f5f5f5;
+  padding-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
 }
-.con{
 
+/* Header styles */
+header {
+  height: 60px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  background-color: #1c3f4d;
+  padding: 0 10%;
+}
+
+.bar {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+.bar i {
+  color: #99d8f1;
+  font-size: 28px;
+  margin-right: 8px;
+}
+
+.bar span {
+  font-family: "Pacifico", cursive;
+  font-size: 24px;
+  color: white;
+}
+
+/* Main content styles */
+main {
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 100px;
+  display: flex;
+  justify-content: center;
+}
+
+.con {
   display: flex;
   flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: space-evenly;
-  gap: 14rem;
+  gap: 20px;
+  justify-content: center;
 }
-.con1{
-  border: solid black;
-  height: 40px;
+
+.con1, .con2, .con3 {
+  background-color: #1c3f4d;
   border-radius: 15px;
-  width: 150px;
-  background-color: #5865F2;
-  padding: 5px;
-  position: relative;
-  font-family:"Bangers", system-ui;
-  font-weight: 400;
-  font-size: 25px;
-  color: white; 
+  width: 200px;
+  padding: 10px;
+  text-align: center;
+  font-family: "Bangers", sans-serif;
+  font-size: 20px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
-.con2{
-  border: solid black;
-  height: 40px;
-  border-radius: 15px;
-  width: 150px;
-  background-color: #5865F2;
-  padding: 5px;
-  position: relative;
-  font-family:"Bangers", system-ui;
-  font-weight: 400;
+
+.con i {
+  color: white;
   font-size: 25px;
-  color: white; 
 }
-.con3{
-  border: solid black;
-  height: 40px;
-  border-radius: 15px;
-  width: 150px;
-  background-color: #5865F2;
-  padding: 5px;
-  position: relative;
-  font-family:"Bangers", system-ui;
-  font-weight: 400;
-  font-size: 25px;
-  color: white; 
+
+.home {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
 }
-.con i{
-  color: rgb(250, 252, 253);
-  font-size: 25px;
-  margin-right: 5px;
+
+.home a {
+  background-color: #1c3f4d;
+  color: white;
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 30px;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.home a:hover {
+  background-color: #143140;
 }

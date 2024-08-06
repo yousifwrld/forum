@@ -26,6 +26,9 @@
             {{end}}
         </div>
         <h2>{{.Title}}</h2>
+        {{if .Base64Image}}
+        <div class="post-image"><img src="data:image/png;base64,{{.Base64Image}}"></div>
+        {{end}}
         <p class="post-content">{{.Content}}</p>
 
         <div class="post-actions">

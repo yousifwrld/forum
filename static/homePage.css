@@ -254,6 +254,17 @@ ul {
     font-weight: 600;
     margin-bottom: 10px;
 }
+.post-image {
+    margin: 10px 0; /* Add some space above and below the image */
+    text-align: center; /* Center the image */
+}
+
+.post-image img {
+    max-width: 90%;
+    height: auto; 
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: add a subtle shadow */
+}
 
 .post-content {
     font-family: "Lora", serif;

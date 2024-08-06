@@ -2,6 +2,7 @@ package forum
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"html/template"
 	"log"
 	"net/http"
@@ -14,6 +15,8 @@ type PostDetail struct {
 	ID            int
 	Title         string
 	Content       string
+	image         []byte
+	Base64Image   string
 	Username      string
 	CreatedAt     string
 	Likes         int
@@ -35,10 +38,11 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
 	var postCreatedAt time.Time
 	var UserID int
 
+	//get the post from the database
 	err = database.QueryRow(`
-        SELECT postID, title, content, userID, created_at, likes, dislikes
+        SELECT postID, title, content, image, userID, created_at, likes, dislikes
         FROM post
-        WHERE postID = ?`, postID).Scan(&post.ID, &post.Title, &post.Content, &UserID, &postCreatedAt, &post.Likes, &post.Dislikes)
+        WHERE postID = ?`, postID).Scan(&post.ID, &post.Title, &post.Content, &post.image, &UserID, &postCreatedAt, &post.Likes, &post.Dislikes)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Println(err)
@@ -49,6 +53,7 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
 		ErrorPages(w, r, "500", http.StatusInternalServerError)
 		return
 	}
+	//get the username of the user that posted
 	err = database.QueryRow(`
 		SELECT username 
 		FROM user
@@ -58,6 +63,7 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//get the count of comments for the post
 	err = database.QueryRow(`SELECT COUNT(*) FROM comment WHERE postID = ?`, postID).Scan(&post.CommentsCount)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -69,16 +75,21 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	//convert the image into a base64 string to display it in the HTML
+	post.Base64Image = base64.StdEncoding.EncodeToString(post.image)
+
+	//format the time into a more readable format
 	post.CreatedAt = postCreatedAt.Format("2006-01-02 15:04")
+	//get the comments for the post
 	comments, err := GetPostComments(postID)
 	if err != nil {
 		log.Println(err)
 		ErrorPages(w, r, "500", http.StatusInternalServerError)
 		return
 	}
-
 	post.Comments = comments
 
+	//get the categories associated with the post
 	categories, err := GetCategoriesForPost(postID)
 	if err != nil {
 		log.Println(err)

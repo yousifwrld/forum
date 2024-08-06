@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,12 +11,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <header>
         <a class="bar"><i class='bx bxl-twitter'></i><span>New Post</span></a>
     </header>
     <div class="post-form">
-        <form method="post" action="/create-post" onsubmit="return validateForm()">
+        <!-- post-form enctype set to "multipart/form-data" to upload image -->
+        <form method="post" action="/create-post" onsubmit="return validateForm()" enctype="multipart/form-data">
             <div class="categories">
                 {{range .}}
                 <label for="{{.Name}}" class="category-label">
@@ -25,6 +28,9 @@
                 {{end}}
             </div>
             <input type="text" name="title" id="title" class="ptitle" placeholder="Post Title" required>
+            <label for="image">Upload Image</label>
+            <input type="file" name="image" id="image" class="pimage">
+            <p class="image-error" id="image-error" style="color: red;"></p>
             <textarea name="content" id="content" placeholder="Write your post here..." required></textarea>
             <button type="submit">Post</button>
         </form>
@@ -34,7 +40,7 @@
     </div>
     <script>
         document.querySelectorAll('.category-label input').forEach(input => {
-            input.addEventListener('change', function() {
+            input.addEventListener('change', function () {
                 if (this.checked) {
                     this.parentElement.classList.add('selected');
                 } else {
@@ -42,11 +48,13 @@
                 }
             });
         });
-    
+
 
         function validateForm() {
             const title = document.getElementById('title').value.trim();
             const content = document.getElementById('content').value.trim();
+            const image = document.getElementById('image');
+            const imageError = document.getElementById('image-error');
             const checkboxes = document.querySelectorAll('input[name="category"]');
             const checked = Array.from(checkboxes).some(checkbox => checkbox.checked);
 
@@ -65,8 +73,24 @@
                 return false;
             }
 
+            const fileExtensions = ['png', 'jpeg', 'gif'];
+            if (image.files.length > 0) { // Check if any file is selected
+                const file = image.files[0]; // Get the first file (since only one is allowed)
+                const extension = file.name.split('.').pop().toLowerCase(); // Extract the file extension, pop will get the last element of the array which is the extension
+                if (!fileExtensions.includes(extension)) { // Check if the extension is allowed
+                    imageError.textContent = 'Invalid file type. Only PNG, JPEG, and GIF files are allowed.';
+                    return false; // Prevent form submission if the file type is not allowed
+                }else if (file.size > (20 * 1024 * 1024)) { //check if the file size is bigger than 20mb
+                    imageError.textContent = 'File size is too large. Maximum file size is 20MB.';
+                    return false;
+                }
+            }
+
+
+            imageError.textContent = '';
             return true;
         }
     </script>
 </body>
+
 </html>

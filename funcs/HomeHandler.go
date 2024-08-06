@@ -2,6 +2,7 @@ package forum
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"html/template"
 	"log"
 	"net/http"
@@ -9,11 +10,14 @@ import (
 )
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	//struct with all the data we need for the page
 	type PageData struct {
 		Posts              []Post
 		IsLoggedIn         bool
 		FilteredCategories []Category
 	}
+
+	//validate path and method type
 	if r.URL.Path != "/" {
 		ErrorPages(w, r, "404", http.StatusNotFound)
 		return
@@ -23,8 +27,10 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//check if the user is logged in or no to display correct buttons (login/logout)
 	isLoggedIn := false
 
+	//get the sessionID from the cookie if available
 	sessionID, err := GetSessionFromCookie(r)
 	if err != nil {
 		if err == http.ErrNoCookie {
@@ -36,6 +42,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	//if a session was available get the userID associated with the session
 	userID, err := GetIDFromSession(sessionID)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -47,10 +54,12 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	//if a userID was retrieved then the user is logged in
 	if userID != 0 {
 		isLoggedIn = true
 	}
 
+	//get all the posts for the home page
 	posts, err := getPosts()
 	if err != nil {
 		log.Println("Error getting posts:", err)
@@ -58,7 +67,9 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//get the categories for the filters
+	//get the categories for the filters option
+
+	//select all of the categories from the database
 	var filteredCategories []Category
 	rows, err := database.Query(`SELECT categoryID, name FROM category`)
 	if err != nil {
@@ -75,6 +86,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 			ErrorPages(w, r, "500", http.StatusInternalServerError)
 			return
 		}
+		//append the category to the array, to loop over in html
 		filteredCategories = append(filteredCategories, category)
 	}
 	if err := rows.Err(); err != nil {
@@ -108,8 +120,9 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 func getPosts() ([]Post, error) {
+	//select all the posts with all the info from the database
 	rows, err := database.Query(`
-        SELECT p.postID, p.title, p.content, p.created_at, u.username 
+        SELECT p.postID, p.title, p.content, p.image, p.created_at, u.username 
         FROM post p
         JOIN user u ON p.userID = u.userID
     `)
@@ -119,24 +132,30 @@ func getPosts() ([]Post, error) {
 	defer rows.Close()
 
 	var posts []Post
+	//loop over the result rows and append each post to the posts slice
 	for rows.Next() {
 		var post Post
-		if err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.CreatedAt, &post.Username); err != nil {
+		// Scan the result rows into the post struct
+		if err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Image, &post.CreatedAt, &post.Username); err != nil {
 			return nil, err
 		}
+
+		// Base64 encode the image to display it in the HTML
+		post.Base64Image = base64.StdEncoding.EncodeToString(post.Image)
+		//format the time into a more readable format
 		post.FormattedCreatedAt = post.CreatedAt.Format("2006-01-02 15:04")
 
-		// Fetch categories for this post
+		// Fetch categories associated with this post
 		categories, err := GetCategoriesForPost(post.ID)
 		if err != nil {
 			return nil, err
 		}
-		// Get likes and dislikes for this post
+		// Get likes and dislikes and comments count for this post
 		likes, dislikes, comments, err := getLikesDislikesComments(post.ID)
 		if err != nil {
 			return nil, err
 		}
-		//save likes, dislikes and categories for each post
+		//save likes, dislikes, comments and categories for each post
 		post.Likes = likes
 		post.Dislikes = dislikes
 		post.Categories = categories

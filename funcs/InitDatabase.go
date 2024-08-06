@@ -47,6 +47,7 @@ func InitDatabase() error {
 			postID INTEGER PRIMARY KEY AUTOINCREMENT,
 			title TEXT NOT NULL,
 			content TEXT NOT NULL,
+			image BLOB,
 			likes INTEGER DEFAULT 0,
 			dislikes INTEGER DEFAULT 0,
 			created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -128,7 +129,7 @@ func InitDatabase() error {
 			return
 		}
 		// Insert a test post
-		if(!dbExists) {
+		if !dbExists {
 			err = insertTestPost()
 			if err != nil {
 				fmt.Printf("Error inserting test post: %v\n", err)

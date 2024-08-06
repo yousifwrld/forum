@@ -1,6 +1,7 @@
 package forum
 
 import (
+	"encoding/base64"
 	"html/template"
 	"log"
 	"net/http"
@@ -81,7 +82,7 @@ func getPostsByUserID(userID int) ([]Post, error) {
 	}
 
 	//
-	rows, err := tx.Query(`SELECT postID, title, content, likes, dislikes, created_at FROM post WHERE userID = ?`, userID)
+	rows, err := tx.Query(`SELECT postID, title, content, image, likes, dislikes, created_at FROM post WHERE userID = ?`, userID)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -102,7 +103,7 @@ func getPostsByUserID(userID int) ([]Post, error) {
 	for rows.Next() {
 		var post Post
 		//scan the rows into the post struct
-		if err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Likes, &post.Dislikes, &post.CreatedAt); err != nil {
+		if err := rows.Scan(&post.ID, &post.Title, &post.Content, &post.Image, &post.Likes, &post.Dislikes, &post.CreatedAt); err != nil {
 			log.Println(err)
 			return nil, err
 		}
@@ -114,6 +115,8 @@ func getPostsByUserID(userID int) ([]Post, error) {
 			return nil, err
 		}
 
+		//base64 encode the image to display it in the HTML
+		post.Base64Image = base64.StdEncoding.EncodeToString(post.Image)
 		//save the categories for each post, and format the time
 		post.Categories = categories
 		post.FormattedCreatedAt = post.CreatedAt.Format("2006-01-02 15:04")
@@ -145,6 +148,7 @@ func getLikedPostsByUserID(userID int) ([]Post, error) {
 		return nil, err
 	}
 
+	//rollback the transaction or error, or commit on success
 	defer func() {
 		if err != nil {
 			tx.Rollback()
@@ -172,14 +176,14 @@ func getLikedPostsByUserID(userID int) ([]Post, error) {
 
 		// Now we query the details for the post
 		postRow := tx.QueryRow(`
-		SELECT p.postID, p.title, p.content, p.likes, p.dislikes, p.created_at, u.username
+		SELECT p.postID, p.title, p.content, p.image, p.likes, p.dislikes, p.created_at, u.username
 		FROM post p
 		JOIN user u ON p.userID = u.userID
 		WHERE p.postID = ?
 		`, postID)
 
 		var post Post
-		if err := postRow.Scan(&post.ID, &post.Title, &post.Content, &post.Likes, &post.Dislikes, &post.CreatedAt, &post.Username); err != nil {
+		if err := postRow.Scan(&post.ID, &post.Title, &post.Content, &post.Image, &post.Likes, &post.Dislikes, &post.CreatedAt, &post.Username); err != nil {
 			log.Println(err)
 			return nil, err
 		}
@@ -191,6 +195,8 @@ func getLikedPostsByUserID(userID int) ([]Post, error) {
 			return nil, err
 		}
 
+		//base64 encode the image to display it in the HTML
+		post.Base64Image = base64.StdEncoding.EncodeToString(post.Image)
 		//save the categories for each post, and format the time
 		post.Categories = categories
 		post.FormattedCreatedAt = post.CreatedAt.Format("2006-01-02 15:04")
