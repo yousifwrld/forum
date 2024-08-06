@@ -28,10 +28,12 @@
                 {{end}}
             </div>
             <input type="text" name="title" id="title" class="ptitle" placeholder="Post Title" required>
+            <p class="title-error" id="title-error" style="color: red;"></p>
             <label for="image">Upload Image</label>
             <input type="file" name="image" id="image" class="pimage">
             <p class="image-error" id="image-error" style="color: red;"></p>
             <textarea name="content" id="content" placeholder="Write your post here..." required></textarea>
+            <p class="content-error" id="content-error" style="color: red;"></p>
             <button type="submit">Post</button>
         </form>
     </div>
@@ -55,16 +57,22 @@
             const content = document.getElementById('content').value.trim();
             const image = document.getElementById('image');
             const imageError = document.getElementById('image-error');
+            const contentError = document.getElementById('content-error');
+            const titleError = document.getElementById('title-error');
             const checkboxes = document.querySelectorAll('input[name="category"]');
             const checked = Array.from(checkboxes).some(checkbox => checkbox.checked);
 
             if (title === '') {
-                alert('Title cannot be empty');
+                titleError.textContent = 'Post title cannot be empty.';
+                contentError.textContent = '';
+                imageError.textContent = '';
                 return false;
             }
 
             if (content === '') {
-                alert('Content cannot be empty');
+                titleError.textContent = '';
+                imageError.textContent = '';
+                contentError.textContent = 'Post content cannot be empty.';
                 return false;
             }
 
