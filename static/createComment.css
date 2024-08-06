@@ -1,122 +1,144 @@
+/* Reset styles */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  
-  } 
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* General body styles */
 body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to right, rgb(28, 63, 77), rgb(153, 216, 241)); /* Change this to your desired color */
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    margin: 0;
-    padding-top: 60px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0; /* Simple background color like the home page */
+  margin: 0;
+  padding-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
 }
-.post-form, .posts {
-    width: 100%;
-    max-width: 800px;
-    margin: 20px;
-    padding: 20px;
-    background-color: transparent;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+/* Form container styles */
+.post-form {
+  width: 100%;
+  max-width: 800px;
+  margin: 20px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
+
+/* Textarea styles */
 .post-form textarea {
-    width: 100%;
-    height: 100px;
-    margin-top: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 7px;
-    box-sizing: border-box;
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  resize: none;
+  box-sizing: border-box;
+  margin-top: 10px;
 }
+
+/* Button styles */
 .post-form button {
-    font-family: "Pacifico", cursive; /*change*/
-    background-color:transparent;
-    color: white;
-    font-size: 20px;
-    padding: 10px;
-    margin-top: 10px;
-    width: 100%;
-    border: none;
-    border-radius: 15px;
-    cursor: pointer;
+  font-family: "Pacifico", cursive;
+  background-color: #1c3f4d;
+  color: white;
+  font-size: 20px;
+  padding: 10px;
+  margin-top: 10px;
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
+
+/* Button hover effect */
 .post-form button:hover {
-    color: rgb(28, 63, 77);
+  background-color: #15303c;
 }
-.post-form .ptitle{
-    border-radius: 2px;
-    border: none;
+
+/* Back button container */
+.back {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
 }
+
+/* Back button styles */
 .back a {
-    background-color: rgb(28, 63, 77); /* Blue background color */
-    color: white; /* Wrgb(0, 0, 0)xt color */   
-    padding: 10px 15px; /* Padding for the button */
-    position: fixed;/* Positioning */
-    bottom: 50px;
-    right: 50px;
-    text-decoration: none;
-    border-radius: 30px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 16px; /* Font size */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+  background-color: #1c3f4d;
+  color: white;
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
 }
 
-/* Hover effect for Add Comment button */
-.back:hover a{
-    background-color: #005cbd; /* Darker green on hover */
-}
-  
-  header{
-    height: 60px;
-    position: fixed;
-    width: 100%;
-    top:0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(to right, rgb(28, 63, 77), rgb(153, 216, 241));
-    padding: 28px 12%;
-    border-radius: 1px;
-    transition: all .50s ease;
-  }
-  .bar{
-    display: flex;
-    align-items: center;
-  }
-  .bar i {
-    color: rgb(153, 216, 241);
-    font-size: 28px;
-    margin-right: 3px;
-  }
-  .bar span{
-    font-family: "Pacifico", cursive;
-    font-weight: 400;
-    font-size: 40px;
-    color: white;
-    font-style: normal;
-  }
-  .home a {
-    background-color: rgb(153, 216, 241); /* Blue background color */
-    color: rgb(28, 63, 77); /* Wrgb(0, 0, 0)xt color */   
-    padding: 10px 15px; /* Padding for the button */
-    position: fixed;/* Positioning */
-    bottom: 50px;
-    left: 50px;
-    text-decoration: none;
-    border-radius: 30px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    font-size: 16px; /* Font size */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for hover effects */
+/* Back button hover effect */
+.back a:hover {
+  background-color: #15303c;
 }
 
-/* Hover effect for Add Comment button */
-.home:hover a{
-    background-color: #005cbd; /* Darker green on hover */
+/* Home button container */
+.home {
+  position: fixed;
+  bottom: 50px;
+  left: 50px;
+}
+
+/* Home button styles */
+.home a {
+  background-color: #1c3f4d;
+  color: white;
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+/* Home button hover effect */
+.home a:hover {
+  background-color: #15303c;
+}
+
+/* Header styles */
+header {
+  height: 60px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1c3f4d;
+  padding: 28px 12%;
+  border-radius: 1px;
+  transition: all 0.5s ease;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+}
+
+.bar i {
+  color: white;
+  font-size: 28px;
+  margin-right: 3px;
+}
+
+.bar span {
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+  font-size: 40px;
+  color: white;
+  font-style: normal;
 }

@@ -5,9 +5,8 @@
 }
 
 body {
-  background: linear-gradient(to right, rgb(28, 63, 77), rgb(153, 216, 241));
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0; /* Simple background color like the home page */
   margin: 0;
   padding-top: 60px;
   display: flex;
@@ -26,7 +25,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(to right, rgb(28, 63, 77), rgb(153, 216, 241));
+  background: #1c3f4d; /* Changed to match theme */
   padding: 20px 10%;
   border-radius: 1px;
 }
@@ -52,16 +51,16 @@ header {
 
 .container {
   width: 60%;
-  background-color: white;
+  background-color: white; /* Changed to white for simplicity */
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
 }
 
 h1 {
   font-family: "Ubuntu", sans-serif;
-  color: rgb(28, 63, 77);
+  color: #1c3f4d; /* Changed to match theme */
   margin-bottom: 20px;
 }
 
@@ -69,7 +68,7 @@ h1 {
   display: flex;
   position: relative;
   margin-bottom: 20px;
-  border-bottom: 2px solid rgb(153, 216, 241);
+  border-bottom: 2px solid #1c3f4d; /* Changed to match theme */
 }
 
 .tab-button {
@@ -82,19 +81,19 @@ h1 {
   background: none;
   border: none;
   outline: none;
-  color: rgb(28, 63, 77);
+  color: #1c3f4d; /* Changed to match theme */
   transition: color 0.3s ease;
 }
 
 .tab-button:hover, .tab-button.active {
-  color: rgb(153, 216, 241);
+  color: #15303c; /* Changed to match theme */
 }
 
 .underline {
   position: absolute;
   bottom: -1.5px;
   height: 2px;
-  background-color: rgb(65, 124, 148);
+  background-color: #1c3f4d; /* Changed to match theme */
   transition: width 0.3s ease, left 0.3s ease;
 }
 
@@ -122,26 +121,26 @@ h1 {
 
 .post {
   padding: 15px;
-  border: 1px solid rgb(153, 216, 241);
+  border: 1px solid #1c3f4d; /* Changed to match theme */
   border-radius: 5px;
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .post:hover {
   background-color: #f0f0f0;
-  border-color: rgb(28, 63, 77);
+  border-color: #1c3f4d; /* Changed to match theme */
 }
 
 .post-meta {
   font-size: 0.8rem;
-  color: rgb(153, 216, 241);
+  color: #1c3f4d; /* Changed to match theme */
 }
 
 .post-title {
   font-size: 1.2rem;
   font-weight: 600;
   margin-top: 10px;
-  color: rgb(28, 63, 77);
+  color: #1c3f4d; /* Changed to match theme */
 }
 
 .post-content {

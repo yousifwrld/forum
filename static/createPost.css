@@ -68,11 +68,11 @@ body {
 /* Textarea styles */
 .post-form textarea {
   width: 100%;
-  height: 150px; /* Increased height */
+  height: 150px;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  resize: vertical; /* Allow resizing only if content overflows */
+  resize: none;
   box-sizing: border-box;
 }
 
