@@ -26,7 +26,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 		err := validateCredentials(email, username, password)
 		if err != nil {
-			ErrorPages(w, r, err.Error(), http.StatusBadRequest, "templates/register.html")
+			ErrorPages(w, r, "400", http.StatusBadRequest)
 			return
 		}
 

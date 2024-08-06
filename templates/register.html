@@ -10,26 +10,24 @@
 <body>
     <div class="wrapper">
         <h1>Register</h1>
-    <form action="/register" method="post">
+    <form action="/register" method="post" onsubmit="return validateForm()">
         <div class="input-field">
-    <input type="email" name="email" placeholder="Email" required>
+    <input type="email" name="email" id="email" placeholder="Email" required>
     <i class='bx bx-envelope'></i>   
 </div>
         <div class="input-field">
-    <input type="text" name="username" placeholder="Username" required>
+    <input type="text" name="username" id="username" placeholder="Username" required>
     <i class='bx bx-user-circle'></i>
 </div>
         <div class="input-field">
-    <input type="password" name="password" placeholder="Password" required>
+    <input type="password" name="password" id="password" placeholder="Password" required>
     <i class='bx bxs-lock'></i>
 </div>
         <button type="submit" class="btn">Register</button>
     </form>
 
-    {{if ne .Msg ""}}
 
-    <p class="err">{{.Msg}}</p>
-    {{end}}
+    <p id="err" class="err"></p>
         <div class="register">
     <p>Already Have An Account <a href="/login">Login</a></p>
         </div>
@@ -37,5 +35,34 @@
     <a href="/">Continue Without An Account</a>
 </div>
 </div>
+
+<script>
+    function validateForm() {
+        const email = document.getElementById("email").value.trim();
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const errMsg = document.getElementById("err");
+
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const usernameRegex = /^[a-zA-Z0-9]+$/;
+
+        if (!emailRegex.test(email)) {
+            errMsg.textContent = "Invalid email";
+            return false;
+        }
+        if (!usernameRegex.test(username)) {
+            errMsg.textContent = "Invalid username";
+            return false;
+        }
+        if (password.length < 8 || password == "") {
+            errMsg.textContent = "Invalid password";
+            return false;
+        }
+
+        errMsg.textContent = "";
+        return true;
+    }
+</script>
+d
 </body>
 </html>
