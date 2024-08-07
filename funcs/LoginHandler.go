@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"strings"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -12,25 +13,30 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		DeleteCookiesAndSession(w, r)
-		if r.URL.Query().Get("email") != "" || r.URL.Query().Get("username") != "" || r.URL.Query().Get("password") != "" {
+		if r.URL.Query().Get("username") != "" || r.URL.Query().Get("password") != "" {
 			ErrorPages(w, r, "405", http.StatusMethodNotAllowed)
 			return
 		}
 		RenderTemplate(w, "templates/login.html", nil)
 	case "POST":
 
-		email := r.FormValue("email")
-		password := r.FormValue("password")
+		username := strings.ToLower(strings.TrimSpace(r.PostFormValue("username")))
+		password := strings.TrimSpace(r.FormValue("password"))
+
+		if username == "" || password == "" {
+			ErrorPages(w, r, "user not found", http.StatusBadRequest, "templates/login.html")
+			return
+		}
 		var hashedPassword string
 		var userID int
 
 		// get the hashed user password that matches the email
-		err := database.QueryRow(`SELECT Password, UserID FROM USER WHERE Email = ?`, email).Scan(&hashedPassword, &userID)
+		err := database.QueryRow(`SELECT Password, UserID FROM USER WHERE Username = ?`, username).Scan(&hashedPassword, &userID)
 		if err != nil {
 			// if no results (0 rows found) means that the user doesn't exist
 			if err == sql.ErrNoRows {
 				log.Println(err)
-				ErrorPages(w, r, "invalid email", http.StatusBadRequest, "templates/login.html")
+				ErrorPages(w, r, "user not found", http.StatusBadRequest, "templates/login.html")
 				return
 			} else {
 				// any other error mainly related to the execution of the query

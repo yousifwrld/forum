@@ -54,8 +54,8 @@ func ErrorPages(w http.ResponseWriter, r *http.Request, errMessage string, code 
 		templatePath = path[0]
 
 	// login related errors
-	case "invalid credentials":
-		data = Error{Code: "400", Msg: "Invalid credentials."}
+	case "user not found":
+		data = Error{Code: "400", Msg: "Invalid username or password."}
 		templatePath = path[0]
 
 	case "invalid password":

@@ -1,36 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forum - Login</title>
     <link rel="stylesheet" type="text/css" href="/static/loginPage.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://kit.fontawesome.com/69ca0ee76d.js" crossorigin="anonymous"></script>
+    <style>
+        #passcheck {
+            display: none;
+        }
+    </style>
 </head>
+
 <body>
     <div class="wrapper">
         <h1>Login</h1>
-    <form action="/login" method="post">
-        <div class="input-field">
-    <input type="email" name="email" placeholder="Email" required>
-    <i class='bx bx-envelope'></i>       
-</div>
-    <div class="input-field">
-        <input type="password" name="password" placeholder="Password" required>
-        <i class='bx bxs-lock'></i>
-    </div>
-    <button type="submit"class="btn">Login</button>
-    </form>
+        <form action="/login" method="post" onsubmit="return validateForm()">
+            <div class="input-field">
+                <input id="username" type="text" name="username" placeholder="Username" required>
+                <i class='bx bx-user-circle'></i>
+            </div>
+            <div class="input-field">
+                <input id="password" type="password" name="password" placeholder="Password" required>
+                <input type="checkbox" id="passcheck">
+                <i id="eye" class='bx bx-show-alt'></i>
+            </div>
+            <button type="submit" class="btn">Login</button>
+        </form>
 
-    {{if ne .Msg ""}}
-    <p class="err"z>{{.Msg}}</p>
-    {{end}}
-    <div class="register">
-    <p>Don't have an account? <a href="/register">Register</a></p>
+        {{if .Msg}}
+        <p id="BackendErr" class="err">{{.Msg}}</p>
+        {{end}}
+        <p id="err" class="err"></p>
+        <div class="register">
+            <p>Don't have an account? <a href="/register">Register</a></p>
+        </div>
+        <div class="noacc">
+            <a href="/">Continue Without An Account</a>
+        </div>
     </div>
-    <div class="noacc">
-    <a href="/">Continue Without An Account</a>
-</div>
-</div>
+
+    <script>
+        //get the eye icon password field and checkbox
+        const eye = document.getElementById("eye");
+        const password = document.getElementById("password");
+        const passcheck = document.getElementById("passcheck");
+
+        //change visibility of the password on click
+        eye.addEventListener("click", function () {
+            passcheck.checked = !passcheck.checked;
+            if (passcheck.checked) {
+                password.setAttribute("type", "text");
+                eye.classList.remove("bx-show-alt");
+                eye.classList.add("bx-hide");
+            } else {
+                password.setAttribute("type", "password");
+                eye.classList.remove("bx-hide");
+                eye.classList.add("bx-show-alt");
+            }
+        });
+
+        function validateForm() {
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const errMsg = document.getElementById("err");
+            const BackendErr = document.getElementById("BackendErr");
+
+            if (username === "") {
+                errMsg.textContent = "Invalid username";
+                BackendErr.textContent = "";
+                return false;
+            } else if (password === "") {
+                errMsg.textContent = "Invalid password";
+                BackendErr.textContent = "";
+                return false;
+            }
+            errMsg.textContent = "";
+            return true;
+        }
+    </script>
 </body>
+
 </html>

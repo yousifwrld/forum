@@ -115,3 +115,12 @@ button:hover {
     padding-top: 5px;
     text-align: center;
 }
+
+#passcheck {
+    display: none;
+  }
+  
+  #eye:hover {
+    cursor: pointer;
+  }
+  
