@@ -88,12 +88,12 @@
                 return false;
             }
 
-            const fileExtensions = ['png', 'jpeg', 'gif'];
+            const fileExtensions = ['png', 'jpeg', 'gif', 'jpg'];
             if (image.files.length > 0) { // Check if any file is selected
                 const file = image.files[0]; // Get the first file (since only one is allowed)
                 const extension = file.name.split('.').pop().toLowerCase(); // Extract the file extension, pop will get the last element of the array which is the extension
                 if (!fileExtensions.includes(extension)) { // Check if the extension is allowed
-                    imageError.textContent = 'Invalid file type. Only PNG, JPEG, and GIF files are allowed.';
+                    imageError.textContent = 'Invalid file type. Only PNG, JPEG, JPG, and GIF files are allowed.';
                     return false; // Prevent form submission if the file type is not allowed
                 } else if (file.size > (20 * 1024 * 1024)) { //check if the file size is bigger than 20mb
                     imageError.textContent = 'File size is too large. Maximum file size is 20MB.';

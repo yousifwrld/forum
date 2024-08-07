@@ -11,7 +11,6 @@ import (
 )
 
 func FilterHandler(w http.ResponseWriter, r *http.Request) {
-
 	type PageData struct {
 		Posts            []Post
 		IsLoggedIn       bool
@@ -61,7 +60,7 @@ func FilterHandler(w http.ResponseWriter, r *http.Request) {
 	categories := r.Form["filter"]
 
 	if len(categories) == 0 {
-		ErrorPages(w, r, "400", http.StatusBadRequest)
+		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
 
@@ -142,7 +141,7 @@ func FilterHandler(w http.ResponseWriter, r *http.Request) {
 		return posts[i].CreatedAt.After(posts[j].CreatedAt)
 	})
 
-	//get the categories for the filters
+	// get the categories for the filters
 	var filterCategories []Category
 	rows, err = database.Query(`SELECT categoryID, name FROM category`)
 	if err != nil {
@@ -173,11 +172,10 @@ func FilterHandler(w http.ResponseWriter, r *http.Request) {
 
 		FilterCategories: filterCategories,
 	}
-	//to be able to use the joinAndTrim function in the html
+	// to be able to use the joinAndTrim function in the html
 	tmpl, err := template.New("filter.html").Funcs(template.FuncMap{
 		"joinAndTrim": joinAndTrim,
 	}).ParseFiles("templates/filter.html")
-
 	if err != nil {
 		log.Println(err)
 		ErrorPages(w, r, "500", http.StatusInternalServerError)
@@ -189,5 +187,4 @@ func FilterHandler(w http.ResponseWriter, r *http.Request) {
 		ErrorPages(w, r, "500", http.StatusInternalServerError)
 		return
 	}
-
 }

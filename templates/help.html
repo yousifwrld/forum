@@ -13,7 +13,34 @@
 </head>
 <body>
     <header>
+        
         <a class="bar"><i class='bx bx-support'></i><span>Help & Support</span></a>
+        <div class="header-right">
+            <a onclick="toggleMenu()" class="mann"><i class='bx bx-menu'></i></a>
+        </div>
+
+        <div class="sub-menu-wrap" id="subMenu">
+            <div class="sub-menu">
+                <div class="user">
+                    <a href="/user-info"><i class='bx bx-user-circle'></i>User</a>
+                </div>
+                <hr>
+                <div class="home">
+                    <a href="/"><i class='bx bx-home-circle'></i>Home</a>
+                </div>
+                <hr>
+                <div class="help">
+                    <a href="/help"><i class='bx bx-help-circle'></i>Help & Support</a>
+                </div>
+                <hr>
+                <div class="logout">
+                    <form action="/logout" method="post">
+                        <button type="submit"><i class='bx bx-log-out-circle'></i>Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </header>
 
     <main>
@@ -25,8 +52,14 @@
         </div>
     </main>
 
-    <div class="home">
-        <a href="/"><i class='bx bx-home-circle'></i></a>
     </div>
+
+    <script>
+        function toggleMenu() {
+    const subMenu = document.getElementById("subMenu");
+
+    subMenu.classList.toggle("open-menu");
+}
+    </script>
 </body>
 </html>

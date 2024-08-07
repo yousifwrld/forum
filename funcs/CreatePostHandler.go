@@ -9,7 +9,6 @@ import (
 )
 
 func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
-
 	// Check if the user is authenticated, and get the userID from the request context
 	userID := r.Context().Value(userIDKey).(int)
 
@@ -22,7 +21,7 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		// Render the form with the categories to choose from
 
-		//get them from the database
+		// get them from the database
 		var categories []Category
 		rows, err := database.Query(`SELECT categoryID, name FROM category`)
 		if err != nil {
@@ -60,16 +59,16 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 
 		// Get the categories from the form using r.MultipartForm.Value instead of r.FormValue it only returns the first value
 		categories := r.MultipartForm.Value["category"]
-		//get the form values normally
+		// get the form values normally
 		title := r.FormValue("title")
 		content := r.FormValue("content")
 
 		// Get the image from the form
-		//form file will return the first file provided
+		// form file will return the first file provided
 		image, _, err := r.FormFile("image")
 
 		if err != nil {
-			//if no image was uploaded which is okay because its optional
+			// if no image was uploaded which is okay because its optional
 			if err == http.ErrMissingFile {
 				// No file was uploaded
 				log.Println("No image uploaded")
@@ -85,10 +84,10 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 			defer image.Close()
 		}
 
-		//convert the image into bytes so that we can insert it into the database using blob data type which is used for big binary data
+		// convert the image into bytes so that we can insert it into the database using blob data type which is used for big binary data
 		var imageBytes []byte
 		if image != nil {
-			//read the image
+			// read the image
 			imageBytes, err = io.ReadAll(image)
 			if err != nil {
 				log.Println(err)
@@ -133,21 +132,20 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreatePost(userID int, title, content string, image []byte, categories []string) error {
-
-	//begin a transaction
+	// begin a transaction
 	tx, err := database.Begin()
 	if err != nil {
 		return err
 	}
 
-	//insert the post into the database with the image, it will be null incase of no image
+	// insert the post into the database with the image, it will be null incase of no image
 	result, err := tx.Exec("INSERT INTO post (userID, title, content, image) VALUES (?, ?, ?, ?)", userID, title, content, image)
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
 
-	//get the post id to add the post categories
+	// get the post id to add the post categories
 	postID, err := result.LastInsertId()
 	if err != nil {
 		tx.Rollback()
@@ -156,7 +154,7 @@ func CreatePost(userID int, title, content string, image []byte, categories []st
 
 	var catIds []int
 
-	//convert the ids to integers to insert them with the postID in the post_categories table
+	// convert the ids to integers to insert them with the postID in the post_categories table
 	for _, id := range categories {
 		idInt, err := strconv.Atoi(id)
 		if err != nil {
@@ -174,6 +172,6 @@ func CreatePost(userID int, title, content string, image []byte, categories []st
 		}
 	}
 
-	//commit the transaction incase of no errors
+	// commit the transaction incase of no errors
 	return tx.Commit()
 }

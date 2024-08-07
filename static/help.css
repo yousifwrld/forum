@@ -18,15 +18,18 @@ body {
 /* Header styles */
 header {
   height: 60px;
-  width: 100%;
   position: fixed;
+  width: 100%;
   top: 0;
   z-index: 1000;
   display: flex;
   align-items: center;
-  background-color: #1c3f4d;
-  padding: 0 10%;
+  justify-content: space-between;
+  background: #1c3f4d; /* Changed to match theme */
+  padding: 20px 10%;
+  border-radius: 1px;
 }
+
 
 .bar {
   text-decoration: none;
@@ -44,6 +47,69 @@ header {
   font-family: "Pacifico", cursive;
   font-size: 24px;
   color: white;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.header-right a {
+  color: #fff;
+  margin-left: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.header-right a:hover {
+  color: #99d8f1;
+}
+
+.home a, .help a, .logout button, .user a{
+  font-family: "Ubuntu", sans-serif;
+  border: none;
+  background-color: transparent;
+  color: #1c3f4d;
+  font-size: 1.1rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.home a:hover, .help a:hover, .logout button:hover, .user a:hover{
+  font-weight: bold;
+}
+
+
+.sub-menu-wrap{
+  position: absolute;
+  top: 60px;
+  right: -300px; /* Adjust to hide off-screen */
+  width: 260px;
+  max-height: 400px;
+  overflow: hidden;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease-in-out; /* Smoother sliding transition */
+}
+
+.sub-menu-wrap.open-menu{
+  right: 0; /* Slide into view */
+}
+
+
+
+.sub-menu{
+  padding: 20px;
+}
+
+.home, .help, .logout, .user{
+  margin-bottom: 10px;
+}
+
+.home i, .help i, .logout i, .user i{
+  font-size: 20px;
+  margin-right: 5px;
 }
 
 /* Main content styles */
@@ -79,28 +145,7 @@ main {
 }
 
 .con i {
-  color: white;
+  color:#7289da;
   font-size: 25px;
 }
 
-.home {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-}
-
-.home a {
-  background-color: #1c3f4d;
-  color: white;
-  padding: 10px 15px;
-  text-decoration: none;
-  border-radius: 30px;
-  font-size: 24px;
-  display: flex;
-  align-items: center;
-  transition: background-color 0.3s ease;
-}
-
-.home a:hover {
-  background-color: #143140;
-}

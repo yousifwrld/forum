@@ -68,6 +68,7 @@ header {
     color: #1c3f4d;
     font-size: 1.1rem;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .user a:hover, .help a:hover, .logout button:hover, .login a:hover {
@@ -111,6 +112,7 @@ header {
     margin-top: 20px;
     display: flex;
     justify-content: center;
+ 
 }
 
 .add-comment-button a{
@@ -202,7 +204,10 @@ ul {
     max-width: 800px;
     padding: 20px;
 }
-
+.add a{
+    text-decoration: none;
+    color: white;
+}
 .add {
     position: fixed;
     bottom: 20px;
@@ -210,10 +215,11 @@ ul {
     background-color: #1c3f4d;
     color: white;
     padding: 10px 20px;
-    border-radius: 50%;
+    border-radius: 50px;
     font-size: 24px;
     text-align: center;
     cursor: pointer;
+    
 }
 
 .add:hover {

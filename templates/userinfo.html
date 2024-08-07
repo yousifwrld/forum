@@ -14,7 +14,28 @@
 <body>
     <header>
         <a class="bar" href="/user-info"><i class='bx bx-user-circle'></i><span>{{.Username}}</span></a>
-        <a href="/" class="home"><i class='bx bx-home-circle'></i></a>
+        <div class="header-right">
+            <a onclick="toggleMenu()" class="mann"><i class='bx bx-menu'></i></a>
+        </div>
+
+        <div class="sub-menu-wrap" id="subMenu">
+            <div class="sub-menu">
+                <div class="home">
+                    <a href="/"><i class='bx bx-home-circle'></i>Home</a>
+                </div>
+                <hr>
+                <div class="help">
+                    <a href="/help"><i class='bx bx-help-circle'></i>Help & Support</a>
+                </div>
+                <hr>
+                <div class="logout">
+                    <form action="/logout" method="post">
+                        <button type="submit"><i class='bx bx-log-out-circle'></i>Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </header>
 
     <div class="container">
@@ -104,6 +125,13 @@
             underline.style.left = activeButton.offsetLeft + 'px';
             showTab('posts');
         });
+    </script>
+    <script>
+        function toggleMenu() {
+    const subMenu = document.getElementById("subMenu");
+
+    subMenu.classList.toggle("open-menu");
+}
     </script>
 </body>
 
