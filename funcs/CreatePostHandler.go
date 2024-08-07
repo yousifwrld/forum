@@ -14,6 +14,12 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value(userIDKey).(int)
 
 	if r.Method == http.MethodGet {
+
+		if r.URL.Query().Get("title") != "" || r.URL.Query().Get("content") != "" || r.URL.Query().Get("category") != "" {
+			log.Println("Error: get request for create post")
+			ErrorPages(w, r, "405", http.StatusMethodNotAllowed)
+			return
+		}
 		// Render the form with the categories to choose from
 
 		//get them from the database

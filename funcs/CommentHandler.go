@@ -21,6 +21,12 @@ func CommentHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == http.MethodGet {
+
+		if r.URL.Query().Get("content") != "" {
+			log.Println("Error: get request for create comment")
+			ErrorPages(w, r, "405", http.StatusMethodNotAllowed)
+			return
+		}
 		// Render the form
 		RenderTemplate(w, "templates/create-comment.html", postID)
 	} else if r.Method == http.MethodPost {

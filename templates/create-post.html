@@ -29,8 +29,15 @@
             </div>
             <input type="text" name="title" id="title" class="ptitle" placeholder="Post Title" required>
             <p class="title-error" id="title-error" style="color: red;"></p>
-            <label for="image">Upload Image</label>
-            <input type="file" name="image" id="image" class="pimage">
+
+            <div class="file-upload-wrapper" id="file-upload-wrapper">
+                <i class='bx bxs-cloud-upload file-upload-icon'></i>
+                <p class="file-upload-text">Drag and drop an image here or click to upload</p>
+                <input type="file" name="image" id="image" class="pimage">
+                <span class="file-upload-filename" id="file-upload-filename"></span>
+            </div>
+
+
             <p class="image-error" id="image-error" style="color: red;"></p>
             <textarea name="content" id="content" placeholder="Write your post here..." required></textarea>
             <p class="content-error" id="content-error" style="color: red;"></p>
@@ -88,7 +95,7 @@
                 if (!fileExtensions.includes(extension)) { // Check if the extension is allowed
                     imageError.textContent = 'Invalid file type. Only PNG, JPEG, and GIF files are allowed.';
                     return false; // Prevent form submission if the file type is not allowed
-                }else if (file.size > (20 * 1024 * 1024)) { //check if the file size is bigger than 20mb
+                } else if (file.size > (20 * 1024 * 1024)) { //check if the file size is bigger than 20mb
                     imageError.textContent = 'File size is too large. Maximum file size is 20MB.';
                     return false;
                 }
@@ -98,6 +105,56 @@
             imageError.textContent = '';
             return true;
         }
+
+
+
+        const fileUploadWrapper = document.getElementById('file-upload-wrapper');
+        const fileInput = document.getElementById('image');
+        const fileNameDisplay = document.getElementById('file-upload-filename');
+
+        // Highlight drag area
+        fileUploadWrapper.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUploadWrapper.classList.add('dragover');
+        });
+
+        fileUploadWrapper.addEventListener('dragleave', () => {
+            fileUploadWrapper.classList.remove('dragover');
+        });
+
+        // Handle drop
+        fileUploadWrapper.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUploadWrapper.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        // Handle click to trigger file input
+        fileUploadWrapper.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Handle file selection
+        fileInput.addEventListener('change', function () {
+            const files = this.files;
+            handleFiles(files);
+        });
+
+        function handleFiles(files) {
+            if (files.length > 0) {
+                const file = files[0];
+                fileNameDisplay.textContent = file.name;
+
+                // Create a DataTransfer object to simulate a file selection for the input
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                fileInput.files = dataTransfer.files;
+            }
+        }
+
+
+
     </script>
 </body>
 

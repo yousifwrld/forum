@@ -253,16 +253,20 @@ ul {
     font-size: 1.2rem;
     font-weight: 600;
     margin-bottom: 10px;
+    border-bottom: 1px solid #ccc; /* Add this line */
+    padding-bottom: 10px; /* Optional: Add padding for spacing */
 }
+
 .post-image {
     margin: 10px 0; /* Add some space above and below the image */
     text-align: center; /* Center the image */
+    border-bottom: 1px solid #ccc; /* Add this line */
+    padding-bottom: 10px; /* Optional: Add padding for spacing */
 }
 
 .post-image img {
     max-width: 90%;
     height: auto; 
-    border: 1px solid #ccc;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: add a subtle shadow */
 }
 
@@ -270,14 +274,14 @@ ul {
     font-family: "Lora", serif;
     font-size: 1rem;
     color: #333;
-    margin-bottom: 10px;
+    padding-top: 10px;
 }
 
 .post-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 10px;
+    margin-top: 3px;
     border-top: 1px solid #ccc;
     padding-top: 10px;
 }

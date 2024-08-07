@@ -155,15 +155,50 @@ header {
 }
 
 
-/* File upload input styles */
-.post-form .pimage {
-  display: block;
+/* Drag-and-drop container */
+.file-upload-wrapper {
+  position: relative;
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
+  max-width: 100%;
+  margin-bottom: 10px;
+  border: 2px dashed #1c3f4d;
   border-radius: 5px;
+  padding: 20px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+/* Hover and drag over effect */
+.file-upload-wrapper.dragover {
+  background-color: #e0f7fa;
+}
+
+/* Hidden file input */
+.file-upload-wrapper input[type="file"] {
+  display: none;
+}
+
+/* File upload text */
+.file-upload-text {
+  color: #666;
+  font-size: 16px;
+}
+
+/* File upload icon */
+.file-upload-icon {
+  font-size: 50px;
+  color: #1c3f4d;
   margin-bottom: 10px;
 }
+
+/* Show selected file name */
+.file-upload-filename {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #666;
+}
+
 
 /* Error messages */
 .post-form .title-error,
