@@ -5,7 +5,9 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"path/filepath"
 	"strconv"
+	"strings"
 )
 
 func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
@@ -65,7 +67,7 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 
 		// Get the image from the form
 		// form file will return the first file provided
-		image, _, err := r.FormFile("image")
+		image, imgHeader, err := r.FormFile("image")
 
 		if err != nil {
 			// if no image was uploaded which is okay because its optional
@@ -113,6 +115,23 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		// handle image size is more than 20MB
 		if len(imageBytes) > 20*1024*1024 {
 			log.Println("Image size exceeds maximum size")
+			ErrorPages(w, r, "400", http.StatusBadRequest)
+			return
+		}
+
+		// Create a map of valid extensions
+		validExtensions := map[string]bool{
+			"jpeg": true,
+			"jpg":  true,
+			"gif":  true,
+			"png":  true,
+		}
+		//extract the file extension without the "."
+		fileExtension := strings.ToLower(filepath.Ext(imgHeader.Filename)[1:])
+
+		//check if it is a valid extension
+		if !validExtensions[fileExtension] {
+			log.Println("invalid file extension: " + fileExtension)
 			ErrorPages(w, r, "400", http.StatusBadRequest)
 			return
 		}
