@@ -8,6 +8,7 @@ import (
 	"time"
 
 	forum "forum/funcs"
+	"forum/oAuth"
 )
 
 func init() {
@@ -31,6 +32,8 @@ func main() {
 	http.HandleFunc("/", forum.HomeHandler)
 	http.HandleFunc("/register", forum.RegisterHandler)
 	http.HandleFunc("/login", forum.LoginHandler)
+	http.HandleFunc("/githublogin", oAuth.GithubloginHandler)
+	http.HandleFunc("githubcallback", oAuth.GithubCallback)
 	http.HandleFunc("/logout", forum.LogoutHandler)
 	http.HandleFunc("/help", forum.Help)
 	http.Handle("/user-info", forum.AuthMiddleware(http.HandlerFunc(forum.UserInfo)))
