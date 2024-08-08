@@ -13,6 +13,12 @@ import (
 // this is the handler or path that github will send the request containing the code to
 func GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
+	if r.Method != http.MethodGet {
+		log.Println("Error: get request for github callback")
+		funcs.ErrorPages(w, r, "405", http.StatusMethodNotAllowed)
+		return
+	}
+
 	//get the code from the request query param "code"
 	code := r.URL.Query().Get("code")
 
