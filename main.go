@@ -32,7 +32,7 @@ func main() {
 	http.HandleFunc("/", forum.HomeHandler)
 	http.HandleFunc("/register", forum.RegisterHandler)
 	http.HandleFunc("/login", forum.LoginHandler)
-	http.HandleFunc("/githublogin", oAuth.GithubloginHandler)
+	http.HandleFunc("/login/github", oAuth.GithubloginHandler)
 	http.HandleFunc("/githubcallback", oAuth.GithubCallbackHandler)
 	http.HandleFunc("/logout", forum.LogoutHandler)
 	http.HandleFunc("/help", forum.Help)

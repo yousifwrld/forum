@@ -116,7 +116,7 @@ func getUserInfo(accessToken string) (string, error) {
 
 	//creating a new request
 	req, err := http.NewRequest(
-		"POST", // request method
+		"GET", // request method
 		"https://api.github.com/user",
 		nil, //no response body, because we need to send the token in the requeset header
 	)
