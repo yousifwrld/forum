@@ -4,51 +4,91 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"forum/db"
 	funcs "forum/funcs"
-	"io"
 	"log"
 	"net/http"
 )
 
-// this is the handler or path that github will send the request containing the code to
+// GithubCallbackHandler handles the GitHub OAuth callback
 func GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
-
 	if r.Method != http.MethodGet {
-		log.Println("Error: get request for github callback")
+		log.Println("Error: Received non-GET request for GitHub callback")
 		funcs.ErrorPages(w, r, "405", http.StatusMethodNotAllowed)
 		return
 	}
 
-	//get the code from the request query param "code"
+	// Get the code from the request query param "code"
 	code := r.URL.Query().Get("code")
+	if code == "" {
+		log.Println("Error: Missing code parameter in GitHub callback")
+		funcs.ErrorPages(w, r, "400", http.StatusBadRequest)
+		return
+	}
 
-	//now we need to exchange this code for an access token
+	// Exchange the code for an access token
 	accessToken, err := getAccessToken(code)
 	if err != nil {
+		log.Println("Error getting access token:", err)
 		funcs.ErrorPages(w, r, "500", http.StatusInternalServerError)
 		return
 	}
 
-	//now we get the user information in exchange for the access token
-	userInfo, err := getUserInfo(accessToken)
+	// Get the user information using the access token
+	email, username, githubID, err := getUserInfo(accessToken)
 	if err != nil {
+		log.Println("Error getting user info:", err)
 		funcs.ErrorPages(w, r, "500", http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Println("User info:", userInfo)
+	// Check if user exists in the database
+	exists, err := userExists("github", githubID)
+	if err != nil {
+		log.Println("Error checking if user exists:", err)
+		funcs.ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
+	}
+
+	var userID int
+	if !exists {
+		// Create a new user if they don't exist
+		userID, err = createUserByGithub(email, username, "github", githubID)
+		if err != nil {
+			log.Println("Error creating user:", err)
+			funcs.ErrorPages(w, r, "500", http.StatusInternalServerError)
+			return
+		}
+	} else {
+		// Get the existing user's ID
+		err = db.Database.QueryRow(`SELECT UserID FROM USER WHERE oauth_userID = ?`, githubID).Scan(&userID)
+		if err != nil {
+			log.Println("Error getting user ID:", err)
+			funcs.ErrorPages(w, r, "500", http.StatusInternalServerError)
+			return
+		}
+	}
+
+	// Manage session
+	err = funcs.ManageSession(w, r, userID)
+	if err != nil {
+		log.Println("Error managing session:", err)
+		funcs.ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
+	}
+
+	// Redirect the user to the home page
+	http.Redirect(w, r, "/", http.StatusFound)
 }
 
+// getAccessToken exchanges the code for an access token
 func getAccessToken(code string) (string, error) {
-	//this function is to get the access token in exchange of the code
-
-	//creating our request structure (it needs the clientID, clientSecret and the code we received)
+	// Request structure for exchanging code for access token
 	request := struct {
 		ClientID     string `json:"client_id"`
 		ClientSecret string `json:"client_secret"`
 		Code         string `json:"code"`
 	}{
-		//mapping the keys to the values
 		ClientID:     githubClientID,
 		ClientSecret: githubClientSecret,
 		Code:         code,
@@ -56,50 +96,46 @@ func getAccessToken(code string) (string, error) {
 
 	reqJson, err := json.Marshal(request)
 	if err != nil {
-		log.Println("Error marshalling request:", err)
+		log.Printf("Error marshalling request for access token exchange: %v", err)
 		return "", err
 	}
 
-	//creating a new request
-	req, err := http.NewRequest( //could have used http.Post and made the process 10x easier but this gives us more control and we can set the needed headers
-		"POST", // request method
-		"https://github.com/login/oauth/access_token", //endpoint
-		bytes.NewBuffer(reqJson),                      //request body
-		//newbuffer creates the request body out of the byte slice
+	// Create a new POST request to GitHub's access token endpoint
+	req, err := http.NewRequest(
+		"POST",
+		"https://github.com/login/oauth/access_token",
+		bytes.NewBuffer(reqJson),
 	)
 	if err != nil {
-		log.Println("Error creating request:", err)
+		log.Printf("Error creating request for access token exchange: %v", err)
 		return "", err
 	}
-	//setting the request headers
-	req.Header.Set("Content-Type", "application/json") // Content-Type set to JSON since our request body is in JSON format
-	req.Header.Set("Accept", "application/json")       // Accept header set to JSON, indicating we prefer the response to be in JSON format
 
-	//send the request and get the response
+	// Set the necessary headers for the request
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "application/json")
+
+	// Send the request and get the response
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Println("Error getting response:", err)
+		log.Printf("Error getting response for access token exchange: %v", err)
 		return "", err
 	}
-
-	//close the response body
 	defer res.Body.Close()
 
-	// Check for HTTP status code
+	// Check for unexpected HTTP status code
 	if res.StatusCode != http.StatusOK {
-		log.Println("Unexpected response status:", res.Status)
+		log.Printf("Unexpected response status: %s", res.Status)
 		return "", fmt.Errorf("unexpected status code: %d", res.StatusCode)
 	}
 
-	//since we set the Accept header to JSON, we need to decode the response into a struct
-	type githubResponse struct {
+	// Decode the response into a struct
+	var response struct {
 		AccessToken string `json:"access_token"`
 	}
-
-	var response githubResponse
 	err = json.NewDecoder(res.Body).Decode(&response)
 	if err != nil {
-		log.Println("Error decoding response:", err)
+		log.Printf("Error decoding response for access token exchange: %v", err)
 		return "", err
 	}
 
@@ -107,53 +143,102 @@ func getAccessToken(code string) (string, error) {
 		log.Println("No access token in response")
 		return "", fmt.Errorf("empty access token in response")
 	}
-	return response.AccessToken, nil
 
+	return response.AccessToken, nil
 }
 
-func getUserInfo(accessToken string) (string, error) {
-	//this function is to get the user information in exchange of the access token
-
-	//creating a new request
+// getUserInfo retrieves user information using the access token
+func getUserInfo(accessToken string) (string, string, int, error) {
+	// Create a new GET request to GitHub's user API
 	req, err := http.NewRequest(
-		"GET", // request method
+		"GET",
 		"https://api.github.com/user",
-		nil, //no response body, because we need to send the token in the requeset header
+		nil,
 	)
-
 	if err != nil {
-		log.Println("Error creating request:", err)
-		return "", err
+		log.Printf("Error creating request for user info: %v", err)
+		return "", "", 0, err
 	}
 
-	// header should be in this format " Authorization: token {token} "
-
-	//format and set the header
+	// Set the Authorization header with the access token
 	AuthHeader := fmt.Sprintf("token %s", accessToken)
 	req.Header.Set("Authorization", AuthHeader)
 
-	//send the request and get the response
+	// Send the request and get the response
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Println("Error getting response:", err)
-		return "", err
+		log.Printf("Error getting response for user info: %v", err)
+		return "", "", 0, err
 	}
-
-	//close the response body
 	defer res.Body.Close()
 
-	// Check for HTTP status code
+	// Check for unexpected HTTP status code
 	if res.StatusCode != http.StatusOK {
-		log.Println("Unexpected response status:", res.Status)
-		return "", fmt.Errorf("unexpected status code: %d", res.StatusCode)
+		log.Printf("Unexpected response status: %s", res.Status)
+		return "", "", 0, fmt.Errorf("unexpected status code: %d", res.StatusCode)
 	}
 
-	//read the response body and return it
-	body, err := io.ReadAll(res.Body)
+	// Decode the response into a struct
+	var response struct {
+		Login    string `json:"login"`
+		Email    string `json:"email"`
+		GithubID int    `json:"id"`
+	}
+	err = json.NewDecoder(res.Body).Decode(&response)
 	if err != nil {
-		log.Println("Error reading response body:", err)
-		return "", err
+		log.Printf("Error decoding response for user info: %v", err)
+		return "", "", 0, err
 	}
 
-	return string(body), nil
+	return response.Email, response.Login, response.GithubID, nil
+}
+
+// userExists checks if a user exists by their OAuth provider and user ID
+func userExists(oauthProvider string, oauthUserID int) (bool, error) {
+	var exists bool
+	err := db.Database.QueryRow(
+		`SELECT EXISTS(SELECT 1 FROM user WHERE oauth_provider = ? AND oauth_userID = ?)`,
+		oauthProvider, oauthUserID,
+	).Scan(&exists)
+	if err != nil {
+		log.Printf("Error checking if user exists: %v", err)
+		return false, err
+	}
+	return exists, nil
+}
+
+// createUserByGithub creates a new user with GitHub OAuth information
+func createUserByGithub(email, username, oauthProvider string, oauthUserID int) (int, error) {
+	// Start a database transaction for atomicity
+	tx, err := db.Database.Begin()
+	if err != nil {
+		log.Printf("Error starting transaction for user creation: %v", err)
+		return 0, err
+	}
+	defer tx.Rollback()
+
+	// Insert the new user into the database
+	result, err := tx.Exec(
+		`INSERT INTO user (email, username, oauth_provider, oauth_userID) VALUES (?, ?, ?, ?)`,
+		email, username, oauthProvider, oauthUserID,
+	)
+	if err != nil {
+		log.Printf("Error inserting new user: %v", err)
+		return 0, err
+	}
+
+	userID, err := result.LastInsertId()
+	if err != nil {
+		log.Printf("Error getting last inserted user ID: %v", err)
+		return 0, err
+	}
+
+	// Commit the transaction
+	err = tx.Commit()
+	if err != nil {
+		log.Printf("Error committing transaction for user creation: %v", err)
+		return 0, err
+	}
+
+	return int(userID), nil
 }

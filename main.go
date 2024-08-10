@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"forum/db"
 	forum "forum/funcs"
 	"forum/oAuth"
 )
@@ -14,7 +15,7 @@ import (
 func init() {
 	fmt.Println("initializing...")
 	start := time.Now()
-	err := forum.InitDatabase()
+	err := db.InitDatabase()
 	if err != nil {
 		log.Println(err)
 		return
@@ -50,4 +51,6 @@ func main() {
 
 	fmt.Println("server is listening on http://localhost:8080")
 	http.ListenAndServe(":8080", nil)
+
+	defer db.Database.Close()
 }

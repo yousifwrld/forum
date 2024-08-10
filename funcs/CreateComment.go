@@ -1,8 +1,10 @@
 package forum
 
+import "forum/db"
+
 func CreateComment(userID, postID int, comment string) error {
 
-	tx, err := database.Begin()
+	tx, err := db.Database.Begin()
 	if err != nil {
 		return err
 	}

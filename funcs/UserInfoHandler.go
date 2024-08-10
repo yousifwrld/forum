@@ -2,6 +2,7 @@ package forum
 
 import (
 	"encoding/base64"
+	"forum/db"
 	"html/template"
 	"log"
 	"net/http"
@@ -25,7 +26,7 @@ func UserInfo(w http.ResponseWriter, r *http.Request) {
 
 	//get the username from the database
 	var username string
-	err := database.QueryRow(`SELECT username FROM user WHERE userID = ?`, userID).Scan(&username)
+	err := db.Database.QueryRow(`SELECT username FROM user WHERE userID = ?`, userID).Scan(&username)
 	if err != nil {
 		log.Println(err)
 		ErrorPages(w, r, "500", http.StatusInternalServerError)
@@ -76,7 +77,7 @@ func UserInfo(w http.ResponseWriter, r *http.Request) {
 func getPostsByUserID(userID int) ([]Post, error) {
 
 	//start a transaction
-	tx, err := database.Begin()
+	tx, err := db.Database.Begin()
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +144,7 @@ func getPostsByUserID(userID int) ([]Post, error) {
 func getLikedPostsByUserID(userID int) ([]Post, error) {
 
 	//start a transaction
-	tx, err := database.Begin()
+	tx, err := db.Database.Begin()
 	if err != nil {
 		return nil, err
 	}

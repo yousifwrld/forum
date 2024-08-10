@@ -2,13 +2,14 @@ package forum
 
 import (
 	"database/sql"
+	"forum/db"
 	"log"
 )
 
 func LikeComment(userID, commentID int) (int, int, error) {
 	var liked, disliked bool
 
-	tx, err := database.Begin()
+	tx, err := db.Database.Begin()
 	if err != nil {
 		log.Println("Error starting transaction:", err)
 		return 0, 0, err
@@ -92,7 +93,7 @@ func LikeComment(userID, commentID int) (int, int, error) {
 func DislikeComment(userID, commentID int) (int, int, error) {
 	var liked, disliked bool
 
-	tx, err := database.Begin()
+	tx, err := db.Database.Begin()
 	if err != nil {
 		log.Println("Error starting transaction:", err)
 		return 0, 0, err

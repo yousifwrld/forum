@@ -3,6 +3,7 @@ package forum
 import (
 	"context"
 	"fmt"
+	"forum/db"
 	"log"
 	"net/http"
 	"time"
@@ -34,7 +35,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 
 	// Delete the session from the database
-	_, err = database.ExecContext(ctx, "DELETE FROM session WHERE sessionID = ?", sessionID)
+	_, err = db.Database.ExecContext(ctx, "DELETE FROM session WHERE sessionID = ?", sessionID)
 	if err != nil {
 		log.Printf("Error deleting session from database: %v", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)

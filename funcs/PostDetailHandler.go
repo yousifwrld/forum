@@ -3,6 +3,7 @@ package forum
 import (
 	"database/sql"
 	"encoding/base64"
+	"forum/db"
 	"html/template"
 	"log"
 	"net/http"
@@ -39,7 +40,7 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
 	var UserID int
 
 	//get the post from the database
-	err = database.QueryRow(`
+	err = db.Database.QueryRow(`
         SELECT postID, title, content, image, userID, created_at, likes, dislikes
         FROM post
         WHERE postID = ?`, postID).Scan(&post.ID, &post.Title, &post.Content, &post.image, &UserID, &postCreatedAt, &post.Likes, &post.Dislikes)
@@ -54,7 +55,7 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//get the username of the user that posted
-	err = database.QueryRow(`
+	err = db.Database.QueryRow(`
 		SELECT username 
 		FROM user
 		WHERE userID =?`, UserID).Scan(&post.Username)
@@ -64,7 +65,7 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//get the count of comments for the post
-	err = database.QueryRow(`SELECT COUNT(*) FROM comment WHERE postID = ?`, postID).Scan(&post.CommentsCount)
+	err = db.Database.QueryRow(`SELECT COUNT(*) FROM comment WHERE postID = ?`, postID).Scan(&post.CommentsCount)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			post.CommentsCount = 0

@@ -2,11 +2,12 @@ package forum
 
 import (
 	"fmt"
+	"forum/db"
 	"sort"
 )
 
 func GetPostComments(postID int) ([]Comment, error) {
-	rows, err := database.Query(`
+	rows, err := db.Database.Query(`
 		SELECT u.username, c.commentID, c.comment, c.created_at, c.likes, c.dislikes
 		FROM comment c
 		JOIN user u ON c.userID = u.userID

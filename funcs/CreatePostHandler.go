@@ -2,6 +2,7 @@ package forum
 
 import (
 	"fmt"
+	"forum/db"
 	"io"
 	"log"
 	"net/http"
@@ -25,7 +26,7 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 
 		// get them from the database
 		var categories []Category
-		rows, err := database.Query(`SELECT categoryID, name FROM category`)
+		rows, err := db.Database.Query(`SELECT categoryID, name FROM category`)
 		if err != nil {
 			log.Println("Error querying categories:", err)
 			ErrorPages(w, r, "500", http.StatusInternalServerError)
@@ -152,7 +153,7 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 
 func CreatePost(userID int, title, content string, image []byte, categories []string) error {
 	// begin a transaction
-	tx, err := database.Begin()
+	tx, err := db.Database.Begin()
 	if err != nil {
 		return err
 	}

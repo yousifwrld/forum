@@ -1,8 +1,10 @@
 package forum
 
+import "forum/db"
+
 func GetCategoriesForPost(postID int) ([]Category, error) {
 	// Fetch categories for this post
-	catRows, err := database.Query(`
+	catRows, err := db.Database.Query(`
 	SELECT c.categoryID, c.name 
 	FROM category c
 	JOIN post_categories pc ON c.categoryID = pc.categoryID

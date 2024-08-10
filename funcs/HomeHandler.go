@@ -3,6 +3,7 @@ package forum
 import (
 	"database/sql"
 	"encoding/base64"
+	"forum/db"
 	"html/template"
 	"log"
 	"net/http"
@@ -71,7 +72,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 	//select all of the categories from the database
 	var filteredCategories []Category
-	rows, err := database.Query(`SELECT categoryID, name FROM category`)
+	rows, err := db.Database.Query(`SELECT categoryID, name FROM category`)
 	if err != nil {
 		log.Println("Error querying categories:", err)
 		ErrorPages(w, r, "500", http.StatusInternalServerError)
@@ -121,7 +122,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 }
 func getPosts() ([]Post, error) {
 	//select all the posts with all the info from the database
-	rows, err := database.Query(`
+	rows, err := db.Database.Query(`
         SELECT p.postID, p.title, p.content, p.image, p.created_at, u.username 
         FROM post p
         JOIN user u ON p.userID = u.userID
@@ -173,7 +174,7 @@ func getPosts() ([]Post, error) {
 
 func getLikesDislikesComments(postID int) (int, int, int, error) {
 	var likes, dislikes int
-	err := database.QueryRow(`
+	err := db.Database.QueryRow(`
 		SELECT likes, dislikes
 		FROM post
 		WHERE postID = ?
@@ -186,7 +187,7 @@ func getLikesDislikesComments(postID int) (int, int, int, error) {
 	}
 
 	var comments int
-	err = database.QueryRow(`SELECT COUNT(*) FROM comment WHERE postID = ?`, postID).Scan(&comments)
+	err = db.Database.QueryRow(`SELECT COUNT(*) FROM comment WHERE postID = ?`, postID).Scan(&comments)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return 0, 0, 0, nil

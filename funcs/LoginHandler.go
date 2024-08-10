@@ -2,6 +2,7 @@ package forum
 
 import (
 	"database/sql"
+	"forum/db"
 	"log"
 	"net/http"
 	"strings"
@@ -31,7 +32,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		var userID int
 
 		// get the hashed user password that matches the email
-		err := database.QueryRow(`SELECT Password, UserID FROM USER WHERE Username = ?`, username).Scan(&hashedPassword, &userID)
+		err := db.Database.QueryRow(`SELECT Password, UserID FROM USER WHERE Username = ?`, username).Scan(&hashedPassword, &userID)
 		if err != nil {
 			// if no results (0 rows found) means that the user doesn't exist
 			if err == sql.ErrNoRows {
@@ -53,9 +54,13 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		database.Exec(`DELETE FROM session WHERE userID = ?`, userID)
-		sessionID := SetCookies(w, r)
-		database.Exec(`INSERT INTO SESSION (SessionID, UserID) VALUES (?, ?)`, sessionID, userID)
+		//deletes any existing session and creates a new one
+		err = ManageSession(w, r, userID)
+		if err != nil {
+			log.Println(err)
+			ErrorPages(w, r, "500", http.StatusInternalServerError)
+			return
+		}
 
 		http.Redirect(w, r, "/", http.StatusFound)
 

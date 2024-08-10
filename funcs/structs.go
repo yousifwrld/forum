@@ -1,15 +1,7 @@
 package forum
 
 import (
-	"database/sql"
-	"sync"
 	"time"
-)
-
-// variables for openning one db connection only
-var (
-	database *sql.DB
-	once     sync.Once
 )
 
 type Post struct {

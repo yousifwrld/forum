@@ -1,6 +1,7 @@
 package forum
 
 import (
+	"forum/db"
 	"net/http"
 )
 
@@ -14,7 +15,7 @@ func Help(w http.ResponseWriter, r *http.Request) {
 }
 func Cr(userID, postID int, comment string) error {
 
-	tx, err := database.Begin()
+	tx, err := db.Database.Begin()
 	if err != nil {
 		return err
 	}

@@ -3,6 +3,7 @@ package forum
 import (
 	"database/sql"
 	"fmt"
+	"forum/db"
 	"html/template"
 	"log"
 	"net/http"
@@ -82,7 +83,7 @@ func FilterHandler(w http.ResponseWriter, r *http.Request) {
 		statement += fmt.Sprintf(" OR categoryID = %d", catID[i])
 	}
 
-	rows, err := database.Query(statement)
+	rows, err := db.Database.Query(statement)
 	if err != nil {
 		log.Println(err)
 		ErrorPages(w, r, "500", http.StatusInternalServerError)
@@ -98,7 +99,7 @@ func FilterHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		var post Post
-		err := database.QueryRow(
+		err := db.Database.QueryRow(
 			`SELECT p.title, p.content, p.created_at, p.likes, p.dislikes, u.username
 			FROM post p
 			JOIN user u ON p.userID = u.userID
@@ -109,7 +110,7 @@ func FilterHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		var comments int
-		err = database.QueryRow(`SELECT COUNT(*) FROM comment WHERE postID = ?`, postID).Scan(&comments)
+		err = db.Database.QueryRow(`SELECT COUNT(*) FROM comment WHERE postID = ?`, postID).Scan(&comments)
 
 		if err != nil {
 			if err == sql.ErrNoRows {
@@ -143,7 +144,7 @@ func FilterHandler(w http.ResponseWriter, r *http.Request) {
 
 	// get the categories for the filters
 	var filterCategories []Category
-	rows, err = database.Query(`SELECT categoryID, name FROM category`)
+	rows, err = db.Database.Query(`SELECT categoryID, name FROM category`)
 	if err != nil {
 		log.Println("Error querying categories:", err)
 		ErrorPages(w, r, "500", http.StatusInternalServerError)

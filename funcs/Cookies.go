@@ -3,6 +3,7 @@ package forum
 import (
 	"context"
 	"database/sql"
+	"forum/db"
 	"log"
 	"net/http"
 	"time"
@@ -60,7 +61,7 @@ func DeleteCookiesAndSession(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 
 	// Delete the session from the database
-	_, err = database.ExecContext(ctx, "DELETE FROM session WHERE sessionID = ?", sessionID)
+	_, err = db.Database.ExecContext(ctx, "DELETE FROM session WHERE sessionID = ?", sessionID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			// if somehow there is a cookie and No rows found, no session
@@ -81,4 +82,26 @@ func DeleteCookiesAndSession(w http.ResponseWriter, r *http.Request) {
 		SameSite: http.SameSiteLaxMode,
 	}
 	http.SetCookie(w, &cookie)
+}
+
+// manageSession manages the session for the user after successful login or registration
+func ManageSession(w http.ResponseWriter, r *http.Request, userID int) error {
+	// Delete existing session for the user
+	_, err := db.Database.Exec(`DELETE FROM session WHERE userID = ?`, userID)
+	if err != nil {
+		log.Printf("Error deleting existing session for user ID %d: %v", userID, err)
+		return err
+	}
+
+	// Set a new session cookie
+	sessionID := SetCookies(w, r)
+
+	// Insert the new session into the database
+	_, err = db.Database.Exec(`INSERT INTO SESSION (SessionID, UserID) VALUES (?, ?)`, sessionID, userID)
+	if err != nil {
+		log.Printf("Error inserting new session for user ID %d: %v", userID, err)
+		return err
+	}
+
+	return nil
 }

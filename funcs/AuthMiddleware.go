@@ -3,6 +3,7 @@ package forum
 import (
 	"context"
 	"database/sql"
+	"forum/db"
 	"log"
 	"net/http"
 )
@@ -54,7 +55,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 
 func GetIDFromSession(sessionID string) (int, error) {
 	// Check if session exists
-	row := database.QueryRow("SELECT userID FROM session WHERE sessionID = ?", sessionID)
+	row := db.Database.QueryRow("SELECT userID FROM session WHERE sessionID = ?", sessionID)
 	var userID int
 	err := row.Scan(&userID)
 	if err != nil {

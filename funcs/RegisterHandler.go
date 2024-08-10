@@ -2,6 +2,7 @@ package forum
 
 import (
 	"fmt"
+	"forum/db"
 	"log"
 	"net/http"
 	"regexp"
@@ -56,9 +57,13 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		database.Exec(`DELETE FROM session WHERE userID = ?`, userID)
-		sessionID := SetCookies(w, r)
-		database.Exec(`INSERT INTO SESSION (SessionID, UserID) VALUES (?, ?)`, sessionID, userID)
+		//deletes any existing session and creates a new one
+		err = ManageSession(w, r, userID)
+		if err != nil {
+			log.Println(err)
+			ErrorPages(w, r, "500", http.StatusInternalServerError)
+			return
+		}
 		http.Redirect(w, r, "/", http.StatusFound)
 
 	default:
@@ -68,7 +73,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateUser(email, username, password string) (int, error) {
-	result, err := database.Exec(`INSERT INTO USER (
+	result, err := db.Database.Exec(`INSERT INTO USER (
 			Email,
 			Username,
 			Password) VALUES (?, ?, ?)`, email, username, password)
@@ -88,7 +93,7 @@ func CreateUser(email, username, password string) (int, error) {
 func userExists(email, username string) (bool, error) {
 	var exists bool
 
-	err := database.QueryRow(`SELECT EXISTS(SELECT 1 FROM USER WHERE Username = ? OR Email = ?)`, username, email).Scan(&exists)
+	err := db.Database.QueryRow(`SELECT EXISTS(SELECT 1 FROM USER WHERE Username = ? OR Email = ?)`, username, email).Scan(&exists)
 	if err != nil {
 		return false, err
 	}
