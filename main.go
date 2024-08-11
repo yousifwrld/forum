@@ -35,6 +35,8 @@ func main() {
 	http.HandleFunc("/login", forum.LoginHandler)
 	http.HandleFunc("/login/github", oAuth.GithubloginHandler)
 	http.HandleFunc("/githubcallback", oAuth.GithubCallbackHandler)
+	http.HandleFunc("/login/google", oAuth.GoogleLoginHandler)
+	http.HandleFunc("/googlecallback", oAuth.GoogleCallbackHandler)
 	http.HandleFunc("/logout", forum.LogoutHandler)
 	http.HandleFunc("/help", forum.Help)
 	http.Handle("/user-info", forum.AuthMiddleware(http.HandlerFunc(forum.UserInfo)))
