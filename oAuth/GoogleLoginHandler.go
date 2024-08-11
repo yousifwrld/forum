@@ -28,7 +28,7 @@ func GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
 	// Adding the required query parameters for our request
 	q := authURL.Query()
 	q.Add("client_id", googleClientID)
-	q.Add("redirect_uri", "http://localhost:8080/") // The callback URL which is the path they are going to send a request on for us to handle
+	q.Add("redirect_uri", "http://localhost:8080/googlecallback") // The callback URL which is the path they are going to send a request on for us to handle
 	q.Add("response_type", "code")
 	q.Add("scope", "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email")
 

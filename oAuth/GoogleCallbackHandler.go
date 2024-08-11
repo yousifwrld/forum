@@ -47,7 +47,7 @@ func getGoogleAccessToken(code string) (string, error) {
 	requestData.Set("client_id", googleClientID)
 	requestData.Set("client_secret", googleClientSecret)
 	requestData.Set("code", code)
-	requestData.Set("redirect_uri", "http://localhost:8080/") // Your callback URL
+	requestData.Set("redirect_uri", "http://localhost:8080/googlecallback") // Your callback URL
 	requestData.Set("grant_type", "authorization_code")
 
 	// Creating a new request
