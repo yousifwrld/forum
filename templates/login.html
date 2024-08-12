@@ -31,6 +31,11 @@
             <button type="submit" class="btn">Login</button>
         </form>
 
+        <h6 style="text-align: center; padding: 3px">or</h6>
+        <a class="github-login" href="/login/github"><i class='bx bxl-github'></i> Login with Github</a>
+        <h6 style="text-align: center; padding: 3px">or</h6>
+        <a class="google-login" href="/login/google"><i class='bx bxl-google'></i> Login with Google</a>
+
         {{if .Msg}}
         <p id="BackendErr" class="err">{{.Msg}}</p>
         {{end}}
