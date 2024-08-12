@@ -31,6 +31,8 @@ func GithubloginHandler(w http.ResponseWriter, r *http.Request) {
 	q.Add("client_id", githubClientID)
 	//the callback url which is the path they are going to send a request on for us to handle
 	q.Add("redirect_uri", "http://localhost:8080/githubcallback")
+	//
+	q.Add("scope", "read:user,user:email")
 
 	//adding the query parameters to the url
 	url.RawQuery = q.Encode()

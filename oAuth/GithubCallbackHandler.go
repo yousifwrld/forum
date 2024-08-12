@@ -181,7 +181,6 @@ func getUserInfo(accessToken string) (string, string, int, error) {
 	// Decode the response into a struct
 	var response struct {
 		Login    string `json:"login"`
-		Email    string `json:"email"`
 		GithubID int    `json:"id"`
 	}
 	err = json.NewDecoder(res.Body).Decode(&response)
@@ -190,7 +189,57 @@ func getUserInfo(accessToken string) (string, string, int, error) {
 		return "", "", 0, err
 	}
 
-	return response.Email, response.Login, response.GithubID, nil
+	// Create a new GET request to GitHub's user emails API
+	req, err = http.NewRequest(
+		"GET",
+		"https://api.github.com/user/emails",
+		nil,
+	)
+	if err != nil {
+		log.Printf("Error creating request for user emails: %v", err)
+		return "", "", 0, err
+	}
+
+	// Set the Authorization header with the access token
+	req.Header.Set("Authorization", AuthHeader)
+
+	// Send the request and get the response
+	res, err = http.DefaultClient.Do(req)
+	if err != nil {
+		log.Printf("Error getting response for user emails: %v", err)
+		return "", "", 0, err
+	}
+	defer res.Body.Close()
+
+	// Check for unexpected HTTP status code
+	if res.StatusCode != http.StatusOK {
+		log.Printf("Unexpected response status for emails: %s", res.Status)
+		return "", "", 0, fmt.Errorf("unexpected status code for emails: %d", res.StatusCode)
+	}
+
+	// Decode the response into a slice of structs
+	var emails []struct {
+		Email    string `json:"email"`
+		Primary  bool   `json:"primary"`
+		Verified bool   `json:"verified"`
+	}
+	err = json.NewDecoder(res.Body).Decode(&emails)
+	if err != nil {
+		log.Printf("Error decoding response for user emails: %v", err)
+		return "", "", 0, err
+	}
+
+	// Find the primary, verified email
+	var primaryEmail string
+	for _, email := range emails {
+		if email.Primary && email.Verified {
+			primaryEmail = email.Email
+			break
+		}
+	}
+
+	// Return the user's primary email, login, and GitHub ID
+	return primaryEmail, response.Login, response.GithubID, nil
 }
 
 // userExists checks if a user exists by their OAuth provider and user ID
