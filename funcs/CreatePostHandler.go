@@ -6,9 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"path/filepath"
 	"strconv"
-	"strings"
 )
 
 func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
@@ -120,21 +118,23 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Create a map of valid extensions
-		validExtensions := map[string]bool{
-			"jpeg": true,
-			"jpg":  true,
-			"gif":  true,
-			"png":  true,
-		}
-		//extract the file extension without the "."
-		fileExtension := strings.ToLower(filepath.Ext(imgHeader.Filename)[1:])
+		// Check the file extension if an image was uploaded
+		if imgHeader != nil {
+			validExtensions := map[string]bool{
+				"image/jpeg": true,
+				"image/jpg":  true,
+				"image/gif":  true,
+				"image/png":  true,
+			}
 
-		//check if it is a valid extension
-		if !validExtensions[fileExtension] {
-			log.Println("invalid file extension: " + fileExtension)
-			ErrorPages(w, r, "400", http.StatusBadRequest)
-			return
+			fileExtension := imgHeader.Header.Get("Content-Type")
+			fmt.Println("file extension:", fileExtension)
+
+			if !validExtensions[fileExtension] {
+				log.Println("Invalid file extension:", fileExtension)
+				ErrorPages(w, r, "400", http.StatusBadRequest)
+				return
+			}
 		}
 
 		// Insert the post into the database
