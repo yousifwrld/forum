@@ -28,33 +28,39 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			ErrorPages(w, r, "user not found", http.StatusBadRequest, "templates/login.html")
 			return
 		}
-		var hashedPassword string
+		var hashedPassword *string // Use a pointer to check for NULL
 		var userID int
 
-		// get the hashed user password that matches the email
+		// Get the hashed user password and user ID
 		err := db.Database.QueryRow(`SELECT Password, UserID FROM USER WHERE Username = ?`, username).Scan(&hashedPassword, &userID)
 		if err != nil {
-			// if no results (0 rows found) means that the user doesn't exist
 			if err == sql.ErrNoRows {
 				log.Println(err)
 				ErrorPages(w, r, "user not found", http.StatusBadRequest, "templates/login.html")
 				return
 			} else {
-				// any other error mainly related to the execution of the query
 				log.Println(err)
 				ErrorPages(w, r, "500", http.StatusInternalServerError)
 				return
 			}
 		}
-		// compare the stored hashed password with the login password, will return error if they don't match
-		err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+
+		// Check if the user has a password set
+		if hashedPassword == nil {
+			log.Println("Account created through OAuth, cannot log in through form.")
+			ErrorPages(w, r, "oauth account", http.StatusForbidden, "templates/login.html")
+			return
+		}
+
+		// Compare the stored hashed password with the login password
+		err = bcrypt.CompareHashAndPassword([]byte(*hashedPassword), []byte(password))
 		if err != nil {
 			log.Println(err)
 			ErrorPages(w, r, "invalid password", http.StatusBadRequest, "templates/login.html")
 			return
 		}
 
-		//deletes any existing session and creates a new one
+		// Deletes any existing session and creates a new one
 		err = ManageSession(w, r, userID)
 		if err != nil {
 			log.Println(err)

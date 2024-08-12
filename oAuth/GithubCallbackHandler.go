@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"forum/db"
 	funcs "forum/funcs"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 // GithubCallbackHandler handles the GitHub OAuth callback
@@ -42,31 +42,12 @@ func GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Check if user exists in the database
-	exists, err := userExists("github", githubID)
+	var userID int
+	userID, err = createUserByOAuth(email, username, "github", githubID)
 	if err != nil {
-		log.Println("Error checking if user exists:", err)
+		log.Println("Error creating user:", err)
 		funcs.ErrorPages(w, r, "500", http.StatusInternalServerError)
 		return
-	}
-
-	var userID int
-	if !exists {
-		// Create a new user if they don't exist
-		userID, err = createUserByGithub(email, username, "github", githubID)
-		if err != nil {
-			log.Println("Error creating user:", err)
-			funcs.ErrorPages(w, r, "500", http.StatusInternalServerError)
-			return
-		}
-	} else {
-		// Get the existing user's ID
-		err = db.Database.QueryRow(`SELECT UserID FROM USER WHERE oauth_userID = ?`, githubID).Scan(&userID)
-		if err != nil {
-			log.Println("Error getting user ID:", err)
-			funcs.ErrorPages(w, r, "500", http.StatusInternalServerError)
-			return
-		}
 	}
 
 	// Manage session
@@ -148,7 +129,7 @@ func getAccessToken(code string) (string, error) {
 }
 
 // getUserInfo retrieves user information using the access token
-func getUserInfo(accessToken string) (string, string, int, error) {
+func getUserInfo(accessToken string) (string, string, string, error) {
 	// Create a new GET request to GitHub's user API
 	req, err := http.NewRequest(
 		"GET",
@@ -157,7 +138,7 @@ func getUserInfo(accessToken string) (string, string, int, error) {
 	)
 	if err != nil {
 		log.Printf("Error creating request for user info: %v", err)
-		return "", "", 0, err
+		return "", "", "", err
 	}
 
 	// Set the Authorization header with the access token
@@ -168,14 +149,14 @@ func getUserInfo(accessToken string) (string, string, int, error) {
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Printf("Error getting response for user info: %v", err)
-		return "", "", 0, err
+		return "", "", "", err
 	}
 	defer res.Body.Close()
 
 	// Check for unexpected HTTP status code
 	if res.StatusCode != http.StatusOK {
 		log.Printf("Unexpected response status: %s", res.Status)
-		return "", "", 0, fmt.Errorf("unexpected status code: %d", res.StatusCode)
+		return "", "", "", fmt.Errorf("unexpected status code: %d", res.StatusCode)
 	}
 
 	// Decode the response into a struct
@@ -186,7 +167,7 @@ func getUserInfo(accessToken string) (string, string, int, error) {
 	err = json.NewDecoder(res.Body).Decode(&response)
 	if err != nil {
 		log.Printf("Error decoding response for user info: %v", err)
-		return "", "", 0, err
+		return "", "", "", err
 	}
 
 	// Create a new GET request to GitHub's user emails API
@@ -197,7 +178,7 @@ func getUserInfo(accessToken string) (string, string, int, error) {
 	)
 	if err != nil {
 		log.Printf("Error creating request for user emails: %v", err)
-		return "", "", 0, err
+		return "", "", "", err
 	}
 
 	// Set the Authorization header with the access token
@@ -207,14 +188,14 @@ func getUserInfo(accessToken string) (string, string, int, error) {
 	res, err = http.DefaultClient.Do(req)
 	if err != nil {
 		log.Printf("Error getting response for user emails: %v", err)
-		return "", "", 0, err
+		return "", "", "", err
 	}
 	defer res.Body.Close()
 
 	// Check for unexpected HTTP status code
 	if res.StatusCode != http.StatusOK {
 		log.Printf("Unexpected response status for emails: %s", res.Status)
-		return "", "", 0, fmt.Errorf("unexpected status code for emails: %d", res.StatusCode)
+		return "", "", "", fmt.Errorf("unexpected status code for emails: %d", res.StatusCode)
 	}
 
 	// Decode the response into a slice of structs
@@ -226,7 +207,7 @@ func getUserInfo(accessToken string) (string, string, int, error) {
 	err = json.NewDecoder(res.Body).Decode(&emails)
 	if err != nil {
 		log.Printf("Error decoding response for user emails: %v", err)
-		return "", "", 0, err
+		return "", "", "", err
 	}
 
 	// Find the primary, verified email
@@ -239,55 +220,6 @@ func getUserInfo(accessToken string) (string, string, int, error) {
 	}
 
 	// Return the user's primary email, login, and GitHub ID
-	return primaryEmail, response.Login, response.GithubID, nil
-}
-
-// userExists checks if a user exists by their OAuth provider and user ID
-func userExists(oauthProvider string, oauthUserID int) (bool, error) {
-	var exists bool
-	err := db.Database.QueryRow(
-		`SELECT EXISTS(SELECT 1 FROM user WHERE oauth_provider = ? AND oauth_userID = ?)`,
-		oauthProvider, oauthUserID,
-	).Scan(&exists)
-	if err != nil {
-		log.Printf("Error checking if user exists: %v", err)
-		return false, err
-	}
-	return exists, nil
-}
-
-// createUserByGithub creates a new user with GitHub OAuth information
-func createUserByGithub(email, username, oauthProvider string, oauthUserID int) (int, error) {
-	// Start a database transaction for atomicity
-	tx, err := db.Database.Begin()
-	if err != nil {
-		log.Printf("Error starting transaction for user creation: %v", err)
-		return 0, err
-	}
-	defer tx.Rollback()
-
-	// Insert the new user into the database
-	result, err := tx.Exec(
-		`INSERT INTO user (email, username, oauth_provider, oauth_userID) VALUES (?, ?, ?, ?)`,
-		email, username, oauthProvider, oauthUserID,
-	)
-	if err != nil {
-		log.Printf("Error inserting new user: %v", err)
-		return 0, err
-	}
-
-	userID, err := result.LastInsertId()
-	if err != nil {
-		log.Printf("Error getting last inserted user ID: %v", err)
-		return 0, err
-	}
-
-	// Commit the transaction
-	err = tx.Commit()
-	if err != nil {
-		log.Printf("Error committing transaction for user creation: %v", err)
-		return 0, err
-	}
-
-	return int(userID), nil
+	idStr := strconv.Itoa(response.GithubID)
+	return primaryEmail, response.Login, idStr, nil
 }

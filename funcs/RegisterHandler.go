@@ -103,7 +103,7 @@ func userExists(email, username string) (bool, error) {
 
 func validateCredentials(email, username, password string) error {
 	emailReg := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
-	reg := regexp.MustCompile(`^[a-zA-Z0-9]+$`)
+	reg := regexp.MustCompile(`^[a-zA-Z0-9_.]+$`)
 
 	if !emailReg.MatchString(email) {
 		return fmt.Errorf("invalid email")

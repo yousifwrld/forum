@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	funcs "forum/funcs"
-	"io"
 	"log"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 func GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
@@ -30,13 +30,33 @@ func GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Now we get the user information in exchange for the access token
-	userInfo, err := getGoogleUserInfo(accessToken)
+	email, oAuthID, err := getGoogleUserInfo(accessToken)
 	if err != nil {
 		funcs.ErrorPages(w, r, "500", http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Println("User info:", userInfo)
+	// Create a new user in the database
+	var userID int
+
+	username := strings.TrimSuffix(email, "@gmail.com")
+	userID, err = createUserByOAuth(email, username, "google", oAuthID)
+	if err != nil {
+		log.Println("Error creating user:", err)
+		funcs.ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
+	}
+
+	// Manage session
+	err = funcs.ManageSession(w, r, userID)
+	if err != nil {
+		log.Println("Error managing session:", err)
+		funcs.ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
+	}
+
+	// Redirect to the home page
+	http.Redirect(w, r, "/", http.StatusFound)
 }
 
 func getGoogleAccessToken(code string) (string, error) {
@@ -95,7 +115,7 @@ func getGoogleAccessToken(code string) (string, error) {
 	return response.AccessToken, nil
 }
 
-func getGoogleUserInfo(accessToken string) (string, error) {
+func getGoogleUserInfo(accessToken string) (string, string, error) {
 	// This function is to get the user information in exchange for the access token
 
 	// Creating a new request
@@ -106,7 +126,7 @@ func getGoogleUserInfo(accessToken string) (string, error) {
 	)
 	if err != nil {
 		log.Println("Error creating request:", err)
-		return "", err
+		return "", "", err
 	}
 
 	// Set the Authorization header
@@ -117,22 +137,26 @@ func getGoogleUserInfo(accessToken string) (string, error) {
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		log.Println("Error getting response:", err)
-		return "", err
+		return "", "", err
 	}
 	defer res.Body.Close()
 
 	// Check for HTTP status code
 	if res.StatusCode != http.StatusOK {
 		log.Println("Unexpected response status:", res.Status)
-		return "", fmt.Errorf("unexpected status code: %d", res.StatusCode)
+		return "", "", fmt.Errorf("unexpected status code: %d", res.StatusCode)
 	}
 
-	// Read the response body and return it
-	body, err := io.ReadAll(res.Body)
+	var response struct {
+		Email string `json:"email"`
+		Id    string `json:"id"`
+	}
+
+	err = json.NewDecoder(res.Body).Decode(&response)
 	if err != nil {
-		log.Println("Error reading response body:", err)
-		return "", err
+		log.Println("Error decoding response:", err)
+		return "", "", err
 	}
 
-	return string(body), nil
+	return response.Email, response.Id, nil
 }
