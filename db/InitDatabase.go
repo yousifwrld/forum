@@ -30,7 +30,7 @@ func InitDatabase() error {
 			password TEXT,
 			oauth_provider TEXT,
 			oauth_userID TEXT
-		)`) // password and email can be null for oAuth users
+		)`) // password can be null for oAuth users
 		if err != nil {
 			err = fmt.Errorf("error creating user table: %v", err)
 			return
