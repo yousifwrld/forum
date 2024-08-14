@@ -32,7 +32,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		var userID int
 
 		// Get the hashed user password and user ID
-		err := db.Database.QueryRow(`SELECT Password, UserID FROM USER WHERE lower(Username) = ?`, username).Scan(&hashedPassword, &userID)
+		err := db.Database.QueryRow(`SELECT Password, UserID FROM USER WHERE lower(Username) = ?`, strings.ToLower(username)).Scan(&hashedPassword, &userID)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				log.Println(err)
