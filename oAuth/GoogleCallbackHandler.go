@@ -25,6 +25,11 @@ func GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	// Now we need to exchange this code for an access token
 	accessToken, err := getGoogleAccessToken(code)
 	if err != nil {
+		if err.Error() == "token resp err" {
+			log.Println("Error getting access token:", err)
+			http.Redirect(w, r, "/login", http.StatusFound)
+			return
+		}
 		funcs.ErrorPages(w, r, "500", http.StatusInternalServerError)
 		return
 	}
@@ -32,6 +37,11 @@ func GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	// Now we get the user information in exchange for the access token
 	email, oAuthID, err := getGoogleUserInfo(accessToken)
 	if err != nil {
+		if err.Error() == "info resp err" {
+			log.Println("Error getting user info:", err)
+			http.Redirect(w, r, "/login", http.StatusFound)
+			return
+		}
 		funcs.ErrorPages(w, r, "500", http.StatusInternalServerError)
 		return
 	}
@@ -93,6 +103,9 @@ func getGoogleAccessToken(code string) (string, error) {
 	// Check for HTTP status code
 	if res.StatusCode != http.StatusOK {
 		log.Println("Unexpected response status:", res.Status)
+		if res.StatusCode == 400 {
+			return "", fmt.Errorf("token resp err")
+		}
 		return "", fmt.Errorf("unexpected status code: %d", res.StatusCode)
 	}
 
@@ -144,6 +157,9 @@ func getGoogleUserInfo(accessToken string) (string, string, error) {
 	// Check for HTTP status code
 	if res.StatusCode != http.StatusOK {
 		log.Println("Unexpected response status:", res.Status)
+		if res.StatusCode == 400 {
+			return "", "", fmt.Errorf("info resp err")
+		}
 		return "", "", fmt.Errorf("unexpected status code: %d", res.StatusCode)
 	}
 

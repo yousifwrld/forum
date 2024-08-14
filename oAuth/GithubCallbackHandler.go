@@ -194,6 +194,7 @@ func getUserInfo(accessToken string) (string, string, string, error) {
 
 	// Check for unexpected HTTP status code
 	if res.StatusCode != http.StatusOK {
+
 		log.Printf("Unexpected response status for emails: %s", res.Status)
 		return "", "", "", fmt.Errorf("unexpected status code for emails: %d", res.StatusCode)
 	}
