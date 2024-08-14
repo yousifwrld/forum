@@ -31,10 +31,18 @@
             <button type="submit" class="btn">Login</button>
         </form>
 
-        <h6 style="text-align: center; padding: 3px">or</h6>
-        <a class="github-login" href="/login/github"><i class='bx bxl-github'></i> Login with Github</a>
-        <h6 style="text-align: center; padding: 3px">or</h6>
-        <a class="google-login" href="/login/google"><i class='bx bxl-google'></i> Login with Google</a>
+        <div class="oauth-divider">
+            <span>OR</span>
+        </div>
+
+        <div class="oauth-section">
+            <a class="oauth-btn github-login" href="/login/github">
+                <i class='bx bxl-github'></i> Login with Github
+            </a>
+            <a class="oauth-btn google-login" href="/login/google">
+                <i class='bx bxl-google'></i> Login with Google
+            </a>
+        </div>
 
         {{if .Msg}}
         <p id="BackendErr" class="err">{{.Msg}}</p>

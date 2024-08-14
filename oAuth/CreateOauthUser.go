@@ -54,11 +54,11 @@ func createUserByOAuth(email, username, oauthProvider, oauthUserID string) (int,
 				return dbUserID, nil
 			} else {
 				// OAuth provider does not match, return error
-				return 0, fmt.Errorf("user exists with a different OAuth provider")
+				return 0, fmt.Errorf("user exists")
 			}
 		} else {
 			// Account exists with a normal login, return error
-			return 0, fmt.Errorf("user exists with a normal login")
+			return 0, fmt.Errorf("user exists")
 		}
 	}
 
