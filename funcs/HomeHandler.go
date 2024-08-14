@@ -10,6 +10,8 @@ import (
 	"sort"
 )
 
+var userID int
+
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	//struct with all the data we need for the page
 	type PageData struct {
@@ -32,7 +34,9 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	isLoggedIn := false
 
 	//get the sessionID from the cookie if available
-	sessionID, err := GetSessionFromCookie(r)
+	var err error
+	var sessionID string
+	sessionID, err = GetSessionFromCookie(r)
 	if err != nil {
 		if err == http.ErrNoCookie {
 			isLoggedIn = false
@@ -44,7 +48,8 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//if a session was available get the userID associated with the session
-	userID, err := GetIDFromSession(sessionID)
+
+	userID, err = GetIDFromSession(sessionID)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			isLoggedIn = false
@@ -156,11 +161,21 @@ func getPosts() ([]Post, error) {
 		if err != nil {
 			return nil, err
 		}
-		//save likes, dislikes, comments and categories for each post
+
+		//get user reactions for each post
+
+		var userLiked, userDisliked bool
+		userLiked, userDisliked, err = getUserReactions(post.ID, userID)
+		if err != nil {
+			return nil, err
+		}
+		//save likes, dislikes, comments, user reactions and categories for each post
 		post.Likes = likes
 		post.Dislikes = dislikes
 		post.Categories = categories
 		post.Comments = comments
+		post.UserLiked = userLiked
+		post.UserDisliked = userDisliked
 
 		// Append post to posts
 		posts = append(posts, post)
@@ -196,4 +211,21 @@ func getLikesDislikesComments(postID int) (int, int, int, error) {
 	}
 
 	return likes, dislikes, comments, nil
+}
+
+func getUserReactions(postID int, userID int) (bool, bool, error) {
+
+	var userLiked, userDisliked bool
+
+	err := db.Database.QueryRow(`
+		SELECT is_like, is_dislike FROM reaction WHERE postID = ? AND userID = ?
+	`, postID, userID).Scan(&userLiked, &userDisliked)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return false, false, nil
+		}
+		return false, false, err
+	}
+	return userLiked, userDisliked, nil
 }

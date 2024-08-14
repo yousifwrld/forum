@@ -64,7 +64,24 @@ func ReactionHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	response := map[string]int{"dislikes": dislikes, "likes": likes}
+	var userLiked, userDisliked bool
+	if req.Type == "post" {
+		userLiked, userDisliked, err = getUserReactions(req.ID, userID)
+		if err != nil {
+			log.Println(err)
+			http.Error(w, "Failed to get user reactions", http.StatusInternalServerError)
+			return
+		}
+	}
+
+	fmt.Println("Likes:", likes, "Dislikes:", dislikes, "User liked:", userLiked, "User disliked:", userDisliked)
+
+	response := map[string]interface{}{
+		"dislikes":      dislikes,
+		"likes":         likes,
+		"user_disliked": userLiked,
+		"user_liked":    userDisliked,
+	}
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(response); err != nil {
 		log.Println(err)

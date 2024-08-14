@@ -79,8 +79,8 @@
                 <div class="post-content">{{.Content}}</div>
         </a>
                 <div class="post-actions">
-                    <button onclick="handleReaction({{.ID}}, 1, 'post')" class="like-button"><i class='bx bx-like'></i><span id="likeCount-{{.ID}}">{{.Likes}}</span></button>
-                    <button onclick="handleReaction({{.ID}}, 0, 'post')" class="dislike-button"><i class='bx bx-dislike'></i><span id="dislikeCount-{{.ID}}">{{.Dislikes}}</span></button>
+                    <button onclick="handleReaction({{.ID}}, 1, 'post')" class="like-button"><i id class='{{if .UserLiked}}bx bxs-like{{else}}bx bx-like{{end}}'></i><span id="likeCount-{{.ID}}">{{.Likes}}</span></button>
+                    <button onclick="handleReaction({{.ID}}, 0, 'post')" class="dislike-button"><i class='{{if .UserDisliked}}bx bxs-dislike{{else}}bx bx-dislike{{end}}'></i><span id="dislikeCount-{{.ID}}">{{.Dislikes}}</span></button>
                     <button href="/post/{{.ID}}/comment" class="comment-button"><i class='bx bx-comment'></i>{{.Comments}} Comments</button>
                 </div>
             </div>

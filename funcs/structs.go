@@ -18,6 +18,8 @@ type Post struct {
 	Dislikes           int        `json:"dislikes"`
 	FilterCategories   []Category
 	Comments           int
+	UserLiked          bool
+	UserDisliked       bool
 }
 
 type Comment struct {
