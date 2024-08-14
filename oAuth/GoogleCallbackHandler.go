@@ -52,6 +52,10 @@ func GoogleCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	username := strings.TrimSuffix(email, "@gmail.com")
 	userID, err = createUserByOAuth(email, username, "google", oAuthID)
 	if err != nil {
+		if err.Error() == "email already exists" {
+			funcs.ErrorPages(w, r, "exists", http.StatusConflict, "templates/login.html")
+			return
+		}
 		log.Println("Error creating user:", err)
 		funcs.ErrorPages(w, r, "500", http.StatusInternalServerError)
 		return

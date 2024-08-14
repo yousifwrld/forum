@@ -45,6 +45,10 @@ func GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	var userID int
 	userID, err = createUserByOAuth(email, username, "github", githubID)
 	if err != nil {
+		if err.Error() == "email already exists" {
+			funcs.ErrorPages(w, r, "exists", http.StatusConflict, "templates/login.html")
+			return
+		}
 		log.Println("Error creating user:", err)
 		funcs.ErrorPages(w, r, "500", http.StatusInternalServerError)
 		return

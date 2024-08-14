@@ -25,24 +25,14 @@ func InitDatabase() error {
 		// Create user table if it doesn't exist
 		_, err = Database.Exec(`CREATE TABLE IF NOT EXISTS user (
 			userID INTEGER PRIMARY KEY AUTOINCREMENT,
-			email TEXT,
+			email TEXT NOT NULL,
 			username TEXT NOT NULL,
-			password TEXT
+			password TEXT,
+			oauth_provider TEXT,
+			oauth_userID TEXT
 		)`) // password and email can be null for oAuth users
 		if err != nil {
 			err = fmt.Errorf("error creating user table: %v", err)
-			return
-		}
-
-		_, err = Database.Exec(`CREATE TABLE IF NOT EXISTS user_oauth (
-			userID INTEGER,
-			oauth_provider TEXT,
-			oauth_userID TEXT,
-			PRIMARY KEY (userID, oauth_provider),
-			FOREIGN KEY (userID) REFERENCES user(userID)	
-		)`)
-		if err != nil {
-			err = fmt.Errorf("error creating user_oauth table: %v", err)
 			return
 		}
 

@@ -67,7 +67,7 @@ func ErrorPages(w http.ResponseWriter, r *http.Request, errMessage string, code 
 		templatePath = path[0]
 
 	case "oauth account":
-		data = Error{Code: "403", Msg: "account created through OAuth, cannot log in through form"}
+		data = Error{Code: "403", Msg: "cannot login to an oauth account."}
 		templatePath = path[0]
 	default:
 		// Handle any unspecified error codes if necessary

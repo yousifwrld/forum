@@ -6,6 +6,7 @@ import (
 	"forum/db"
 	"log"
 	"math/rand"
+	"strings"
 	"time"
 )
 
@@ -36,44 +37,24 @@ func createUserByOAuth(email, username, oauthProvider string, oauthUserID string
 	}()
 
 	// Check if the email already exists in the user table
-	var existingUserID int
-	err = tx.QueryRow(`SELECT userID FROM user WHERE email = ?`, email).Scan(&existingUserID)
+	var emailExists bool
+
+	err = tx.QueryRow(`SELECT EXISTS(SELECT 1 FROM user WHERE email = ?)`, email).Scan(&emailExists)
 	if err != nil && err != sql.ErrNoRows {
 		return 0, fmt.Errorf("error checking for existing email: %v", err)
 	}
 
-	// If a user with the provided email already exists
-	if existingUserID != 0 {
-		// Check if there's already an OAuth link for this provider and userID
-		var existingOAuthUserID string
-		err = tx.QueryRow(`SELECT oauth_userID FROM user_oauth WHERE userID = ? AND oauth_provider = ?`, existingUserID, oauthProvider).Scan(&existingOAuthUserID)
-		if err != nil && err != sql.ErrNoRows {
-			return 0, fmt.Errorf("error checking for existing OAuth link: %v", err)
-		}
-
-		// If no OAuth link exists, insert a new one
-		if err == sql.ErrNoRows {
-			_, err = tx.Exec(
-				`INSERT INTO user_oauth (userID, oauth_provider, oauth_userID) VALUES (?, ?, ?)`,
-				existingUserID, oauthProvider, oauthUserID,
-			)
-			if err != nil {
-				return 0, fmt.Errorf("error linking new OAuth information: %v", err)
-			}
-
-			// Clear the err variable after successful operation
-			err = nil
-		}
-
-		// Return the existing user ID
-		return existingUserID, nil
+	if emailExists {
+		return 0, fmt.Errorf("email already exists")
 	}
 
-	// If the email does not exist, generate a unique username
+	// if the email does not exist, create a new user with a unique username
 	originalUsername := username
+
+	//infinite loop until we find a unique username
 	for {
 		var existingUsername string
-		err = tx.QueryRow(`SELECT username FROM user WHERE username = ?`, username).Scan(&existingUsername)
+		err = tx.QueryRow(`SELECT username FROM user WHERE lower(username) = ?`, strings.ToLower(username)).Scan(&existingUsername)
 
 		if err == sql.ErrNoRows {
 			break
@@ -89,8 +70,8 @@ func createUserByOAuth(email, username, oauthProvider string, oauthUserID string
 
 	// Insert the new user into the user table
 	result, err := tx.Exec(
-		`INSERT INTO user (email, username) VALUES (?, ?)`,
-		email, username,
+		`INSERT INTO user (email, username, oauth_provider, oauth_userID) VALUES (?, ?, ?, ?)`,
+		email, username, oauthProvider, oauthUserID,
 	)
 	if err != nil {
 		return 0, fmt.Errorf("error inserting new user: %v", err)
@@ -100,15 +81,6 @@ func createUserByOAuth(email, username, oauthProvider string, oauthUserID string
 	userID, err := result.LastInsertId()
 	if err != nil {
 		return 0, fmt.Errorf("error getting last inserted user ID: %v", err)
-	}
-
-	// Insert the OAuth information into the user_oauth table
-	_, err = tx.Exec(
-		`INSERT INTO user_oauth (userID, oauth_provider, oauth_userID) VALUES (?, ?, ?)`,
-		userID, oauthProvider, oauthUserID,
-	)
-	if err != nil {
-		return 0, fmt.Errorf("error inserting OAuth information: %v", err)
 	}
 
 	// The transaction will be committed by the deferred function if no error occurred
