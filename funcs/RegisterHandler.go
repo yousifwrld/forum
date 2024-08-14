@@ -93,8 +93,9 @@ func CreateUser(email, username, password string) (int, error) {
 func userExists(email, username string) (bool, error) {
 	var exists bool
 
-	err := db.Database.QueryRow(`SELECT EXISTS(SELECT 1 FROM USER WHERE Username = ? OR Email = ?)`, username, email).Scan(&exists)
+	err := db.Database.QueryRow(`SELECT EXISTS(SELECT 1 FROM USER WHERE lower(Username) = ? OR Email = ?)`, strings.ToLower(username), email).Scan(&exists)
 	if err != nil {
+		log.Println(err)
 		return false, err
 	}
 

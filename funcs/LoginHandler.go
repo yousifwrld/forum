@@ -21,7 +21,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		RenderTemplate(w, "templates/login.html", nil)
 	case "POST":
 
-		username := strings.ToLower(strings.TrimSpace(r.PostFormValue("username")))
+		username := strings.TrimSpace(r.FormValue("username"))
 		password := strings.TrimSpace(r.FormValue("password"))
 
 		if username == "" || password == "" {
@@ -32,7 +32,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		var userID int
 
 		// Get the hashed user password and user ID
-		err := db.Database.QueryRow(`SELECT Password, UserID FROM USER WHERE Username = ?`, username).Scan(&hashedPassword, &userID)
+		err := db.Database.QueryRow(`SELECT Password, UserID FROM USER WHERE lower(Username) = ?`, username).Scan(&hashedPassword, &userID)
 		if err != nil {
 			if err == sql.ErrNoRows {
 				log.Println(err)
