@@ -25,9 +25,29 @@ type PostDetail struct {
 	CommentsCount int
 	Comments      []Comment
 	Categories    []Category
+	UserLiked     bool
+	UserDisliked  bool
 }
 
 func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
+
+	//get the sessionID from the cookie if available
+	var err error
+	var sessionID string
+	sessionID, err = GetSessionFromCookie(r)
+	if err != nil && err != http.ErrNoCookie {
+		log.Println("Error getting session cookie:", err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
+	}
+
+	//if a session was available get the userID associated with the session
+	reqUserID, err := GetIDFromSession(sessionID)
+	if err != nil && err != sql.ErrNoRows {
+		log.Println("Error getting userID from session:", err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
+	}
 	// extracting ID from the GET request
 	postIDStr := strings.TrimPrefix(string(r.URL.Path), "/post/")
 	postID, err := strconv.Atoi(postIDStr)
@@ -98,6 +118,14 @@ func PostDetailHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	post.Categories = categories
+
+	//get the user reactions for the post
+	post.UserLiked, post.UserDisliked, err = getUserReactions(postID, reqUserID)
+	if err != nil {
+		log.Println(err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
+	}
 
 	tmpl, err := template.New("post-detail.html").Funcs(template.FuncMap{
 		"joinAndTrim": joinAndTrim,
