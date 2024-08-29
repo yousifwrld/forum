@@ -6,7 +6,7 @@
 
 body {
     font-family: "Ubuntu", sans-serif;
-    background-color: #f5f5f5;
+    background-color: #121212; /* Dark background */
     padding-top: 60px;
     display: flex;
     flex-direction: column;
@@ -23,7 +23,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #1c3f4d;
+    background-color: #1f1f1f; /* Dark gray for headers */
     padding: 0 10%;
 }
 
@@ -34,7 +34,7 @@ header {
 }
 
 .bar i {
-    color: #99d8f1;
+    color: #bb86fc; /* Purple accent */
     font-size: 28px;
     margin-right: 8px;
 }
@@ -42,7 +42,7 @@ header {
 .bar span {
     font-family: "Pacifico", cursive;
     font-size: 24px;
-    color: white;
+    color: #ffffff; /* White text */
 }
 
 .header-right {
@@ -51,21 +51,21 @@ header {
 }
 
 .header-right a {
-    color: #fff;
+    color: #ffffff; /* White text */
     margin-left: 20px;
     font-size: 24px;
     cursor: pointer;
 }
 
 .header-right a:hover {
-    color: #99d8f1;
+    color: #bb86fc; /* Purple accent on hover */
 }
 
 .user a, .help a, .logout button, .login a {
     font-family: "Ubuntu", sans-serif;
     border: none;
     background-color: transparent;
-    color: #1c3f4d;
+    color: #e0e0e0; /* Light gray text */
     font-size: 1.1rem;
     cursor: pointer;
     text-decoration: none;
@@ -75,7 +75,6 @@ header {
     font-weight: bold;
 }
 
-
 .sub-menu-wrap, .filter-wrap {
     position: absolute;
     top: 60px;
@@ -83,7 +82,7 @@ header {
     width: 260px;
     max-height: 400px;
     overflow: hidden;
-    background: white;
+    background: #1f1f1f; /* Dark background for menus */
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: right 0.3s ease-in-out; /* Smoother sliding transition */
@@ -92,8 +91,6 @@ header {
 .sub-menu-wrap.open-menu, .filter-wrap.open-menu {
     right: 0; /* Slide into view */
 }
-
-
 
 .sub-menu, .filter-form {
     padding: 20px;
@@ -112,39 +109,37 @@ header {
     margin-top: 20px;
     display: flex;
     justify-content: center;
- 
 }
 
-.add-comment-button a{
+.add-comment-button a {
     text-decoration: none;
-    color: #1c3f4d;
+    color: #bb86fc; /* Purple accent */
     font-size: 24px;
     display: flex;
     align-items: center;
     margin: 0 10px;
 }
 
-.add-comment-button a:hover{
-    color: #99d8f1;
+.add-comment-button a:hover {
+    color: #6200ea; /* Dark purple on hover */
 }
 
 hr {
     border: 0;
     height: 1px;
     width: 100%;
-    background: #ccc;
+    background: #292929; /* Darker border color */
     margin: 15px 0;
 }
 
 .filter-option {
     display: inline-block;
-    background-color: #f0f0f0;
+    background-color: #292929; /* Darker background for filter options */
     padding: 8px 12px;
     border-radius: 20px;
     margin: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    /* Ensures consistent size and padding whether selected or not */
 }
 
 .filter-option input[type="checkbox"] {
@@ -154,18 +149,18 @@ hr {
 .filter-option label {
     font-family: "Ubuntu", sans-serif;
     font-size: 0.9rem;
-    color: #333;
+    color: #e0e0e0; /* Light gray text */
     cursor: pointer;
 }
 
 .filter-option:hover {
-    background-color: #d0e6f1;
+    background-color: #3700b3; /* Dark purple on hover */
 }
 
 /* Apply styles directly to .filter-option when selected */
 .filter-option.selected {
-    background-color: #1c3f4d;
-    color: white; /* Change text color to white */
+    background-color: #3700b3; /* Dark purple for selected state */
+    color: #ffffff; /* White text */
     border-radius: 20px;
     padding: 8px 12px;
     transition: background-color 0.3s ease;
@@ -173,20 +168,15 @@ hr {
 
 /* New rule to ensure label text color is white when selected */
 .filter-option.selected label {
-    color: white;
+    color: #ffffff; /* White text */
 }
-
-
-
-
-
 
 .filter-submit {
     display: block;
     width: 100%;
     padding: 10px;
-    background-color: #1c3f4d;
-    color: white;
+    background-color: #3700b3; /* Dark purple button */
+    color: #ffffff; /* White text */
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -195,7 +185,7 @@ hr {
 }
 
 .filter-submit:hover {
-    background-color: #143140;
+    background-color: #6200ea; /* Dark purple on hover */
 }
 
 ul {
@@ -204,26 +194,27 @@ ul {
     max-width: 800px;
     padding: 20px;
 }
-.add a{
+
+.add a {
     text-decoration: none;
-    color: white;
+    color: #ffffff; /* White text */
 }
+
 .add {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: #1c3f4d;
-    color: white;
+    background-color: #3700b3; /* Dark purple button */
+    color: #ffffff; /* White text */
     padding: 10px 20px;
     border-radius: 50px;
     font-size: 24px;
     text-align: center;
     cursor: pointer;
-    
 }
 
 .add:hover {
-    background-color: #143140;
+    background-color: #6200ea; /* Dark purple on hover */
 }
 
 .post-link {
@@ -236,7 +227,7 @@ ul {
 .post {
     display: flex;
     flex-direction: column;
-    background-color: white;
+    background-color: #1f1f1f; /* Dark gray for post background */
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -244,13 +235,13 @@ ul {
 }
 
 .post:hover {
-    background-color: #f0f0f0;
+    background-color: #292929; /* Darker background on hover */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .post-meta {
     font-size: 0.8rem;
-    color: gray;
+    color: #e0e0e0; /* Light gray text */
     margin-bottom: 10px;
 }
 
@@ -259,27 +250,27 @@ ul {
     font-size: 1.2rem;
     font-weight: 600;
     margin-bottom: 10px;
-    border-bottom: 1px solid #ccc; /* Add this line */
+    border-bottom: 1px solid #292929; /* Darker border */
     padding-bottom: 10px; /* Optional: Add padding for spacing */
 }
 
 .post-image {
     margin: 10px 0; /* Add some space above and below the image */
     text-align: center; /* Center the image */
-    border-bottom: 1px solid #ccc; /* Add this line */
+    border-bottom: 1px solid #292929; /* Darker border */
     padding-bottom: 10px; /* Optional: Add padding for spacing */
 }
 
 .post-image img {
     max-width: 90%;
-    height: auto; 
+    height: auto;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: add a subtle shadow */
 }
 
 .post-content {
     font-family: "Lora", serif;
     font-size: 1rem;
-    color: #333;
+    color: #e0e0e0; /* Light gray text */
     padding-top: 10px;
 }
 
@@ -288,7 +279,7 @@ ul {
     justify-content: space-between;
     align-items: center;
     margin-top: 3px;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid #292929; /* Darker border */
     padding-top: 10px;
 }
 
@@ -299,11 +290,11 @@ ul {
     font-size: 1rem;
     display: flex;
     align-items: center;
-    color: #1c3f4d;
+    color: #bb86fc; /* Purple accent */
 }
 
 .post-actions button:hover {
-    color: #99d8f1;
+    color: #6200ea; /* Dark purple on hover */
 }
 
 .post-actions i {

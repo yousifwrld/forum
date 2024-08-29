@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum - chat</title>
+    <link rel="stylesheet" href="/static/homePage.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="/static/chat.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Ubuntu:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="chat-container" id="chat-container">
+        <div class="message sent">
+            <p>hello world!</p>
+        </div>
+        <div class="message received">
+            <p>println</p>
+        </div>
+    </div>
+
+    <div class="input-area">
+        <textarea class="textbox" name="textbox" id="textbox" placeholder="Message..."></textarea>
+        <button class="send" id="send"><i class='bx bxs-send'></i></button>
+    </div>
+
+    <script>
+        // Set the height of the text box to match the scrollHeight
+        const textbox = document.getElementById('textbox');
+
+        textbox.addEventListener('input', function () {
+            this.style.height = '40px'; // Reset the height
+            this.style.height = this.scrollHeight + 'px'; // Set the height to match the scrollHeight
+        });
+    </script>
+</body>
+
+</html>
