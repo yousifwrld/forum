@@ -13,7 +13,7 @@ This project is a web-based forum that allows users to communicate with each oth
 1. User Authentication:
 
 - User Registration: 
-- Users can register by providing an email, username, and password.
+- Users can register by providing an email, username, and password. Or using one of the two OAuth methods provided (github and google)
 - The system checks if the email is already registered and returns an error if it is.
 - Passwords are securely encrypted.
 
