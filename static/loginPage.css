@@ -55,11 +55,6 @@ body {
 
 .input-field input::placeholder {
   color: white;
-  transition: all .3s ease;
-}
-
-.input-field input:focus::placeholder{
-  opacity: 30%;
 }
 
 .input-field i {

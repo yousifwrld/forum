@@ -7,7 +7,9 @@
     <title>User Info</title>
     <link rel="stylesheet" href="/static/userinfo.css">
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700&display=swap"
+        rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
@@ -44,7 +46,7 @@
             <button class="tab-button" onclick="showTab('liked')">Liked</button>
             <div class="underline"></div>
         </div>
-        
+
         <div id="posts" class="tab-content">
             <h1>Your Posts</h1>
             {{if .Posts}}
@@ -128,10 +130,10 @@
     </script>
     <script>
         function toggleMenu() {
-    const subMenu = document.getElementById("subMenu");
+            const subMenu = document.getElementById("subMenu");
 
-    subMenu.classList.toggle("open-menu");
-}
+            subMenu.classList.toggle("open-menu");
+        }
     </script>
 </body>
 

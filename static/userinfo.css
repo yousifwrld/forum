@@ -64,7 +64,9 @@ header {
   color: #99d8f1;
 }
 
-.home a, .help a, .logout button{
+.home a,
+.help a,
+.logout button {
   font-family: "Ubuntu", sans-serif;
   border: none;
   background-color: transparent;
@@ -74,12 +76,13 @@ header {
   text-decoration: none;
 }
 
-.home a:hover, .help a:hover, .logout button:hover{
+.home a:hover,
+.help a:hover,
+.logout button:hover {
   font-weight: bold;
 }
 
-
-.sub-menu-wrap{
+.sub-menu-wrap {
   position: absolute;
   top: 60px;
   right: -300px; /* Adjust to hide off-screen */
@@ -92,21 +95,23 @@ header {
   transition: right 0.3s ease-in-out; /* Smoother sliding transition */
 }
 
-.sub-menu-wrap.open-menu{
+.sub-menu-wrap.open-menu {
   right: 0; /* Slide into view */
 }
 
-
-
-.sub-menu{
+.sub-menu {
   padding: 20px;
 }
 
-.home, .help, .logout{
+.home,
+.help,
+.logout {
   margin-bottom: 10px;
 }
 
-.home i, .help i, .logout i{
+.home i,
+.help i,
+.logout i {
   font-size: 20px;
   margin-right: 5px;
 }
@@ -147,7 +152,8 @@ h1 {
   transition: color 0.3s ease;
 }
 
-.tab-button:hover, .tab-button.active {
+.tab-button:hover,
+.tab-button.active {
   color: #15303c; /* Changed to match theme */
 }
 
@@ -208,7 +214,6 @@ h1 {
   margin: 10px 0; /* Space above and below the image */
   text-align: center; /* Center the image */
 }
-
 
 .post-image img {
   max-width: 90%; /* Ensure the image fits within the container */

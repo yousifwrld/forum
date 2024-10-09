@@ -52,16 +52,10 @@ body{
     padding: 20px 45px 20px 20px;
 
 }
-
-.input-field input::placeholder {
+.input-field input::placeholder{
     color: white;
-    transition: all .3s ease;
-  }
-  
-  .input-field input:focus::placeholder{
-    opacity: 30%;
-  }
-  
+
+}
 .input-field i{
     position: absolute;
     right: 20px;
