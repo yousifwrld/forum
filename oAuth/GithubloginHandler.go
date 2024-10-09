@@ -4,11 +4,12 @@ import (
 	funcs "forum/funcs"
 	"net/http"
 	"net/url"
+	"os"
 )
 
 var (
-	githubClientID     = "Ov23liJQhTGw0Kzh4PRN"
-	githubClientSecret = "d350cb1e955cce4ddd644c42655d50261db09dee"
+	githubClientID     = os.Getenv("githubClientID")
+	githubClientSecret = os.Getenv("githubClientSecret")
 )
 
 func GithubloginHandler(w http.ResponseWriter, r *http.Request) {

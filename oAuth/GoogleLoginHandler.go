@@ -4,11 +4,12 @@ import (
 	funcs "forum/funcs"
 	"net/http"
 	"net/url"
+	"os"
 )
 
 var (
-	googleClientID     = "569800644637-0kjgkt8nr79eg4smivlinsghm0vna21a.apps.googleusercontent.com"
-	googleClientSecret = "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"
+	googleClientID     = os.Getenv("googleClientID")
+	googleClientSecret = os.Getenv("googleClientSecret")
 )
 
 func GoogleLoginHandler(w http.ResponseWriter, r *http.Request) {
