@@ -7,7 +7,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"sort"
 )
 
 var userID int
@@ -130,7 +129,7 @@ func getPosts() ([]Post, error) {
 	rows, err := db.Database.Query(`
         SELECT p.postID, p.title, p.content, p.image, p.created_at, u.username 
         FROM post p
-        JOIN user u ON p.userID = u.userID
+        JOIN user u ON p.userID = u.userID ORDER BY p.created_at DESC
     `)
 	if err != nil {
 		return nil, err
@@ -180,10 +179,6 @@ func getPosts() ([]Post, error) {
 		// Append post to posts
 		posts = append(posts, post)
 	}
-	// sort from latest to oldest based on created_at
-	sort.Slice(posts, func(i, j int) bool {
-		return posts[i].CreatedAt.After(posts[j].CreatedAt)
-	})
 	return posts, nil
 }
 

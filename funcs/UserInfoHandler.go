@@ -12,9 +12,10 @@ import (
 func UserInfo(w http.ResponseWriter, r *http.Request) {
 
 	type PageData struct {
-		Username   string
-		Posts      []Post
-		LikedPosts []Post
+		Username      string
+		Posts         []Post
+		LikedPosts    []Post
+		DislikedPosts []Post
 	}
 	if r.Method != http.MethodGet {
 		ErrorPages(w, r, "405", http.StatusMethodNotAllowed)
@@ -42,7 +43,7 @@ func UserInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//get the liked posts for the user
-	likedPosts, err := getLikedPostsByUserID(userID)
+	likedPosts, dislikedPosts, err := GetLikedAndDislikedPosts(userID)
 	if err != nil {
 		log.Println(err)
 		ErrorPages(w, r, "500", http.StatusInternalServerError)
@@ -50,9 +51,10 @@ func UserInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := PageData{
-		Username:   username,
-		Posts:      posts,
-		LikedPosts: likedPosts,
+		Username:      username,
+		Posts:         posts,
+		LikedPosts:    likedPosts,
+		DislikedPosts: dislikedPosts,
 	}
 
 	//to be able to use the joinAndTrim function in the html
@@ -141,15 +143,14 @@ func getPostsByUserID(userID int) ([]Post, error) {
 	return posts, nil
 }
 
-func getLikedPostsByUserID(userID int) ([]Post, error) {
-
-	//start a transaction
+func GetLikedAndDislikedPosts(userID int) ([]Post, []Post, error) {
+	// Start a transaction
 	tx, err := db.Database.Begin()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	//rollback the transaction or error, or commit on success
+	// Rollback the transaction on error or commit on success
 	defer func() {
 		if err != nil {
 			tx.Rollback()
@@ -158,72 +159,70 @@ func getLikedPostsByUserID(userID int) ([]Post, error) {
 		}
 	}()
 
-	rows, err := tx.Query(`SELECT postID FROM reaction WHERE userID = ? AND is_like = true`, userID)
+	// Query to get post IDs along with their like or dislike status
+	rows, err := tx.Query(`
+		SELECT postID, is_like, is_dislike 
+		FROM reaction 
+		WHERE userID = ? AND (is_like = true OR is_dislike = true)
+	`, userID)
 	if err != nil {
 		log.Println(err)
-		return nil, err
+		return nil, nil, err
 	}
 	defer rows.Close()
 
-	// get the posts
-	var posts []Post
+	// Prepare slices for liked and disliked posts
+	var likedPosts []Post
+	var dislikedPosts []Post
 
 	for rows.Next() {
 		var postID int
-		if err := rows.Scan(&postID); err != nil {
+		var isLike, isDislike bool
+		if err := rows.Scan(&postID, &isLike, &isDislike); err != nil {
 			log.Println(err)
-			return nil, err
+			return nil, nil, err
 		}
 
-		// Now we query the details for the post
+		// Query the details for each post
 		postRow := tx.QueryRow(`
-		SELECT p.postID, p.title, p.content, p.image, p.likes, p.dislikes, p.created_at, u.username
-		FROM post p
-		JOIN user u ON p.userID = u.userID
-		WHERE p.postID = ?
+			SELECT p.postID, p.title, p.content, p.image, p.likes, p.dislikes, p.created_at, u.username
+			FROM post p
+			JOIN user u ON p.userID = u.userID
+			WHERE p.postID = ? ORDER BY p.created_at DESC
 		`, postID)
 
+		// Prepare a Post struct to hold the post details
 		var post Post
 		if err := postRow.Scan(&post.ID, &post.Title, &post.Content, &post.Image, &post.Likes, &post.Dislikes, &post.CreatedAt, &post.Username); err != nil {
 			log.Println(err)
-			return nil, err
+			return nil, nil, err
 		}
 
-		//get the categories for each post
+		// Get the categories for each post
 		categories, err := GetCategoriesForPost(post.ID)
 		if err != nil {
 			log.Println(err)
-			return nil, err
+			return nil, nil, err
 		}
 
-		//base64 encode the image to display it in the HTML
+		// Base64 encode the image and set additional fields
 		post.Base64Image = base64.StdEncoding.EncodeToString(post.Image)
-		//save the categories for each post, and format the time
 		post.Categories = categories
 		post.FormattedCreatedAt = post.CreatedAt.Format("2006-01-02 15:04")
 
-		posts = append(posts, post)
+		// Append post to likedPosts or dislikedPosts based on its status
+		if isLike {
+			likedPosts = append(likedPosts, post)
+		} else if isDislike {
+			dislikedPosts = append(dislikedPosts, post)
+		}
 	}
 
-	// Check if there were any errors during iteration
+	// Check for any errors during iteration
 	if err = rows.Err(); err != nil {
 		log.Println(err)
-		return nil, err
+		return nil, nil, err
 	}
 
-	// in case of no posts liked by the user, set the posts to an empty slice
-	if posts == nil {
-		posts = []Post{}
-	}
-
-	//reverse the order of the posts to display them based on the latest liked posts
-	Reverse(posts)
-
-	return posts, nil
-}
-
-func Reverse(posts []Post) {
-	for i, j := 0, len(posts)-1; i < j; i, j = i+1, j-1 {
-		posts[i], posts[j] = posts[j], posts[i]
-	}
+	return likedPosts, dislikedPosts, nil
 }

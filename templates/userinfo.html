@@ -44,6 +44,7 @@
         <div class="tabs">
             <button class="tab-button active" onclick="showTab('posts')">Posts</button>
             <button class="tab-button" onclick="showTab('liked')">Liked</button>
+            <button class="tab-button" onclick="showTab('dislkied')">Disliked</button>
             <div class="underline"></div>
         </div>
 
@@ -72,7 +73,7 @@
                 {{end}}
             </ul>
             {{else}}
-            <p>No posts available.</p>
+            <p>It looks like you haven't posted anything yet.</p>
             {{end}}
         </div>
 
@@ -100,7 +101,35 @@
                 {{end}}
             </ul>
             {{else}}
-            <p>No liked posts available.</p>
+            <p>It looks like you haven't liked any posts yet.</p>
+            {{end}}
+        </div>
+
+        <div id="dislkied" class="tab-content" style="display:none;">
+            <h1>Disliked Posts</h1>
+            {{if .DislikedPosts}}
+            <ul class="post-list">
+                {{range .DislikedPosts}}
+                <li class="post-item">
+                    <a href="/post/{{.ID}}" class="post-link">
+                        <div class="post">
+                            <div class="post-meta">
+                                <small>By {{.Username}}</small>
+                                <br>
+                                <small>Posted on {{.FormattedCreatedAt}}</small>
+                                {{if gt (len .Categories) 0}}
+                                <p>Categories: {{joinAndTrim .Categories}}</p>
+                                {{end}}
+                            </div>
+                            <p class="post-title">{{.Title}}</p>
+                            <p class="post-content">{{.Content}}</p>
+                        </div>
+                    </a>
+                </li>
+                {{end}}
+            </ul>
+            {{else}}
+            <p>It looks like you haven't disliked any posts yet.</p>
             {{end}}
         </div>
     </div>
