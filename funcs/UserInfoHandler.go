@@ -9,6 +9,11 @@ import (
 	"sort"
 )
 
+type PostWithComments struct {
+	Post     Post
+	Comments []Comment
+}
+
 func UserInfo(w http.ResponseWriter, r *http.Request) {
 
 	type PageData struct {
@@ -16,6 +21,7 @@ func UserInfo(w http.ResponseWriter, r *http.Request) {
 		Posts         []Post
 		LikedPosts    []Post
 		DislikedPosts []Post
+		Comments      map[int]PostWithComments
 	}
 	if r.Method != http.MethodGet {
 		ErrorPages(w, r, "405", http.StatusMethodNotAllowed)
@@ -50,11 +56,20 @@ func UserInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//get the comments created by the user
+	postAndComments, err := getUserCommentsOnPost(userID)
+	if err != nil {
+		log.Println(err)
+		ErrorPages(w, r, "500", http.StatusInternalServerError)
+		return
+	}
+
 	data := PageData{
 		Username:      username,
 		Posts:         posts,
 		LikedPosts:    likedPosts,
 		DislikedPosts: dislikedPosts,
+		Comments:      postAndComments,
 	}
 
 	//to be able to use the joinAndTrim function in the html
@@ -225,4 +240,101 @@ func GetLikedAndDislikedPosts(userID int) ([]Post, []Post, error) {
 	}
 
 	return likedPosts, dislikedPosts, nil
+}
+
+func getUserCommentsOnPost(userID int) (map[int]PostWithComments, error) {
+	// Start a transaction
+	tx, err := db.Database.Begin()
+	if err != nil {
+		return nil, err
+	}
+
+	// Prepare the map to group comments by post
+	postAndComments := make(map[int]PostWithComments)
+
+	// Query to get user's comments
+	rows, err := tx.Query(`SELECT commentID, comment, likes, dislikes, created_at, postID FROM comment WHERE userID = ? ORDER BY created_at DESC`, userID)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	// Defer a function to commit or rollback the transaction
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		} else {
+			tx.Commit()
+		}
+	}()
+
+	// Process each comment
+	for rows.Next() {
+		var comment Comment
+		var postID int
+		// Scan comment data including postID
+		if err := rows.Scan(&comment.CommentID, &comment.Content, &comment.Likes, &comment.Dislikes, &comment.CreatedAt, &postID); err != nil {
+			log.Println(err)
+			return nil, err
+		}
+
+		// Format the comment's creation date
+		comment.FormattedCreatedAt = comment.CreatedAt.Format("2006-01-02 15:04")
+
+		// Retrieve the post and comments slice from the map (or initialize if not present)
+		postWithComments, exists := postAndComments[postID]
+		if !exists {
+			// Fetch the post data if this is the first comment for this postID
+			post, err := getPostByPostID(postID)
+			if err != nil {
+				log.Println(err)
+				return nil, err
+			}
+			postWithComments = PostWithComments{
+				Post:     post,
+				Comments: []Comment{},
+			}
+		}
+
+		// Append the new comment to the Comments slice
+		postWithComments.Comments = append(postWithComments.Comments, comment)
+
+		// Reassign the modified struct back to the map
+		postAndComments[postID] = postWithComments
+	}
+
+	// Return the map of posts and comments
+	return postAndComments, nil
+}
+
+func getPostByPostID(postID int) (Post, error) {
+
+	//start a transaction
+	tx, err := db.Database.Begin()
+	if err != nil {
+		return Post{}, err
+	}
+
+	//get the post from the database
+	var post Post
+	err = tx.QueryRow(`SELECT postID, title, content, image, likes, dislikes, created_at FROM post WHERE postID = ?`, postID).Scan(&post.ID, &post.Title, &post.Content, &post.Image, &post.Likes, &post.Dislikes, &post.CreatedAt)
+	if err != nil {
+		log.Println(err)
+		return Post{}, err
+	}
+
+	//get the categories for the post
+	categories, err := GetCategoriesForPost(post.ID)
+	if err != nil {
+		log.Println(err)
+		return Post{}, err
+	}
+
+	//base64 encode the image to display it in the HTML
+	post.Base64Image = base64.StdEncoding.EncodeToString(post.Image)
+	//save the categories for the post, and format the time
+	post.Categories = categories
+	post.FormattedCreatedAt = post.CreatedAt.Format("2006-01-02 15:04")
+
+	return post, nil
 }

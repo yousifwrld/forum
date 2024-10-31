@@ -45,6 +45,7 @@
             <button class="tab-button active" onclick="showTab('posts')">Posts</button>
             <button class="tab-button" onclick="showTab('liked')">Liked</button>
             <button class="tab-button" onclick="showTab('dislkied')">Disliked</button>
+            <button class="tab-button" onclick="showTab('commented')">Comments</button>
             <div class="underline"></div>
         </div>
 
@@ -130,6 +131,50 @@
             </ul>
             {{else}}
             <p>It looks like you haven't disliked any posts yet.</p>
+            {{end}}
+        </div>
+
+        <div id="commented" class="tab-content" style="display: none;">
+            <h1>Your Comments</h1>
+            {{if .Comments}}
+            <ul class="post-list">
+                {{range $postID, $postWithComments := .Comments}}
+                <li class="post-item">
+                    <!-- Display post information -->
+                    <div class="post">
+                        <a href="/post/{{$postWithComments.Post.ID}}" class="post-link">
+                            <div class="post-meta">
+                                <small>By {{$postWithComments.Post.Username}}</small>
+                                <br>
+                                <small>Posted on {{$postWithComments.Post.FormattedCreatedAt}}</small>
+                                {{if gt (len $postWithComments.Post.Categories) 0}}
+                                <p>Categories: {{joinAndTrim $postWithComments.Post.Categories}}</p>
+                                {{end}}
+                            </div>
+                            <p class="post-title">{{$postWithComments.Post.Title}}</p>
+                            <p class="post-content">{{$postWithComments.Post.Content}}</p>
+                        </a>
+                    </div>
+
+                    <!-- Display comments for the post -->
+                    <ul class="comment-list">
+                        {{range $postWithComments.Comments}}
+                        <li class="comment-item">
+                            <div class="comment">
+                                <p class="comment-meta">Commented on {{.FormattedCreatedAt}}</p>
+                                <p class="comment-content">{{.Content}}</p>
+                                <p class="comment-likes">
+                                    Likes: {{.Likes}}, Dislikes: {{.Dislikes}}
+                                </p>
+                            </div>
+                        </li>
+                        {{end}}
+                    </ul>
+                </li>
+                {{end}}
+            </ul>
+            {{else}}
+            <p>It looks like you haven't commented on any posts yet.</p>
             {{end}}
         </div>
     </div>
