@@ -134,6 +134,22 @@ func InitDatabase() error {
 			err = fmt.Errorf("error creating comments table: %v", err)
 			return
 		}
+		// Create notifications table if it doesn't exist
+		_, err = Database.Exec(`CREATE TABLE IF NOT EXISTS notification (
+			notificationID INTEGER PRIMARY KEY AUTOINCREMENT,
+			initiatorID INTEGER NOT NULL,
+			recipientID INTEGER NOT NULL,
+			notificationType TEXT NOT NULL,
+			created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			postID INTEGER NOT NULL,
+			FOREIGN KEY (initiatorID) REFERENCES USER(userID),
+			FOREIGN KEY (recipientID) REFERENCES USER(userID),
+			FOREIGN KEY (postID) REFERENCES POST(postID)
+		)`)
+		if err != nil {
+			err = fmt.Errorf("error creating notifications table: %v", err)
+			return
+		}
 		// Insert a test post
 		if !dbExists {
 			err = insertTestPost()

@@ -9,7 +9,9 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Ubuntu:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 </head>
 
@@ -17,8 +19,9 @@
     <header>
         <a href="/" class="bar"><i class='bx bx-home-circle'></i><span>Forum posts</span></a>
         <div class="header-right">
-            <a onclick="toggleMenu()" class="mann"><i class='bx bx-menu'></i></a>
+            <a href="/notifications" class="filter"><i class='bx bxs-bell'></i></a>
             <a onclick="toggleFilter()" class="filter"><i class='bx bx-filter-alt'></i></a>
+            <a onclick="toggleMenu()" class="mann"><i class='bx bx-menu'></i></a>
         </div>
         <div class="sub-menu-wrap" id="subMenu">
             <div class="sub-menu">
@@ -65,7 +68,7 @@
         {{range .Posts}}
         <a href="/post/{{.ID}}" class="post-link">
             <div class="post">
-                <div class="post-meta">Posted by {{.Username}} 
+                <div class="post-meta">Posted by {{.Username}}
                     <br> On {{.FormattedCreatedAt}}
                     {{if .Categories}}
                     <br>
@@ -78,108 +81,63 @@
                 {{end}}
                 <div class="post-content">{{.Content}}</div>
         </a>
-                <div class="post-actions">
-                    <button onclick="handleReaction({{.ID}}, 1, 'post')" class="like-button">
-                        <i id="likeIcon-{{.ID}}" class='{{if .UserLiked}}bx bxs-like{{else}}bx bx-like{{end}}'></i>
-                        <span id="likeCount-{{.ID}}">{{.Likes}}</span>
-                    </button>
-                    <button onclick="handleReaction({{.ID}}, 0, 'post')" class="dislike-button">
-                        <i id="dislikeIcon-{{.ID}}" class='{{if .UserDisliked}}bx bxs-dislike{{else}}bx bx-dislike{{end}}'></i>
-                        <span id="dislikeCount-{{.ID}}">{{.Dislikes}}</span>
-                    </button>
-                    <button href="/post/{{.ID}}/comment" class="comment-button"><i class='bx bx-comment'></i>{{.Comments}} Comments</button>
-                </div>
-            </div>
+        <div class="post-actions">
+            <button onclick="handleReaction({{.ID}}, 1, 'post')" class="like-button">
+                <i id="likeIcon-{{.ID}}" class='{{if .UserLiked}}bx bxs-like{{else}}bx bx-like{{end}}'></i>
+                <span id="likeCount-{{.ID}}">{{.Likes}}</span>
+            </button>
+            <button onclick="handleReaction({{.ID}}, 0, 'post')" class="dislike-button">
+                <i id="dislikeIcon-{{.ID}}" class='{{if .UserDisliked}}bx bxs-dislike{{else}}bx bx-dislike{{end}}'></i>
+                <span id="dislikeCount-{{.ID}}">{{.Dislikes}}</span>
+            </button>
+            <button href="/post/{{.ID}}/comment" class="comment-button"><i class='bx bx-comment'></i>{{.Comments}}
+                Comments</button>
+        </div>
+        </div>
         {{end}}
     </ul>
 
     <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const filterOptions = document.querySelectorAll('.filter-option');
+        document.addEventListener("DOMContentLoaded", function () {
+            const filterOptions = document.querySelectorAll('.filter-option');
 
-        filterOptions.forEach(option => {
-            option.addEventListener('click', function() {
-                const checkbox = this.querySelector('input[type="checkbox"]');
-                checkbox.checked = !checkbox.checked;
-                this.classList.toggle('selected', checkbox.checked);
+            filterOptions.forEach(option => {
+                option.addEventListener('click', function () {
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    checkbox.checked = !checkbox.checked;
+                    this.classList.toggle('selected', checkbox.checked);
+                });
             });
         });
-    });
-</script>
-
-
-    <script>
-function toggleMenu() {
-    const subMenu = document.getElementById("subMenu");
-    const filterMenu = document.getElementById("filterMenu");
-
-    if (!subMenu.classList.contains("open-menu")) {
-        filterMenu.classList.remove("open-menu"); // Close the filter menu if open
-    }
-    subMenu.classList.toggle("open-menu");
-}
-
-function toggleFilter() {
-    const subMenu = document.getElementById("subMenu");
-    const filterMenu = document.getElementById("filterMenu");
-
-    if (!filterMenu.classList.contains("open-menu")) {
-        subMenu.classList.remove("open-menu"); // Close the sub menu if open
-    }
-    filterMenu.classList.toggle("open-menu");
-}
     </script>
 
+
     <script>
-function handleReaction(id, action, type) {
-    fetch('/reaction', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ ID: id, action: action, type: type })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Received data:', data); // Log the received data
+        function toggleMenu() {
+            const subMenu = document.getElementById("subMenu");
+            const filterMenu = document.getElementById("filterMenu");
 
-        if (data.likes !== undefined && data.dislikes !== undefined) {
-            document.getElementById('likeCount-' + id).textContent = data.likes;
-            document.getElementById('dislikeCount-' + id).textContent = data.dislikes;
-
-            // Update the like icon
-            const likeIcon = document.getElementById('likeIcon-' + id);
-            console.log('user_liked:', data.user_liked); // Log user_liked status
-            if (data.user_liked) {
-                likeIcon.classList.remove('bx-like');
-                likeIcon.classList.add('bxs-like');
-            } else {
-                likeIcon.classList.remove('bxs-like');
-                likeIcon.classList.add('bx-like');
+            if (!subMenu.classList.contains("open-menu")) {
+                filterMenu.classList.remove("open-menu"); // Close the filter menu if open
             }
-
-            // Update the dislike icon
-            const dislikeIcon = document.getElementById('dislikeIcon-' + id);
-            console.log('user_disliked:', data.user_disliked); // Log user_disliked status
-            if (data.user_disliked) {
-                dislikeIcon.classList.remove('bx-dislike');
-                dislikeIcon.classList.add('bxs-dislike');
-            } else {
-                dislikeIcon.classList.remove('bxs-dislike');
-                dislikeIcon.classList.add('bx-dislike');
-            }
-        } else {
-            console.error('Invalid response data:', data);
+            subMenu.classList.toggle("open-menu");
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        window.location.replace("/login");
-    });
-}
 
+        function toggleFilter() {
+            const subMenu = document.getElementById("subMenu");
+            const filterMenu = document.getElementById("filterMenu");
 
+            if (!filterMenu.classList.contains("open-menu")) {
+                subMenu.classList.remove("open-menu"); // Close the sub menu if open
+            }
+            filterMenu.classList.toggle("open-menu");
+        }
+
+        function toggleNotifications() {
+
+        }
     </script>
+    <script src="/static/JS/Likes.js"></script>
 </body>
 
 </html>
